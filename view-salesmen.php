@@ -1,3 +1,8 @@
+<?php
+require_once("connection.php");
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +15,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Salesmen</title>
+    <title>View Salesman</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -20,7 +25,8 @@
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-
+    <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
@@ -32,6 +38,8 @@
 
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
+
+
 
 </head>
 
@@ -82,14 +90,7 @@
                                                         <a href="#">
                                                             <i class="zmdi zmdi-account"></i>Account</a>
                                                     </div>
-                                                    <!-- <div class="account-dropdown__item">
-                                                        <a href="#">
-                                                            <i class="zmdi zmdi-settings"></i>Setting</a>
-                                                    </div> -->
-                                                    <!-- <div class="account-dropdown__item">
-                                                        <a href="#">
-                                                            <i class="zmdi zmdi-money-box"></i>Billing</a>
-                                                    </div> -->
+                                                    
                                                 </div>
                                                 <div class="account-dropdown__footer">
                                                     <a href="#">
@@ -109,7 +110,56 @@
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                       
+                        
+                    <div class="row">
+                            <div class="col-md-12">
+
+
+<?php 
+
+
+if(!$conn->connect_error){
+
+$sql = 'select * from salesman where deleted != 1';
+$res = $conn->query($sql);
+if($res->num_rows > 0 ){
+    echo '<table id="example" class="table table-striped table-bordered">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Salesman Name</th>';
+        echo '<th>Email Address</th>';
+        echo '<th>Work Phone</th>';
+        echo '<th>Mobile Number</th>';
+        echo '<th>Work Address</th>';
+        echo '<th>Home Address</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        while($row = $res->fetch_assoc()){
+            echo  '<tr>';
+            echo  '<td>' . $row['user_name'] . '</td>';
+            echo  '<td>' . $row['email_address'] . '</td>';
+            echo  '<td>' . $row['work_phone'] . '</td>';
+            echo  '<td>' . $row['mobile_number'] . '</td>';
+            echo  '<td>' . $row['work_address'] . '</td>';
+            echo  '<td>' . $row['home_address'] . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</tbody>';
+    echo '</table>';
+
+
+}   
+}
+?>
+
+
+
+
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
@@ -131,7 +181,11 @@
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-    <!-- Vendor JS       -->
+
+
+    <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
+    <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
+
     <script src="vendor/slick/slick.min.js">
     </script>
     <script src="vendor/wow/wow.min.js"></script>
@@ -149,6 +203,12 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('#example').DataTable();
+} );
+    </script>
 
 </body>
 
