@@ -10,7 +10,7 @@
                        
 
                         <li class="active">
-                            <a class="js-arrow" href="index.php">
+                            <a class="js-arrow" href="dashboard.php">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
                         <li class="has-sub">
