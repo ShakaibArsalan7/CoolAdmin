@@ -20,13 +20,13 @@ if(!$conn->connect_error){// if database connected.
         $bankname =  $_REQUEST['hf-bankname'];
         //$profilepic = $_REQUEST['hf-profilepic'];
 
-        echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
+        //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
 
    
     //validation passed
 
-        $sql = "insert into client(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic','false')";
+        $sql = "insert into client(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic','0')";
         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";

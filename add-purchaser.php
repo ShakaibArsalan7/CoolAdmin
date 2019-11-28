@@ -20,7 +20,7 @@ if(!$conn->connect_error){// if database connected.
         $bankname =  $_REQUEST['hf-bankname'];
         //$profilepic = $_REQUEST['hf-profilepic'];
 
-        echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
+        //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
 
    
