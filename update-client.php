@@ -1,8 +1,13 @@
-
 <?php require_once('session.php') ?>
+
 <?php
 require_once("connection.php");
-$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+
+
+$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = $id = "";
+
+
+
 $err = "";
 
 if(!$conn->connect_error){// if database connected.
@@ -18,23 +23,44 @@ if(!$conn->connect_error){// if database connected.
         $bankaccounttitle =  $_REQUEST['hf-bankaccounttitle'];
         $bankaccountnumber =  $_REQUEST['hf-bankaccountnumber'];
         $bankname =  $_REQUEST['hf-bankname'];
+        $id = $_REQUEST['id'];
         //$profilepic = $_REQUEST['hf-profilepic'];
 
         //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
-
+        
    
     //validation passed
-
-        $sql = "insert into salesman(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic',false)";
-        $res = $conn->query($sql);
+        
+        $sql7 = "update client set user_name = '$username' ,email_address='$emailaddress',work_phone='$workphone',mobile_number='$mobilenumber',work_address='$workaddress',home_address='$homeaddress',bank_account_title='$bankaccounttitle',bank_account_number='$bankaccountnumber',bank_name='$bankname',profile_pic='$profilepic' where client_id = $id";
+        
+        $res = $conn->query($sql7);
        if($res){
+           // updated , go to view page.
+           header("Location: ./view-clients.php");
            //echo "inserted succesfully";
-           $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+           #$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+       }else{
+           //echo "update unsuccesfull";
        }
+       
            
    }else{// if not submit, first visit to page or refresh
-    $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+    $id = (int)$_REQUEST['id'];
+    $sql2 = "select * from client where client_id = $id";
+    $res1 = $conn->query($sql2)->fetch_object();
+
+    $username  =  $res1->user_name;
+    $emailaddress =  $res1->email_address;
+    $workphone =  $res1->work_phone;
+    $mobilenumber =  $res1->mobile_number;
+    $workaddress =  $res1->work_address;
+    $homeaddress =  $res1->home_address;
+    $bankaccounttitle =  $res1->bank_account_title;
+    $bankaccountnumber =  $res1->bank_account_number;
+    $bankname =  $res1->bank_name;
+    $profilepic = $res1->profile_pic;
+
    }
 
 }
@@ -52,7 +78,7 @@ if(!$conn->connect_error){// if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Salesman</title>
+    <title>Update Client</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -107,13 +133,13 @@ if(!$conn->connect_error){// if database connected.
                             <div class="col-md-10">
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Salesman</strong>
+                                        Update <strong>Client</strong> 
                                     </div>
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-username" class=" form-control-label">Salesman Name</label>
+                                                    <label for="hf-username" class=" form-control-label">Client Name</label>
                                                 </div>
                                                 <div class="col-12 col-md-5">
                                                     <input type="text" id="hf-username" name="hf-username" placeholder="Enter Username..." class="form-control" value="<?php echo $username;?>">
@@ -196,7 +222,8 @@ if(!$conn->connect_error){// if database connected.
                                                    
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
+                                                <input type="hidden" name="id" value="<?php echo $id;?>">
+                                                <input type="submit" class="btn btn-primary btn-lg btn-success" name="submit" value="Update" />
                                                 </div>
                                                 
                                             </div>
@@ -270,7 +297,7 @@ function validateForm() {
     var bankname = document.getElementById("hf-bankname").value;
     var profilepic = document.getElementById("hf-profilepic").value;
     if (username == "") {
-    snackbar("Username is required.");
+    snackbar("Client name is required.");
     return false;
     }
     if (emailaddress == "") {

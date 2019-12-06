@@ -13,7 +13,7 @@
                             <a class="js-arrow" href="dashboard.php">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
-                        <li class="has-sub">
+                        <!-- <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-users"></i>Users
                             </a>
@@ -25,18 +25,18 @@
                                     <a href="view-users.php">View Users</a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="has-sub">
                                 <a class="js-arrow" href="#">
-                                    <i class="fab fa-product-hunt"></i>Products/Brands
+                                    <i class="fab fa-product-hunt"></i>Brands
                                 </a>
                                 <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                     <li>
-                                        <a href="add-product.php">Add Product/Brand</a>
+                                        <a href="add-product.php">Add Brand</a>
                                     </li>
-                                    <li>
-                                        <a href="view-products.php">View Products/Brands</a>
-                                    </li>
+                                    <!-- <li>
+                                        <a href="view-products.php">View Products</a>
+                                    </li> -->
                                 </ul>
                         </li>
 
@@ -144,9 +144,18 @@
                                 <a href="expense.php">
                                     <i class="fas fa-clipboard-list"></i>Expenses</a>
                             </li>
-                            <li>
-                                <a href="stock.php">
-                                    <i class="fas fa-cubes"></i>Stocks</a>
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                    <i class="fas fa-clipboard-check"></i>Stocks
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                    <a href="rawmaterialstocks.php">Raw Material Stock</a>
+                                    </li>
+                                    <li>
+                                    <a href="productstock.php">Product Stock</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
                                 <a href="accounts.php">

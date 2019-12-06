@@ -1,4 +1,44 @@
 <?php require_once('session.php') ?>
+<?php
+require_once("connection.php");
+if(!$conn->connect_error){// if database connected.
+    
+if(isset($_REQUEST['submit'])){ // if submit button clicked
+    
+    $productname = $profilepic  = $packingopt = "";
+
+    $productname  =  $_REQUEST['hf-brandname'];
+    //$profilepic = $_REQUEST['hf-profilepic'];
+    $timestamp= time();
+    $sql1 = "insert into brand(brand_name,profile_pic,adding_timestamp,deleted) values('$productname','$profilepic','$timestamp',false)";
+    $res = $conn->query($sql1);
+    $brandid = "";
+    if($res){
+        
+    $sql2 = "select brand_id from brand where adding_timestamp = '$timestamp' && deleted != 1";
+    $res1 = $conn->query($sql2)->fetch_object()->brand_id;
+
+
+    echo "<script>alert('$res1');</script>";
+    foreach ($_POST as $name => $value) {
+    if (strpos($name, 'packing') !== false) {
+        $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
+        $res2 = $conn->query($que);
+    }
+ }
+   }else{
+    echo "<script>alert('failure');</script>";
+   }
+
+   
+   //$res = $conn->query($sql);
+
+
+
+}
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +51,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Product</title>
+    <title>Add Brand</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -66,44 +106,20 @@
                             <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Brand/Product</strong>
+                                        Add <strong>Brand</strong>
                                     </div>
                                     <div class="card-body card-block">
-                                        <form action="" method="post" class="form-horizontal">
+                                        <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-brandname" class=" form-control-label">Brand Name</label>
+                                                <div class="col col-md-2">
+                                                    <label for="hf-brandname" class=" form-control-label">Product Name</label>
                                                 </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Brandname..." class="form-control">
+                                                <div class="col-12 col-md-3">
+                                                    <input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Product name..." class="form-control">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-userid" class=" form-control-label">Packing Options: </label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <button>Add</button>
-                                                </div>
-                                            </div>
-
-                                            <!-- <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-role" class=" form-control-label">Role</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                        <select name="hf-role" id="select" class="form-control">
-                                                                <option value="0">Please select</option>
-                                                                <option value="1">Role #1</option>
-                                                                <option value="2">Role #2</option>
-                                                                <option value="3">Role #3</option>
-                                                            </select>
-                                                </div>
-                                            </div> -->
-
-                                          
-                                                <div class="row form-group">
                                                         <div class="col col-md-3">
                                                                 <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
                                                         </div>
@@ -111,19 +127,45 @@
                                                                 <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
                                                         </div>
                                                     </div>
+
+        
+
+                                            <div class="row form-group">
+                                                <div class="col col-md-5">
+                                                    <div class="row">
+                                                        <div class="col-sm-8" id="tabletitle"><h2>Packing Details</h2></div>
+                                                        <div class="col-sm-4">
+                                                            <button type="button" class="btn btn-success add-new" id="addrow"><i class="fa fa-plus"></i> Add New</button>
+                                                         </div>
+                                                    </div>
+
+                                                    <table id="myTable" class=" table table-bordered order-list ">
+                                                        <thead>
+                                                            <tr class="packtab">
+                                                                <td></td>
+                                                                <td>Packing Detail</td>
+                                                                <td style="text-align:center">Action</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                          
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Save" />
+                                                </div>
+                                                
+                                            </div>  
                                       
 
                                             
 
                                         </form>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-dot-circle-o"></i> Register
-                                        </button>
-                                        <button type="reset" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-ban"></i> Cancel
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +185,7 @@
         </div>
 
     </div>
-
+    <div id="snackbar"></div>
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
@@ -167,6 +209,109 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+    <script>
+
+function validateForm() {
+    var brandname = document.getElementById("hf-brandname").value;
+    //var emailaddress = document.getElementById("hf-emailaddress").value;
+
+    if (brandname == "") {
+    snackbar("Brand name is required.");
+    return false;
+    }
+
+    var els = document.getElementsByClassName('pw');
+    //alert(els.length);
+    if(els.length == 0){
+        snackbar("No Packing Option is added.");
+        return false;
+    }
+    var packArray = [];
+    var reason =1;
+    for(var i = 0; i< els.length; i++){
+        var el = els[i];
+        if(el.value == "select"){
+        snackbar("One of the option field is empty.");
+        return false;
+    }else{
+        if(packArray.indexOf(el.value) > -1){
+            //in the array
+            snackbar(el.value +" option is selected twice.");
+            return false;
+        }else{
+            packArray.push(el.value);
+            // console.log();
+        }
+        
+    }
+    }
+
+    return true;
+}
+
+function snackbar(message) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML =message;
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+    </script>
+
+    <script>
+$(document).ready(function () {
+    var counter = 0;
+
+    $("#addrow").on("click", function () {
+        var newRow = $("<tr class='packtab'>");
+        var cols = "";
+
+        cols += '<td><i class="fa fa-circle"></i></td>';
+        // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
+        cols += '<td>'+
+        '<select class="form-control pw" name="packing' + counter + '">'
+            +'<option value="select">select option</option>'
+            +'<option value="5">5 kg</option>'
+            +'<option value="10">10 kg</option>'
+            +'<option value="15">15 kg</option>'
+            +'<option value="20">20 kg</option>'
+            +'<option value="25">25 kg</option>'
+            +'<option value="30">30 kg</option>'
+            +'<option value="35">35 kg</option>'
+            +'<option value="37">37 kg</option>'
+            +'<option value="40">40 kg</option>'
+            +'<option value="45">45 kg</option>'
+            +'<option value="50">50 kg</option>'
+            +'<option value="55">55 kg</option>'
+            +'<option value="60">60 kg</option>'
+        +'</select>'
+        +'</td>';
+        
+
+        // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
+        
+        newRow.append(cols);
+        $("table.order-list").append(newRow);
+        counter++;
+    });
+
+
+
+    $("table.order-list").on("click", ".ibtnDel", function (event) {
+        $(this).closest("tr").remove();
+        counter -= 1;
+    });
+
+
+});
+</script>
+
+
 
 </body>
 

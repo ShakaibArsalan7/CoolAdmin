@@ -26,7 +26,7 @@ if(!$conn->connect_error){// if database connected.
    
     //validation passed
 
-        $sql = "insert into purchaser(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic','false')";
+        $sql = "insert into purchaser(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic',false)";
         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";

@@ -2,7 +2,22 @@
 
 <?php
 require_once("connection.php");
+if(!$conn->connect_error){
 
+    if(isset($_REQUEST['delete'])){
+        $id = (int)$_POST['id'];
+         
+        $sql = "update purchaser set deleted = 1 where purchaser_id = $id";
+        
+        $res = $conn->query($sql);
+        if($res){
+            #echo "<script>alert('Deleted Successfully')</script>";
+        }else{
+            #echo "<script>alert('Deleted Failed')</script>";
+        }
+
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -93,6 +108,7 @@ if($res->num_rows > 0 ){
         echo '<th>Mobile Number</th>';
         echo '<th>Work Address</th>';
         echo '<th>Home Address</th>';
+        echo '<th>Actions</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -104,6 +120,20 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['mobile_number'] . '</td>';
             echo  '<td>' . $row['work_address'] . '</td>';
             echo  '<td>' . $row['home_address'] . '</td>';
+            echo '<td style="text-align:center">
+            
+            <form action="update-purchaser.php" method="POST">
+            <input type="hidden" name="id" value=' .$row["purchaser_id"]. 
+                '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                </form>
+
+                <form action="" method="POST">
+            <input type="hidden" name="id" value=' .$row["purchaser_id"]. 
+                '> <button type="submit" name="delete" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+                
+                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["purchaser_id"] .'><i class="fas fa-eye"></i></button>
+                </td>';
             echo '</tr>';
         }
 
@@ -111,7 +141,23 @@ if($res->num_rows > 0 ){
     echo '</table>';
 
 
-}   
+}   else{
+    echo '<table id="example" class="table table-striped table-bordered">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Purchaser Name</th>';
+        echo '<th>Email Address</th>';
+        echo '<th>Work Phone</th>';
+        echo '<th>Mobile Number</th>';
+        echo '<th>Work Address</th>';
+        echo '<th>Home Address</th>';
+        echo '<th>Actions</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        echo '</tbody>';
+    echo '</table>';
+}
 }
 ?>
 
@@ -136,6 +182,32 @@ if($res->num_rows > 0 ){
         </div>
 
     </div>
+
+    <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="largeModalLabel">Purchaser Detail</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+                        <input  type="hidden" id="idval" value=""/>
+
+							<p id="parawithdata">
+								
+
+                                
+							</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end modal large -->
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -168,6 +240,20 @@ if($res->num_rows > 0 ){
     <script>
     $(document).ready(function() {
     $('#example').DataTable();
+    $(".mid").click(function(){ // Click to only happen on announce links
+    //var a = document.getElement
+    $("#idval").val($(this).data('id'));
+    // debugger;
+    var modid = parseInt($("#idval").val());
+
+    $('#parawithdata').load("viewModaldata.php", {
+        fmodid : modid,
+        fform : "purchaser"
+    });
+
+
+     $('#largeModal').modal('show');
+   });
 } );
     </script>
 
