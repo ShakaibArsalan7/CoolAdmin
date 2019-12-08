@@ -45,7 +45,7 @@
                                         <a href="add-product.php">Add Brand</a>
                                     </li>
                                     <li>
-                                        <a href="edit-products.php">View Brand</a>
+                                        <a href="edit-products.php">Edit Brand</a>
                                     </li>
                                 </ul>
                         </li>

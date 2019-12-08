@@ -180,9 +180,14 @@ $(document).ready(function () {
 
     $('#rawmat').on('change', function() {
         var rawid = this.value;
-        $('#nutridata').load("rawmatnutridata.php", {
+        if(rawid != "select"){
+            $('#nutridata').load("rawmatnutridata.php", {
         fmodid : rawid
          });
+        }else{
+            $("#nutridata").text("");
+        }
+        
     });
 
 

@@ -35,6 +35,20 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
 
 
 
+}else{
+
+    $opt = "";
+    $sql =  "select id, packing_size from packings where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        $opt .='<option value=\"'. $row['packing_size'] .'\">'. $row['packing_size'] . ' kg</option>';
+
+        
+
+    }
+}
 }
 }
 
@@ -112,10 +126,10 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-brandname" class=" form-control-label">Product Name</label>
+                                                    <label for="hf-brandname" class=" form-control-label">Brand Name</label>
                                                 </div>
                                                 <div class="col-12 col-md-3">
-                                                    <input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Product name..." class="form-control">
+                                                    <input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Brand name..." class="form-control">
                                                 </div>
                                             </div>
 
@@ -274,27 +288,8 @@ $(document).ready(function () {
         // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
         cols += '<td>'+
         '<select class="form-control pw" name="packing' + counter + '">'
-            +'<option value="select">select option</option>'
-            +'<option value="5">5 kg</option>'
-            +'<option value="10">10 kg</option>'
-            +'<option value="15">15 kg</option>'
-            +'<option value="20">20 kg</option>'
-            +'<option value="25">25 kg</option>'
-            +'<option value="30">30 kg</option>'
-            +'<option value="35">35 kg</option>'
-            +'<option value="40">40 kg</option>'
-            +'<option value="45">45 kg</option>'
-            +'<option value="50">50 kg</option>'
-            +'<option value="55">55 kg</option>'
-            +'<option value="60">60 kg</option>'
-            +'<option value="65">65 kg</option>'
-            +'<option value="70">70 kg</option>'
-            +'<option value="75">75 kg</option>'
-            +'<option value="80">80 kg</option>'
-            +'<option value="85">85 kg</option>'
-            +'<option value="90">90 kg</option>'
-            +'<option value="95">95 kg</option>'
-            +'<option value="100">100 kg</option>'
+            +'<option value="select">select option</option><?php echo $opt;?>'
+            
         +'</select>'
         +'</td>';
         
