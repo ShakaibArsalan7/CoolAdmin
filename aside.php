@@ -34,9 +34,9 @@
                                     <li>
                                         <a href="add-product.php">Add Brand</a>
                                     </li>
-                                    <!-- <li>
-                                        <a href="view-products.php">View Products</a>
-                                    </li> -->
+                                    <li>
+                                        <a href="edit-products.php">Edit Brand</a>
+                                    </li>
                                 </ul>
                         </li>
 
@@ -56,6 +56,20 @@
 
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
+                                <i class="fab fa-nutritionix"></i>Nutrients
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                        <a href="add-nutrient.php">Add Nutrient</a>
+                                    </li>
+                                    <li>
+                                        <a href="view-nutrients.php">View Nutrients</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
                                     <i class="fab fa-rockrms"></i>Raw Materials
                                 </a>
                                 <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
@@ -63,7 +77,10 @@
                                         <a href="add-rawmaterial.php">Add Raw Material</a>
                                     </li>
                                     <li>
-                                        <a href="view-rawmaterial.php">View Raw Materails</a>
+                                        <a href="view-rawmaterial.php">View Raw Materials</a>
+                                    </li>
+                                    <li>
+                                        <a href="view-rawmaterialnutrients.php">View Nutrients in Raw Material</a>
                                     </li>
                                 </ul>
                             </li>
@@ -138,6 +155,20 @@
                                 </ul>
                             </li>
 
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-industry"></i>Production
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                        <a href="add-laborattendance.php">Add Formula</a>
+                                    </li>
+                                    <li>
+                                        <a href="view-laborattendance.php">View Formulas</a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             
                             
                             <li>
@@ -146,7 +177,7 @@
                             </li>
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
-                                    <i class="fas fa-clipboard-check"></i>Stocks
+                                <i class="fas fa-cubes"></i>Stocks
                                 </a>
                                 <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                     <li>

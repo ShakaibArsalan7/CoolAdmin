@@ -224,7 +224,7 @@ if($res->num_rows > 0 ){
     <script>
     $(document).ready(function() {
     $('#example').DataTable();
-    $(".mid").click(function(){ // Click to only happen on announce links
+    $('body').on('click','.mid',function(){ // Click to only happen on announce links
     //var a = document.getElement
     $("#idval").val($(this).data('id'));
     // debugger;

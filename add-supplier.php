@@ -204,14 +204,7 @@ if(!$conn->connect_error){// if database connected.
                                                 
                                         </form>
                                     </div>
-                                    <!-- <div class="card-footer">
-                                        
-                                            <i class="fa fa-dot-circle-o"></i> Register
-                                        </button>
-                                        <button type="reset" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-ban"></i> Cancel
-                                        </button>
-                                    </div> -->
+                                    
                                 </div>
                             </div>
                         </div>
@@ -269,7 +262,7 @@ function validateForm() {
     var bankname = document.getElementById("hf-bankname").value;
     var profilepic = document.getElementById("hf-profilepic").value;
     if (username == "") {
-    snackbar("Username is required.");
+    snackbar("Supplier name is required.");
     return false;
     }
     if (emailaddress == "") {

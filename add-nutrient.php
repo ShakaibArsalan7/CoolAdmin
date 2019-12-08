@@ -2,61 +2,28 @@
 
 <?php
 require_once("connection.php");
-$rawmaterialname  = "";
+$nutrientname  = "";
 $err = "";
-
-
- 
 
 if(!$conn->connect_error){// if database connected.
     
     if(isset($_REQUEST['submit'])){ // if submit button clicked
         
-        $rawmaterialname  =  $_REQUEST['hf-rawmaterialname'];
+        $nutrientname  =  $_REQUEST['hf-nutrientname'];
 
 
    
     //validation passed
         $timestamp= time();
-        $sql = "insert into rawMaterial(raw_material_name,unit_of_purchase,unit_of_usage,adding_timestamp,deleted) values('$rawmaterialname','kg','kg','$timestamp',false);";
+        $sql = "insert into nutrition(nutrition_name,unit_of_usage,adding_timestamp,deleted) values('$nutrientname','percent per kg','$timestamp',false);";
         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";
-           $rawmaterialname  = "";
-           $sql2 = "select raw_material_id from rawMaterial where adding_timestamp = '$timestamp' && deleted != 1";
-           $res1 = $conn->query($sql2)->fetch_object()->raw_material_id;
-       
-       
-           //echo "<script>alert('$res1');</script>";
-           foreach ($_POST as $name => $value) {
-           if (strpos($name, 'nutrient') !== false) {
-                $qname =  "quantity" .  substr($name,8);
-                $qquan = $_POST[$qname];
-               $que = "insert into RawmaterialNutrients(raw_material_id,Nutrition_id,percentageperkg,deleted) values('$res1','$value',$qquan,false)";
-               $res2 = $conn->query($que);
-           }
-        //echo "<script>alert('$name - $value')</script>";
-
-        }
+           $nutrientname  = "";;
        }
            
    }else{// if not submit, first visit to page or refresh
-    
-    $rawmaterialname  = "";
-    $opt = "";
-    $sql =  "select Nutrition_id, nutrition_name from nutrition where deleted != 1";
-    $res = $conn->query($sql);
-    if($res->num_rows > 0 ){
-    while($row = $res->fetch_assoc()){
-        // echo "<script>alert('a')</script>";
-        $opt .='<option value=\"'. $row['Nutrition_id'] .'\">'. $row['Nutrition_id'] . ' - ' . $row['nutrition_name'] .'</option>';
-
-        
-
-    }
-    // echo "<script>alert('$opt')</script>";
-}
-
+    $nutrientname  = "";
    }
 
 }
@@ -74,7 +41,7 @@ if(!$conn->connect_error){// if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Raw Material</title>
+    <title>Add Nutrient</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -129,45 +96,18 @@ if(!$conn->connect_error){// if database connected.
                             <div class="col-md-10">
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Raw Material</strong>
+                                        Add <strong>Nutrient</strong>
                                     </div>
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-rawmaterialname" class=" form-control-label">Raw Material Name</label>
+                                                    <label for="hf-nutrientname" class=" form-control-label">Nutrient Name</label>
                                                 </div>
                                                 <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-rawmaterialname" name="hf-rawmaterialname" placeholder="Enter Raw Material name..." class="form-control" value="<?php echo $rawmaterialname;?>">
+                                                    <input type="text" id="hf-nutrientname" name="hf-nutrientname" placeholder="Enter Nutrient name..." class="form-control" value="<?php echo $nutrientname;?>">
                                                 </div>
-                                            </div>  
-
-                                            
-                                            <div class="row form-group">
-                                                <div class="col col-md-8">
-                                                    <div class="row">
-                                                        <div class="col-sm-8" id="tabletitle"><h2>Nutrient Details</h2></div>
-                                                        <div class="col-sm-4">
-                                                            <button type="button" class="btn btn-success add-new" id="addrow"><i class="fa fa-plus"></i> Add New</button>
-                                                         </div>
-                                                    </div>
-
-                                                    <table id="myTable" class=" table table-bordered order-list ">
-                                                        <thead>
-                                                            <tr class="packtab">
-                                                                <td></td>
-                                                                <td>Nutrient Detail</td>
-                                                                <td>Quantity</td>
-                                                                <td style="text-align:center">Action</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
+                                            </div>                                                   
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
                                                 <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
@@ -223,114 +163,15 @@ if(!$conn->connect_error){// if database connected.
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
-
-
-
-    <script>
-$(document).ready(function () {
-
-     
-    var counter = 0;
-
-    $("#addrow").on("click", function () {
-        // alert("a");
-        var newRow = $("<tr class='packtab'>");
-        var cols = "";
-
-        cols += '<td><i class="fa fa-circle"></i></td>';
-        // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
-        cols += '<td>'+
-        '<select class="form-control pw" name="nutrient' + counter + '">'
-        +'<option value="select">select option</option><?php echo $opt;?>'
-
-           
-        
-
-
-        +'</select>'
-        +'</td>';
-        cols+='<td><input type="text" class="form-control qw" id="hf-nutrientquantity' + counter +'" name="quantity' + counter + '" placeholder="Enter nutrient quantity..." ></td>';
-
-        // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
-        
-        newRow.append(cols);
-        $("table.order-list").append(newRow);
-        counter++;
-    });
-
-
-
-    $("table.order-list").on("click", ".ibtnDel", function (event) {
-        $(this).closest("tr").remove();
-        counter -= 1;
-    });
-
-
-});
-</script>
-
-
     <script>
 function validateForm() {
-    var nname = document.getElementById("hf-rawmaterialname").value;
+    var nname = document.getElementById("hf-nutrientname").value;
     if (nname == "") {
-    snackbar("Raw material name is required.");
+    snackbar("Nutrient name is required.");
     return false;
     }
 
-
-
-    var els = document.getElementsByClassName('pw');
-    //alert(els.length);
-    if(els.length == 0){
-        snackbar("No Nutrient Detail is added.");
-        return false;
-    }
-    var packArray = [];
-    // var reason =1;
-    for(var i = 0; i< els.length; i++){
-        var el = els[i];
-        if(el.value == "select"){
-        snackbar("One of the option field is empty.");
-        return false;
-    }else{
-        if(packArray.indexOf(el.value) > -1){
-            //in the array
-            snackbar(el.options[el.selectedIndex].text +" option is selected twice.");
-            return false;
-        }else{
-            packArray.push(el.value);
-            // console.log();
-        }
-        
-    }
-    }
-
-    var elq = document.getElementsByClassName('qw');
-    // var reason =1;
-    for(var i = 0; i< elq.length; i++){
-        var el = elq[i];
-        if(el.value == ""){
-        snackbar("One of the quantity field is empty.");
-        return false;
-    }
-    else{
-        var v=  validateQuantity(el.value);
-        if(!v){
-            snackbar("One of the quantity field is not valid. only numeral allowed.");
-            return false;
-        }
-    }
-    }
-
-
     return true;
-}
-
-function validateQuantity(s) {
-    var rgx = /^[0-9]*\.?[0-9]*$/;
-    return s.match(rgx);
 }
 
 function snackbar(message) {

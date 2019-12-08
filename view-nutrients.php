@@ -8,7 +8,7 @@ if(!$conn->connect_error){
     if(isset($_REQUEST['delete'])){
         $id = (int)$_POST['id'];
          
-        $sql = "update rawMaterial set deleted = 1 where raw_material_id = $id";
+        $sql = "update nutrition set deleted = 1 where Nutrition_id = $id";
         
         $res = $conn->query($sql);
         if($res){
@@ -34,7 +34,7 @@ if(!$conn->connect_error){
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Raw MAterial</title>
+    <title>View Nutrients</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -98,37 +98,37 @@ if(!$conn->connect_error){
 
 if(!$conn->connect_error){
 
-$sql = 'select * from rawMaterial where deleted != 1';
+$sql = 'select * from nutrition where deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
     echo '<table id="example" class="table table-striped table-bordered">';
         echo '<thead>';
         echo '<tr>';
-        echo '<th>Raw material ID</th>';
-        echo '<th>Raw material Name</th>';
+        echo '<th>Nutrient ID</th>';
+        echo '<th>Nutrient Name</th>';
         echo '<th>Usage unit</th>';
         echo '<th>Actions</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         while($row = $res->fetch_assoc()){
-            $id = $row['raw_material_id'];
+            $id = $row['Nutrition_id'];
             echo  '<tr>';
-            echo  '<td>' . $row['raw_material_id'] . '</td>';
-            echo  '<td>' . $row['raw_material_name'] . '</td>';
+            echo  '<td>' . $row['Nutrition_id'] . '</td>';
+            echo  '<td>' . $row['nutrition_name'] . '</td>';
             echo  '<td>' . $row['unit_of_usage'] . '</td>';
             echo '<td style="text-align:center">
             
-            <form action="update-rawmaterial.php" method="POST">
-            <input type="hidden" name="id" id="sid" value=' .$row["raw_material_id"]. 
+            <form action="update-nutrient.php" method="POST">
+            <input type="hidden" name="id" id="sid" value=' .$row["Nutrition_id"]. 
                 '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
 
                 <form action="" method="POST">
-            <input type="hidden" name="id" value=' .$row["raw_material_id"]. 
+            <input type="hidden" name="id" value=' .$row["Nutrition_id"]. 
                 '> <button type="submit" name="delete" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
-                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["raw_material_id"] .'><i class="fas fa-eye"></i></button>
+                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["Nutrition_id"] .'><i class="fas fa-eye"></i></button>
                 
                 
                 
@@ -173,7 +173,7 @@ if($res->num_rows > 0 ){
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="largeModalLabel">Raw Material Detail</h5>
+							<h5 class="modal-title" id="largeModalLabel">Nutrient Detail</h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -235,7 +235,7 @@ if($res->num_rows > 0 ){
 
     $('#parawithdata').load("viewModaldata.php", {
         fmodid : modid,
-        fform : "rawmaterial"
+        fform : "nutrient"
     });
 
 

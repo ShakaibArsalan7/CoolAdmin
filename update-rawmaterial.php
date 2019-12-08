@@ -1,5 +1,49 @@
 <?php require_once('session.php') ?>
 
+<?php
+require_once("connection.php");
+
+$rawmaterialname  = "";
+
+
+
+$err = "";
+
+if(!$conn->connect_error){// if database connected.
+    
+    if(isset($_REQUEST['submit'])){ // if submit button clicked
+        
+        $rawmaterialname  =  $_REQUEST['hf-rawmaterialname'];
+        $id = $_REQUEST['id'];
+        
+   
+    //validation passed
+        
+        $sql7 = "update rawMaterial set raw_material_name = '$rawmaterialname' where raw_material_id = $id";
+        
+        $res = $conn->query($sql7);
+       if($res){
+           // updated , go to view page.
+           header("Location: ./view-rawmaterial.php");
+           //echo "inserted succesfully";
+           #$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+       }else{
+           //echo "update unsuccesfull";
+       }
+       
+           
+   }else{// if not submit, first visit to page or refresh
+    $id = (int)$_REQUEST['id'];
+    $sql2 = "select * from rawMaterial where raw_material_id = $id";
+    $res1 = $conn->query($sql2)->fetch_object();
+
+    $rawmaterialname  =  $res1->raw_material_name;
+
+   }
+
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +56,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Products</title>
+    <title>Update Raw Material</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -56,14 +100,46 @@
                         <?php include_once('accountdetail.php')?>
                         </div>
                     </div>
-                </header>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                       
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Update <strong>Raw material</strong> 
+                                    </div>
+                                    <div class="card-body card-block">
+                                        <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
+                                            <div class="row form-group">
+                                                <div class="col col-md-2">
+                                                    <label for="hf-rawmaterialname" class=" form-control-label">Raw Material Name</label>
+                                                </div>
+                                                <div class="col-12 col-md-5">
+                                                    <input type="text" id="hf-rawmaterialname" name="hf-rawmaterialname" placeholder="Enter Raw Material name..." class="form-control" value="<?php echo $rawmaterialname;?>">
+                                                </div>
+                                            </div>
+                                                   
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                <input type="hidden" name="id" value="<?php echo $id;?>">
+                                                <input type="submit" class="btn btn-primary btn-lg btn-success" name="submit" value="Update" />
+                                                </div>
+                                                
+                                            </div>
+
+                                            
+                                                
+                                        </form>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
@@ -79,6 +155,8 @@
         </div>
 
     </div>
+
+    <div id="snackbar"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -103,6 +181,29 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+    <script>
+function validateForm() {
+    var nname = document.getElementById("hf-rawmaterialname").value;
+    if (nname == "") {
+    snackbar("Raw Material name is required.");
+    return false;
+    }
+
+    return true;
+}
+
+function snackbar(message) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML =message;
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+</script>
 
 </body>
 

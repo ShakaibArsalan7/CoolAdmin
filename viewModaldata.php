@@ -96,6 +96,28 @@ if(!$conn->connect_error){
             echo "Supplier Bank Name : " . $row["bank_name"] . "<br>";
         }
         
+    }else if($form === 'nutrient'){
+        $sql = "select * from nutrition where Nutrition_id = $id";
+        $res = $conn->query($sql);
+        if($res->num_rows > 0 ){
+            $row = $res->fetch_assoc();
+            echo "Nutrient ID : " . $row["Nutrition_id"] . "<br>";
+            echo "Nutrient Name : " . $row["nutrition_name"] . "<br>";
+            echo "Unit of Usage : " . $row["unit_of_usage"] . "<br>";
+            echo "Added on : " . date('m/d/Y', (int)$row["adding_timestamp"]) . "<br>";
+        }
+        
+    }else if($form === 'rawmaterial'){
+        $sql = "select * from rawMaterial where raw_material_id = $id";
+        $res = $conn->query($sql);
+        if($res->num_rows > 0 ){
+            $row = $res->fetch_assoc();
+            echo "Raw Material ID : " . $row["raw_material_id"] . "<br>";
+            echo "Raw Material Name : " . $row["raw_material_name"] . "<br>";
+            echo "Unit of Usage : " . $row["unit_of_usage"] . "<br>";
+            echo "Added on : " . date('m/d/Y', (int)$row["adding_timestamp"]) . "<br>";
+        }
+        
     }
 
 

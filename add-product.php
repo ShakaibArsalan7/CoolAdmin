@@ -19,7 +19,7 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
     $res1 = $conn->query($sql2)->fetch_object()->brand_id;
 
 
-    echo "<script>alert('$res1');</script>";
+    //echo "<script>alert('$res1');</script>";
     foreach ($_POST as $name => $value) {
     if (strpos($name, 'packing') !== false) {
         $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
@@ -282,12 +282,19 @@ $(document).ready(function () {
             +'<option value="25">25 kg</option>'
             +'<option value="30">30 kg</option>'
             +'<option value="35">35 kg</option>'
-            +'<option value="37">37 kg</option>'
             +'<option value="40">40 kg</option>'
             +'<option value="45">45 kg</option>'
             +'<option value="50">50 kg</option>'
             +'<option value="55">55 kg</option>'
             +'<option value="60">60 kg</option>'
+            +'<option value="65">65 kg</option>'
+            +'<option value="70">70 kg</option>'
+            +'<option value="75">75 kg</option>'
+            +'<option value="80">80 kg</option>'
+            +'<option value="85">85 kg</option>'
+            +'<option value="90">90 kg</option>'
+            +'<option value="95">95 kg</option>'
+            +'<option value="100">100 kg</option>'
         +'</select>'
         +'</td>';
         

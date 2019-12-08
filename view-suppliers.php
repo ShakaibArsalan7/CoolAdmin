@@ -132,7 +132,7 @@ if($res->num_rows > 0 ){
 
                 <form action="" method="POST">
             <input type="hidden" name="id" value=' .$row["supplier_id"]. 
-                '> <button type="submit" name="delete" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                '> <button type="submit" name="delete"  value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
                 <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["supplier_id"] .'><i class="fas fa-eye"></i></button>
                 
@@ -201,6 +201,31 @@ if($res->num_rows > 0 ){
 			</div>
 			<!-- end modal large -->
 
+            			<!-- modal static -->
+			<!-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
+			 data-backdrop="static">
+				<div class="modal-dialog modal-sm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="staticModalLabel">Confirmation</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>
+								Are you sure You want to delete this record ?
+							</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary falsebutton" data-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-primary confirmbutton">Confirm</button>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<!-- end modal static -->
+
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
@@ -232,7 +257,7 @@ if($res->num_rows > 0 ){
     <script>
     $(document).ready(function() {
     $('#example').DataTable();
-    $(".mid").click(function(){ // Click to only happen on announce links
+    $('body').on('click','.mid',function(){ // Click to only happen on announce links
     //var a = document.getElement
     $("#idval").val($(this).data('id'));
     // debugger;
@@ -246,6 +271,7 @@ if($res->num_rows > 0 ){
 
      $('#largeModal').modal('show');
    });
+
 } );
     </script>
 
