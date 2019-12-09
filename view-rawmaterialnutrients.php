@@ -119,6 +119,10 @@ if(!$conn->connect_error){
                                     
                                 </div>
 
+                                <div id='updatenutri'>
+                                    
+                                </div>
+
 
                             </div>
                         </div>
@@ -138,6 +142,8 @@ if(!$conn->connect_error){
         </div>
 
     </div>
+
+    <div id="snackbar"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -184,14 +190,104 @@ $(document).ready(function () {
             $('#nutridata').load("rawmatnutridata.php", {
         fmodid : rawid
          });
+         $("#updatenutri").text("");
         }else{
             $("#nutridata").text("");
         }
         
     });
 
+    $('body').on('click','#editnutri',function(){
+         // Click to only happen on announce links
+    var rawmatid = parseInt($('#sid').val());
+
+    
+
+        $('#updatenutri').load("update-rawmatnutridata.php", {
+        fmodid : rawmatid,
+        fform : "updatenutri"
+         });
+        });
+
+
+
+         $('body').on('change','#nutrientID',function(){
+         // Click to only happen on announce links
+                var valnum = $('#nutrientID').val();
+                var quan = document.getElementById(valnum).textContent;
+
+                $('#nutrientquantity').val(quan);
+
+            });
+
+
+        $('body').on('click','#updatenutriinfo',function(){
+         // Click to only happen on announce links
+        var quantity = $('#nutrientquantity').val();
+
+        if(quantity == ""){
+            snackbar("Quantity Field is empty.");
+        }else{
+            var fl = validateQuantity(quantity);
+            if(!fl){
+            snackbar("Quantity field is not valid. only numeral allowed.");
+            return false;
+        }else{
+
+        
+        var rawmatid = parseInt($('#rawmaterialid').val());
+        var nutrientID = parseInt($('#nutrientID').val());
+
+        alert(rawmatid);
+        alert(nutrientID);
+        $("#updatenutri").text("");
+        $('#updatenutri').load("update-rawmatnutridata.php", {
+        fmodid : rawmatid,
+        nutrientID : nutrientID,
+        quantity: quantity,
+        fform : "updatevalue"
+         });
+
+         
+        if(rawmatid != "select"){
+            $('#nutridata').load("rawmatnutridata.php", {
+            fmodid : rawmatid
+         });
+        }
+
+        }
+        }
+
+
+    
+
+        // $('#updatenutri').load("update-rawmatnutridata.php", {
+        // fmodid : rawmatid,
+        // fform : "updatenutri"
+        //  });
+        });
+
+
+
 
 });
+
+function validateQuantity(s) {
+    var rgx = /^[0-9]*\.?[0-9]*$/;
+    return s.match(rgx);
+}
+
+function snackbar(message) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML =message;
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 </script>
 
 </body>

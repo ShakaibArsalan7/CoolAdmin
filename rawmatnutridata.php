@@ -54,14 +54,14 @@ if($res1->num_rows > 0 ){
 
             foreach($data1 as $per){
                 if($nutridata['Nutrition_id'] === $per['Nutrition_id']){
-                    echo  '<td>' . $per['percentageperkg'] . '</td>';
+                    echo  '<td id='.$nutridata['Nutrition_id'].  '>' . $per['percentageperkg'] . '</td>';
                     $found = true;
                 break;
                 }
             }
 
             if($found == false){
-                echo  '<td>0.0000</td>';
+                echo  '<td id='.$nutridata['Nutrition_id'].  '>0.0000</td>';
             }
             
 
@@ -72,10 +72,8 @@ if($res1->num_rows > 0 ){
 
         echo '<td style="text-align:center">
             
-        <form action="update-rawmatnutridata.php" method="POST">
         <input type="hidden" name="id" id="sid" value=' .$id. 
-            '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
-            </form>
+            '><button type="submit" name="edit" id="editnutri" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
             </td>';
         
         echo '</tr>';
