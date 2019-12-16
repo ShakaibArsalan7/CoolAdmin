@@ -118,6 +118,18 @@ if(!$conn->connect_error){
             echo "Added on : " . date('m/d/Y', (int)$row["adding_timestamp"]) . "<br>";
         }
         
+    }else if($form === 'expense'){
+        $sql = "select * from expenses where id = $id";
+        $res = $conn->query($sql);
+        if($res->num_rows > 0 ){
+            $row = $res->fetch_assoc();
+            echo "Expense ID : " . $row["id"] . "<br>";
+            echo "Expense Type : " . $row["type_id"] . "<br>";
+            echo "Amount : " . $row["amount"] . "<br>";
+            echo "Date : " . $row["date"] . "<br>";
+            echo "Comment : " . $row["comment"] . "<br>";
+        }
+        
     }
 
 

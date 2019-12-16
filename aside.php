@@ -161,20 +161,33 @@
                                 </a>
                                 <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                     <li>
-                                        <a href="add-laborattendance.php">Add Formula</a>
+                                        <a href="add-formula.php">Add Formula</a>
                                     </li>
                                     <li>
-                                        <a href="view-laborattendance.php">View Formulas</a>
+                                        <a href="view-formula.php">View Formulas</a>
                                     </li>
                                 </ul>
                             </li>
 
-                            
-                            
-                            <li>
-                                <a href="expense.php">
-                                    <i class="fas fa-clipboard-list"></i>Expenses</a>
+
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-clipboard-list"></i>Expenses
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                    <a href="add-expense.php">Add Expense</a>
+                                    </li>
+                                    <li>
+                                    <a href="view-expense.php">View Expense</a>
+                                    </li>
+                                    <li>
+                                    <a href="add-expensetype.php">Add Expense Type</a>
+                                    </li>
+                                </ul>
                             </li>
+
+
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
                                 <i class="fas fa-cubes"></i>Stocks

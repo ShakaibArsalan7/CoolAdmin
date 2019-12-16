@@ -2,7 +2,12 @@
 
 <?php
 require_once("connection.php");
-$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+
+
+$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = $id = "";
+
+
+
 $err = "";
 
 if(!$conn->connect_error){// if database connected.
@@ -18,22 +23,44 @@ if(!$conn->connect_error){// if database connected.
         $bankaccounttitle =  $_REQUEST['hf-bankaccounttitle'];
         $bankaccountnumber =  $_REQUEST['hf-bankaccountnumber'];
         $bankname =  $_REQUEST['hf-bankname'];
+        $id = $_REQUEST['id'];
         //$profilepic = $_REQUEST['hf-profilepic'];
 
         //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
-
+        
    
     //validation passed
-        $sql = "insert into supplier(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic',false);";
-        $res = $conn->query($sql);
+        
+        $sql7 = "update supplier set user_name = '$username' ,email_address='$emailaddress',work_phone='$workphone',mobile_number='$mobilenumber',work_address='$workaddress',home_address='$homeaddress',bank_account_title='$bankaccounttitle',bank_account_number='$bankaccountnumber',bank_name='$bankname',profile_pic='$profilepic' where supplier_id = $id";
+        
+        $res = $conn->query($sql7);
        if($res){
+           // updated , go to view page.
+           header("Location: ./view-suppliers.php");
            //echo "inserted succesfully";
-           $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+           #$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+       }else{
+           //echo "update unsuccesfull";
        }
+       
            
    }else{// if not submit, first visit to page or refresh
-    $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+    $id = (int)$_REQUEST['id'];
+    $sql2 = "select * from supplier where supplier_id = $id";
+    $res1 = $conn->query($sql2)->fetch_object();
+
+    $username  =  $res1->user_name;
+    $emailaddress =  $res1->email_address;
+    $workphone =  $res1->work_phone;
+    $mobilenumber =  $res1->mobile_number;
+    $workaddress =  $res1->work_address;
+    $homeaddress =  $res1->home_address;
+    $bankaccounttitle =  $res1->bank_account_title;
+    $bankaccountnumber =  $res1->bank_account_number;
+    $bankname =  $res1->bank_name;
+    $profilepic = $res1->profile_pic;
+
    }
 
 }
@@ -51,7 +78,7 @@ if(!$conn->connect_error){// if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Supplier</title>
+    <title>Update Supplier</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -103,99 +130,100 @@ if(!$conn->connect_error){// if database connected.
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Supplier</strong>
+                                        Update <strong>Supplier</strong> 
                                     </div>
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-username" class=" form-control-label">Supplier Name</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="text" id="hf-username" name="hf-username" placeholder="Enter Username..." class="form-control" value="<?php echo $username;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-emailaddress" class=" form-control-label">Email Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="email" id="hf-emailaddress" name="hf-emailaddress" placeholder="Enter Email Address..." class="form-control" value="<?php echo $emailaddress;?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-workphone" class=" form-control-label">Work Phone</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="tel" id="hf-workphone" name="hf-workphone" placeholder="Enter Work Phone..." class="form-control" value="<?php echo $workphone;?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-mobilenumber" class=" form-control-label">Mobile Number</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="tel" id="hf-mobilenumber" name="hf-mobilenumber" placeholder="Enter Mobile Number..." class="form-control" value="<?php echo $mobilenumber;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-workaddress" class=" form-control-label">Work Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="text" id="hf-workaddress" name="hf-workaddress" placeholder="Enter Work Address..." class="form-control" value="<?php echo $workaddress;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-2">
                                                     <label for="hf-homeaddress" class=" form-control-label">Home Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-5">
                                                     <input type="text" id="hf-homeaddress" name="hf-homeaddress" placeholder="Enter Home Address..." class="form-control" value="<?php echo $homeaddress;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                    <div class="col col-md-3">
+                                                    <div class="col col-md-2">
                                                         <label for="hf-bankaccounttitle" class=" form-control-label">Bank Account Title</label>
                                                     </div>
-                                                    <div class="col-12 col-md-6">
+                                                    <div class="col-12 col-md-5">
                                                         <input type="text" id="hf-bankaccounttitle" name="hf-bankaccounttitle" placeholder="Enter Bank Account Title..." class="form-control" value="<?php echo $bankaccounttitle;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                    <div class="col col-md-3">
+                                                    <div class="col col-md-2">
                                                         <label for="hf-bankaccountnumber" class=" form-control-label">Bank Account Number</label>
                                                     </div>
-                                                    <div class="col-12 col-md-6">
+                                                    <div class="col-12 col-md-5">
                                                         <input type="text" id="hf-bankaccountnumber" name="hf-bankaccountnumber" placeholder="Enter Bank Account Number..." class="form-control" value="<?php echo $bankaccountnumber;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                    <div class="col col-md-3">
+                                                    <div class="col col-md-2">
                                                         <label for="hf-bankname" class=" form-control-label">Bank Name</label>
                                                     </div>
-                                                    <div class="col-12 col-md-6">
+                                                    <div class="col-12 col-md-5">
                                                         <input type="text" id="hf-bankname" name="hf-bankname" placeholder="Enter Bank Name..." class="form-control" value="<?php echo $bankname;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                        <div class="col col-md-3">
+                                                        <div class="col col-md-2">
                                                                 <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
                                                         </div>
-                                                        <div class="col-12 col-md-6">
+                                                        <div class="col-12 col-md-5">
                                                                 <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
                                                         </div>
                                                     </div>
                                                    
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
+                                                <input type="hidden" name="id" value="<?php echo $id;?>">
+                                                <input type="submit" class="btn btn-primary btn-lg btn-success" name="submit" value="Update" />
                                                 </div>
                                                 
                                             </div>
@@ -204,7 +232,14 @@ if(!$conn->connect_error){// if database connected.
                                                 
                                         </form>
                                     </div>
-                                    
+                                    <!-- <div class="card-footer">
+                                        
+                                            <i class="fa fa-dot-circle-o"></i> Register
+                                        </button>
+                                        <button type="reset" class="btn btn-danger btn-sm">
+                                            <i class="fa fa-ban"></i> Cancel
+                                        </button>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

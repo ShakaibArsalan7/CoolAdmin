@@ -8,7 +8,7 @@ if(!$conn->connect_error){
     if(isset($_REQUEST['delete'])){
         $id = (int)$_POST['id'];
          
-        $sql = "update supplier set deleted = 1 where supplier_id = $id";
+        $sql = "update expenses set deleted = 1 where id = $id";
         
         $res = $conn->query($sql);
         if($res){
@@ -34,7 +34,7 @@ if(!$conn->connect_error){
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Supplier</title>
+    <title>View Expense</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -98,43 +98,37 @@ if(!$conn->connect_error){
 
 if(!$conn->connect_error){
 
-$sql = 'select * from supplier where deleted != 1';
+$sql = 'select * from expenses where deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
     echo '<table id="example" class="table table-striped table-bordered">';
         echo '<thead>';
         echo '<tr>';
-        echo '<th>Supplier Name</th>';
-        echo '<th>Email Address</th>';
-        echo '<th>Work Phone</th>';
-        echo '<th>Mobile Number</th>';
-        echo '<th>Work Address</th>';
-        echo '<th>Home Address</th>';
+        echo '<th>Date</th>';
+        echo '<th>Amount</th>';
+        echo '<th>Comment</th>';
         echo '<th>Actions</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         while($row = $res->fetch_assoc()){
-            $id = $row['supplier_id'];
+            $id = $row['id'];
             echo  '<tr>';
-            echo  '<td>' . $row['user_name'] . '</td>';
-            echo  '<td>' . $row['email_address'] . '</td>';
-            echo  '<td>' . $row['work_phone'] . '</td>';
-            echo  '<td>' . $row['mobile_number'] . '</td>';
-            echo  '<td>' . $row['work_address'] . '</td>';
-            echo  '<td>' . $row['home_address'] . '</td>';
+            echo  '<td>' . $row['date'] . '</td>';
+            echo  '<td>' . $row['amount'] . '</td>';
+            echo  '<td>' . $row['comment'] . '</td>';
             echo '<td style="text-align:center">
             
-            <form action="update-supplier.php" method="POST">
-            <input type="hidden" name="id" id="sid" value=' .$row["supplier_id"]. 
+            <form action="update-expense.php" method="POST">
+            <input type="hidden" name="id" id="sid" value=' .$row["id"]. 
                 '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
 
                 <form action="" method="POST">
-            <input type="hidden" name="id" value=' .$row["supplier_id"]. 
+            <input type="hidden" name="id" value=' .$row["id"]. 
                 '> <button type="submit" name="delete"  value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
-                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["supplier_id"] .'><i class="fas fa-eye"></i></button>
+                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["id"] .'><i class="fas fa-eye"></i></button>
                 
                 
                 
@@ -179,7 +173,7 @@ if($res->num_rows > 0 ){
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="largeModalLabel">Supplier Detail</h5>
+							<h5 class="modal-title" id="largeModalLabel">Expense Detail</h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -267,7 +261,7 @@ if($res->num_rows > 0 ){
 
     $('#parawithdata').load("viewModaldata.php", {
         fmodid : modid,
-        fform : "supplier"
+        fform : "expense"
     });
 
 

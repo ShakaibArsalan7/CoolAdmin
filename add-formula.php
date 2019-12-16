@@ -2,6 +2,7 @@
 
 <?php
 require_once("connection.php");
+
 $rawmaterialname  = "";
 $err = "";
 
@@ -12,27 +13,29 @@ if(!$conn->connect_error){// if database connected.
     
     if(isset($_REQUEST['submit'])){ // if submit button clicked
         
-        $rawmaterialname  =  $_REQUEST['hf-rawmaterialname'];
-
-
+        $brandid  =  $_REQUEST['brande'];
+        $formulaname  =  $_REQUEST['formulaname'];
+        $timestamp= time();
    
     //validation passed
-        $timestamp= time();
-        $sql = "insert into rawMaterial(raw_material_name,unit_of_purchase,unit_of_usage,adding_timestamp,deleted) values('$rawmaterialname','kg','kg','$timestamp',false);";
-        $res = $conn->query($sql);
+        
+        $sql = "insert into formulas(brand_id,formula_name,adding_timestamp,deleted) values($brandid,'$formulaname','$timestamp',false);";
+        //echo "<script>alert(\"$sql\")</script>";
+         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";
-           $rawmaterialname  = "";
-           $sql2 = "select raw_material_id from rawMaterial where adding_timestamp = '$timestamp' && deleted != 1";
-           $res1 = $conn->query($sql2)->fetch_object()->raw_material_id;
+           $sql2 = "select formula_id from formulas where adding_timestamp = '$timestamp' && deleted != 1";
+           $formulaid = $conn->query($sql2)->fetch_object()->formula_id;
        
        
            //echo "<script>alert('$res1');</script>";
            foreach ($_POST as $name => $value) {
-           if (strpos($name, 'nutrient') !== false) {
-                $qname =  "quantity" .  substr($name,8);
+           if (strpos($name, 'rawmaterial') !== false) {
+                $qname =  "rmweight" .  substr($name,11);
                 $qquan = $_POST[$qname];
-               $que = "insert into RawmaterialNutrients(raw_material_id,Nutrition_id,percentageperkg,deleted) values('$res1','$value',$qquan,false)";
+                $rawmatid = $_POST[$name];
+
+               $que = "insert into brandFormula(brand_id,formula_id,rawmaterial_id,weightinkg,deleted) values($brandid,$formulaid,$rawmatid,$qquan,false)";
                $res2 = $conn->query($que);
            }
         //echo "<script>alert('$name - $value')</script>";
@@ -41,23 +44,34 @@ if(!$conn->connect_error){// if database connected.
        }
            
    }else{// if not submit, first visit to page or refresh
-    
-    $rawmaterialname  = "";
+
+    $brandname  = "";
     $opt = "";
-    $sql =  "select Nutrition_id, nutrition_name from nutrition where deleted != 1";
+    $sql =  "select brand_id, brand_name from brand where deleted != 1";
     $res = $conn->query($sql);
     if($res->num_rows > 0 ){
     while($row = $res->fetch_assoc()){
         // echo "<script>alert('a')</script>";
-        $opt .='<option value=\"'. $row['Nutrition_id'] .'\">'. $row['Nutrition_id'] . ' - ' . $row['nutrition_name'] .'</option>';
+        $opt .='<option value='. $row['brand_id'] .'>'. $row['brand_id'] . ' - ' . $row['brand_name'] .'</option>';
 
-        
+        }
+    // echo "<script>alert('$opt')</script>";
+    }
+    
+    $rawmaterialname  = "";
+    $opt1 = "";
+    $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        $opt1 .='<option value='. $row['raw_material_id'] .'>'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
 
     }
     // echo "<script>alert('$opt')</script>";
-}
+    }
 
-   }
+}
 
 }
 
@@ -74,7 +88,7 @@ if(!$conn->connect_error){// if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Raw Material</title>
+    <title>Add Formula</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -118,7 +132,7 @@ if(!$conn->connect_error){// if database connected.
                         <?php include_once('accountdetail.php')?>
                         </div>
                     </div>
-            </header>
+                </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
@@ -126,27 +140,40 @@ if(!$conn->connect_error){// if database connected.
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Raw Material</strong>
+                                        Add <strong>Formula</strong>
                                     </div>
+
+
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-rawmaterialname" class=" form-control-label">Raw Material Name</label>
+                                                    <label for="brandname" class=" form-control-label">Brand</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-rawmaterialname" name="hf-rawmaterialname" placeholder="Enter Raw Material name..." class="form-control" value="<?php echo $rawmaterialname;?>">
+                                                <div class="col-12 col-md-5 brandname" >
+                                                <select class="form-control" id="brandedit" name="brande">
+                                                    <option value="select">select option</option><?php echo $opt;?>
+                                                </select>
                                                 </div>
-                                            </div>  
+                                            </div> 
 
-                                            
                                             <div class="row form-group">
-                                                <div class="col col-md-10">
+                                                <div class="col col-md-2">
+                                                    <label for="formulaname" class=" form-control-label">Formula Name</label>
+                                                </div>
+                                                <div class="col-12 col-md-5 formulaname">
+                                                <input type="text" id="formulaname" name="formulaname" placeholder="Enter Formula name..." class="form-control">
+                                                
+                                                </div>
+                                            </div> 
+
+                                            <div class="row form-group">
+                                                <div class="col col-md-8">
                                                     <div class="row">
-                                                        <div class="col-sm-8" id="tabletitle"><h2>Nutrient Details</h2></div>
+                                                        <div class="col-sm-8" id="tabletitle"><h2>Raw Material Details</h2></div>
                                                         <div class="col-sm-4">
                                                             <button type="button" class="btn btn-success add-new" id="addrow"><i class="fa fa-plus"></i> Add New</button>
                                                          </div>
@@ -154,10 +181,10 @@ if(!$conn->connect_error){// if database connected.
 
                                                     <table id="myTable" class=" table table-bordered order-list ">
                                                         <thead>
-                                                            <tr class="packtab">
+                                                            <tr class="rmtab">
                                                                 <td></td>
-                                                                <td>Nutrient Detail</td>
-                                                                <td>Quantity</td>
+                                                                <td>Raw Material Detail</td>
+                                                                <td>Weight in kg</td>
                                                                 <td style="text-align:center">Action</td>
                                                             </tr>
                                                         </thead>
@@ -170,15 +197,14 @@ if(!$conn->connect_error){// if database connected.
 
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
+                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Add Formula" />
                                                 </div>
                                                 
                                             </div>
-
-                                            
-                                                
                                         </form>
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -225,7 +251,6 @@ if(!$conn->connect_error){// if database connected.
     <script src="js/main.js"></script>
 
 
-
     <script>
 $(document).ready(function () {
 
@@ -240,8 +265,8 @@ $(document).ready(function () {
         cols += '<td><i class="fa fa-circle"></i></td>';
         // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
         cols += '<td>'+
-        '<select class="form-control pw" name="nutrient' + counter + '">'
-        +'<option value="select">select option</option><?php echo $opt;?>'
+        '<select class="form-control pw" name="rawmaterial' + counter + '">'
+        +'<option value="select">select option</option><?php echo $opt1;?>'
 
            
         
@@ -249,7 +274,7 @@ $(document).ready(function () {
 
         +'</select>'
         +'</td>';
-        cols+='<td><input type="text" class="form-control qw" id="hf-nutrientquantity' + counter +'" name="quantity' + counter + '" placeholder="Enter nutrient quantity..." ></td>';
+        cols+='<td><input type="text" class="form-control qw" id="rawmaterialweight' + counter +'" name="rmweight' + counter + '" placeholder="Enter Weight..." ></td>';
 
         // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
         cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
@@ -270,21 +295,25 @@ $(document).ready(function () {
 });
 </script>
 
-
-    <script>
+<script>
 function validateForm() {
-    var nname = document.getElementById("hf-rawmaterialname").value;
-    if (nname == "") {
-    snackbar("Raw material name is required.");
-    return false;
+    var bname = document.getElementById("brandedit").value;
+    if(bname == "select"){
+        snackbar("Please Select Brand name from drop down.");
+        return false;
     }
 
-
+    var fname = document.getElementById("formulaname").value;
+    if(fname == ""){
+        snackbar("Formula name is required.");
+        return false;
+    }
+    
 
     var els = document.getElementsByClassName('pw');
     //alert(els.length);
     if(els.length == 0){
-        snackbar("No Nutrient Detail is added.");
+        snackbar("No Raw Material Detail is added.");
         return false;
     }
     var packArray = [];
@@ -292,7 +321,7 @@ function validateForm() {
     for(var i = 0; i< els.length; i++){
         var el = els[i];
         if(el.value == "select"){
-        snackbar("One of the option field is empty.");
+        snackbar("One of the raw material name is not selected.");
         return false;
     }else{
         if(packArray.indexOf(el.value) > -1){
@@ -309,19 +338,37 @@ function validateForm() {
 
     var elq = document.getElementsByClassName('qw');
     // var reason =1;
+    var formulaSum = 0.0;
     for(var i = 0; i< elq.length; i++){
         var el = elq[i];
+        
+    
         if(el.value == ""){
-        snackbar("One of the quantity field is empty.");
+        snackbar("One of the weight field is empty.");
         return false;
     }
     else{
         var v=  validateQuantity(el.value);
         if(!v){
-            snackbar("One of the quantity field is not valid. only numeral allowed.");
+            snackbar("only numeral allowed in weight field.");
             return false;
         }
     }
+
+    formulaSum += parseFloat(el.value);
+
+
+
+    }
+
+    if(formulaSum != 100.0000){
+        if(formulaSum < 100){
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is less than 100");
+            return false;
+        }else{
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is greater than 100");
+            return false;
+        }
     }
 
 

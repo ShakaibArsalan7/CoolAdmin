@@ -36,6 +36,8 @@ if($res1->num_rows > 0 ){
 }
 }
 
+
+
 if($res1->num_rows > 0 ){
     echo '<table id="example" class="table table-striped table-bordered">';
         echo '<thead>';
@@ -79,6 +81,8 @@ if($res1->num_rows > 0 ){
         echo '</tr>';
         echo '</tbody>';
     echo '</table>';
+
+
 
 
 }else{

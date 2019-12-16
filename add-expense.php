@@ -6,25 +6,40 @@ require_once("connection.php");
 if(!$conn->connect_error){
 
 
+    if(isset($_REQUEST['submit'])){ // if submit button clicked
         
-    $rawmaterialname  = "";
+        $expensetype  =  $_REQUEST['expensetype'];
+        $date =  $_REQUEST['hf-date'];
+        $amount =  $_REQUEST['hf-amount'];
+        $comment =  $_REQUEST['hf-comment'];
+
+
+   
+    //validation passed
+        $sql = "insert into expenses(type_id,date,amount,comment,deleted) values($expensetype,'$date',$amount,'$comment',false);";
+        $res = $conn->query($sql);
+       if($res){
+           //echo "inserted succesfully";
+           
+       }
+           
+   }else{
+
     $opt = "";
-    $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
+    $sql =  "select id, expense_type from expenseType where deleted != 1";
     $res = $conn->query($sql);
     if($res->num_rows > 0 ){
     while($row = $res->fetch_assoc()){
         // echo "<script>alert('a')</script>";
-        $opt .='<option value=\"'. $row['raw_material_id'] .'\">'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
+        $opt .='<option value='. $row['id'] .'>'. $row['expense_type'] .'</option>';
 
-        
-
-    }
+        }
     // echo "<script>alert('$opt')</script>";
+    }
 }
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +52,7 @@ if(!$conn->connect_error){
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Raw Material Nutrient</title>
+    <title>Add Expense</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -47,8 +62,7 @@ if(!$conn->connect_error){
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-    <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    
+
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
@@ -60,8 +74,6 @@ if(!$conn->connect_error){
 
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
-
-
 
 </head>
 
@@ -84,49 +96,74 @@ if(!$conn->connect_error){
                         <?php include_once('accountdetail.php')?>
                         </div>
                     </div>
-                </header>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                        
-                    <div class="row">
+
+                        <div class="row">
                             <div class="col-md-12">
-                            <div class="card">
+                                <div class="card">
                                     <div class="card-header">
-                                        View <strong>Raw Material Nutrients</strong>
+                                        Add <strong>Expense</strong>
+                                        <!-- drop down -- date -- amount --submit button -->
                                     </div>
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="rawmaterialname" class=" form-control-label">Raw Material</label>
+                                                    <label for="hf-expensetype" class=" form-control-label">Expense Type</label>
                                                 </div>
-                                                <div class="col-12 col-md-5 rawmaterialname" >
+                                                <div class="col-12 col-md-4">
+                                                <select class="form-control" id="expensetype" name="expensetype">
+                                                    <option value="select">select option</option><?php echo $opt;?>
+                                                </select>
                                                 </div>
-                                            </div> 
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col col-md-2">
+                                                    <label for="hf-date" class=" form-control-label">Date</label>
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <input type="date" id="hf-date" name="hf-date" placeholder="Enter Date..." class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                                </div>
+                                            </div>
 
+                                            <div class="row form-group">
+                                                <div class="col col-md-2">
+                                                    <label for="hf-amount" class=" form-control-label">Amount</label>
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <input type="text" id="hf-amount" name="hf-amount" placeholder="Enter expense amount..." class="form-control" value="0">
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col col-md-2">
+                                                    <label for="hf-comment" class=" form-control-label">Comment</label>
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <textarea type="text" id="hf-comment" name="hf-comment" placeholder="any comments..." class="form-control" ></textarea>
+                                                </div>
+                                            </div>
+                                                   
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
+                                                </div>
+                                            </div>
 
                                             
                                                 
                                         </form>
                                     </div>
-                                </div>
-
-                                <div id='nutridata'>
                                     
                                 </div>
-
-                                <div id='updatenutri'>
-                                    
-                                </div>
-
-
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
@@ -150,11 +187,7 @@ if(!$conn->connect_error){
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-
-
-    <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
-    <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
-
+    <!-- Vendor JS       -->
     <script src="vendor/slick/slick.min.js">
     </script>
     <script src="vendor/wow/wow.min.js"></script>
@@ -172,107 +205,54 @@ if(!$conn->connect_error){
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
-
-    <script>
+    <!-- <script>
 $(document).ready(function () {
 
-   
-        var cols = "";
-
-        cols += '<select class="form-control" id="rawmat" name="rawmaterial">'
-        +'<option value="select">select option</option><?php echo $opt;?>'
-        +'</select>';
-        $(".rawmaterialname").append(cols);
-
-       
-
-    $('#rawmat').on('change', function() {
-        var rawid = this.value;
-        if(rawid != "select"){
-            $('#nutridata').load("rawmatnutridata.php", {
-        fmodid : rawid
+    $('body').on('click','#aen',function(){ // Click to only happen on announce links
+        $("#exptypeform").text("");
+        $('#exptypeform').load("expensesajax.php", {
+            fform : "aen"
          });
-         $("#updatenutri").text("");
-        }else{
-            $("#nutridata").text("");
-        }
-        
+
+   });
+
     });
-
-    $('body').on('click','#editnutri',function(){
-         // Click to only happen on announce links
-    var rawmatid = parseInt($('#sid').val());
-
+    </script> -->
+    <script>
+function validateForm() {
     
-
-        $('#updatenutri').load("update-rawmatnutridata.php", {
-        fmodid : rawmatid,
-        fform : "updatenutri"
-         });
-        });
-
-
-
-         $('body').on('change','#nutrientID',function(){
-         // Click to only happen on announce links
-                var valnum = $('#nutrientID').val();
-                var quan = document.getElementById(valnum).textContent;
-
-                $('#nutrientquantity').val(quan);
-
-            });
-
-
-        $('body').on('click','#updatenutriinfo',function(){
-         // Click to only happen on announce links
-        var quantity = $('#nutrientquantity').val();
-
-        if(quantity == ""){
-            snackbar("Quantity Field is empty.");
-        }else{
-            var fl = validateQuantity(quantity);
-            if(!fl){
-            snackbar("Quantity field is not valid. only numeral allowed.");
+    var expensetype = document.getElementById('expensetype').value;
+    var date = document.getElementById('hf-date').value;
+    var amount = document.getElementById('hf-amount').value;
+    var comment = document.getElementById('hf-comment').value;
+    alert(expensetype);
+    alert(date);
+    alert(amount);
+    alert(comment);
+    if(expensetype == "select"){
+        snackbar("Expense type is required");
+        return false;
+    }
+    if(date == ""){
+        snackbar("Expense date is required");
+        return false;
+    }
+    if(amount == '0' || amount == ''){
+        snackbar("Expense amount is required");
+        return false;
+    }
+    if(comment == ""){
+        snackbar("describe nature of expense in comment section");
+        return false;
+    }
+    var fl = validateQuantity(quantity);
+    if(!fl){
+            snackbar("Amount field is not valid. only numeral allowed.");
             return false;
-        }else{
-
-        
-        var rawmatid = parseInt($('#rawmaterialid').val());
-        var nutrientID = parseInt($('#nutrientID').val());
-
-        // alert(rawmatid);
-        // alert(nutrientID);
-        $("#updatenutri").text("");
-        $('#updatenutri').load("update-rawmatnutridata.php", {
-        fmodid : rawmatid,
-        nutrientID : nutrientID,
-        quantity: quantity,
-        fform : "updatevalue"
-         });
-
-         
-        if(rawmatid != "select"){
-            $('#nutridata').load("rawmatnutridata.php", {
-            fmodid : rawmatid
-         });
         }
 
-        }
-        }
-
-
-    
-
-        // $('#updatenutri').load("update-rawmatnutridata.php", {
-        // fmodid : rawmatid,
-        // fform : "updatenutri"
-        //  });
-        });
-
-
-
-
-});
+    return false;
+}
 
 function validateQuantity(s) {
     var rgx = /^[0-9]*\.?[0-9]*$/;

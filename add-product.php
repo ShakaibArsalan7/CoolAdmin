@@ -125,10 +125,10 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-brandname" class=" form-control-label">Brand Name</label>
                                                 </div>
-                                                <div class="col-12 col-md-3">
+                                                <div class="col-12 col-md-5">
                                                     <input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Brand name..." class="form-control">
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
         
 
                                             <div class="row form-group">
-                                                <div class="col col-md-5">
+                                                <div class="col col-md-8">
                                                     <div class="row">
                                                         <div class="col-sm-8" id="tabletitle"><h2>Packing Details</h2></div>
                                                         <div class="col-sm-4">

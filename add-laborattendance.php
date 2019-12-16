@@ -1,4 +1,79 @@
 <?php require_once('session.php') ?>
+
+<?php
+require_once("connection.php");
+
+$rawmaterialname  = "";
+$err = "";
+
+
+ 
+
+if(!$conn->connect_error){// if database connected.
+    
+    if(isset($_REQUEST['submit'])){ // if submit button clicked
+        
+        $rawmaterialname  =  $_REQUEST['hf-rawmaterialname'];
+
+
+   
+    //validation passed
+        $timestamp= time();
+        $sql = "insert into rawMaterial(raw_material_name,unit_of_purchase,unit_of_usage,adding_timestamp,deleted) values('$rawmaterialname','kg','kg','$timestamp',false);";
+        $res = $conn->query($sql);
+       if($res){
+           //echo "inserted succesfully";
+           $rawmaterialname  = "";
+           $sql2 = "select raw_material_id from rawMaterial where adding_timestamp = '$timestamp' && deleted != 1";
+           $res1 = $conn->query($sql2)->fetch_object()->raw_material_id;
+       
+       
+           //echo "<script>alert('$res1');</script>";
+           foreach ($_POST as $name => $value) {
+           if (strpos($name, 'nutrient') !== false) {
+                $qname =  "quantity" .  substr($name,8);
+                $qquan = $_POST[$qname];
+               $que = "insert into RawmaterialNutrients(raw_material_id,Nutrition_id,percentageperkg,deleted) values('$res1','$value',$qquan,false)";
+               $res2 = $conn->query($que);
+           }
+        //echo "<script>alert('$name - $value')</script>";
+
+        }
+       }
+           
+   }else{// if not submit, first visit to page or refresh
+
+    $brandname  = "";
+    $opt = "";
+    $sql =  "select brand_id, brand_name from brand where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        $opt .='<option value='. $row['brand_id'] .'>'. $row['brand_id'] . ' - ' . $row['brand_name'] .'</option>';
+
+        }
+    // echo "<script>alert('$opt')</script>";
+    }
+    
+    $rawmaterialname  = "";
+    $opt1 = "";
+    $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        $opt1 .='<option value='. $row['raw_material_id'] .'>'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
+
+    }
+    // echo "<script>alert('$opt')</script>";
+    }
+
+}
+
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -68,118 +143,40 @@
                                     <div class="card-header">
                                         Add <strong>Labor Attendance</strong>
                                     </div>
+
+
                                     <div class="card-body card-block">
-                                        <form action="" method="post" class="form-horizontal">
+                                        <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-username" class=" form-control-label">User Name</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="hf-username" name="hf-username" placeholder="Enter Username..." class="form-control">
-                                                </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-userid" class=" form-control-label">User ID</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="hf-userid" name="hf-userid" placeholder="Enter User ID..." class="form-control">
-                                                </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-role" class=" form-control-label">Role</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                        <select name="hf-role" id="select" class="form-control">
-                                                                <option value="0">Please select</option>
-                                                                <option value="1">Role #1</option>
-                                                                <option value="2">Role #2</option>
-                                                                <option value="3">Role #3</option>
-                                                            </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-workphone" class=" form-control-label">Work Phone</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="tel" id="hf-workphone" name="hf-workphone" placeholder="Enter Work Phone..." class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-mobilephone" class=" form-control-label">Mobile Phone</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="tel" id="hf-mobilephone" name="hf-mobilephone" placeholder="Enter Mobile Phone..." class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-workaddress" class=" form-control-label">Work Address</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="hf-workaddress" name="hf-workaddress" placeholder="Enter Work Address..." class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-homeaddress" class=" form-control-label">Home Address</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="hf-homeaddress" name="hf-homeaddress" placeholder="Enter Home Address..." class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                    <div class="col col-md-3">
-                                                        <label for="hf-bankaccount" class=" form-control-label">Bank Account</label>
+                                                <div class="col col-md-8">
+                                                    <div class="row">
+                                                        <div class="col-sm-8" id="tabletitle"><h2>Attendance Details</h2></div>
                                                     </div>
-                                                    <div class="col-12 col-md-9">
-                                                        <input type="text" id="hf-bankaccount" name="hf-bankaccount" placeholder="Enter Bank Account..." class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                        <div class="col col-md-3">
-                                                                <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
-                                                        </div>
-                                                        <div class="col-12 col-md-9">
-                                                                <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
-                                                        </div>
-                                                    </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <label for="hf-createpassword" class=" form-control-label">Create Password</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="password" id="hf-createpassword" name="hf-createpassword" placeholder="Enter Password.." class="form-control">
+
+                                                    <table id="myTable" class=" table table-bordered order-list ">
+                                                        <thead>
+                                                            <tr class="rmtab">
+                                                                <td>Employee name</td>
+                                                                <td>Attendance Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                    <label for="hf-recreatepassword" class=" form-control-label">Re-Enter Password</label>
+                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Add Formula" />
                                                 </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="password" id="hf-recreatepassword" name="hf-recreatepassword" placeholder="Re-Enter Password.." class="form-control">
-                                                </div>
+                                                
                                             </div>
-
-                                            
-
                                         </form>
                                     </div>
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-dot-circle-o"></i> Submit
-                                        </button>
-                                        <button type="reset" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-ban"></i> Reset
-                                        </button>
-                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -198,6 +195,8 @@
         </div>
 
     </div>
+
+    <div id="snackbar"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -222,6 +221,149 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
+
+    <script>
+$(document).ready(function () {
+
+     
+    var counter = 0;
+
+    $("#addrow").on("click", function () {
+        // alert("a");
+        var newRow = $("<tr class='packtab'>");
+        var cols = "";
+
+        cols += '<td><i class="fa fa-circle"></i></td>';
+        // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
+        cols += '<td>'+
+        '<select class="form-control pw" name="rawmaterial' + counter + '">'
+        +'<option value="select">select option</option><?php echo $opt1;?>'
+
+           
+        
+
+
+        +'</select>'
+        +'</td>';
+        cols+='<td><input type="text" class="form-control qw" id="rawmaterialweight' + counter +'" name="rmweight' + counter + '" placeholder="Enter Weight..." ></td>';
+
+        // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
+        
+        newRow.append(cols);
+        $("table.order-list").append(newRow);
+        counter++;
+    });
+
+
+
+    $("table.order-list").on("click", ".ibtnDel", function (event) {
+        $(this).closest("tr").remove();
+        counter -= 1;
+    });
+
+
+});
+</script>
+
+<script>
+function validateForm() {
+    var bname = document.getElementById("brandedit").value;
+    if(bname == "select"){
+        snackbar("Please Select Brand name from drop down.");
+        return false;
+    }
+
+    var fname = document.getElementById("formulaname").value;
+    if(fname == ""){
+        snackbar("Formula name is required.");
+        return false;
+    }
+    
+
+    var els = document.getElementsByClassName('pw');
+    //alert(els.length);
+    if(els.length == 0){
+        snackbar("No Raw Material Detail is added.");
+        return false;
+    }
+    var packArray = [];
+    // var reason =1;
+    for(var i = 0; i< els.length; i++){
+        var el = els[i];
+        if(el.value == "select"){
+        snackbar("One of the raw material name is not selected.");
+        return false;
+    }else{
+        if(packArray.indexOf(el.value) > -1){
+            //in the array
+            snackbar(el.options[el.selectedIndex].text +" option is selected twice.");
+            return false;
+        }else{
+            packArray.push(el.value);
+            // console.log();
+        }
+        
+    }
+    }
+
+    var elq = document.getElementsByClassName('qw');
+    // var reason =1;
+    var formulaSum = 0.0;
+    for(var i = 0; i< elq.length; i++){
+        var el = elq[i];
+        
+    
+        if(el.value == ""){
+        snackbar("One of the weight field is empty.");
+        return false;
+    }
+    else{
+        var v=  validateQuantity(el.value);
+        if(!v){
+            snackbar("only numeral allowed in weight field.");
+            return false;
+        }
+    }
+
+    formulaSum += parseFloat(el.value);
+
+
+
+    }
+
+    if(formulaSum != 100.0000){
+        if(formulaSum < 100){
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is less than 100");
+
+        }else{
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is greater than 100");
+
+        }
+    }
+
+
+    return false;
+}
+
+function validateQuantity(s) {
+    var rgx = /^[0-9]*\.?[0-9]*$/;
+    return s.match(rgx);
+}
+
+function snackbar(message) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML =message;
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+</script>
 
 </body>
 

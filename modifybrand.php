@@ -15,9 +15,11 @@ $form = $_POST['fform'];
 
 if($form === "one"){
     echo "<input type='hidden' name='id' id='brandid' value=$id >";
+    echo "<div>";
     echo '<button type="button" style="margin:15px 5px" class="btn btn-info" id="cbn">Change Brand Name</button>';
     echo '<button type="button" style="margin:15px 5px" class="btn btn-success" id="apo">Add Packing Option</button>';
     echo '<button type="button" style="margin:15px 5px" class="btn btn-danger" id="rpo">Remove Packing Option</button>';
+    echo "</div>";
 
 }else if($form === "cbn"){
     echo "<input type='hidden' name='id1' id='brandid1' value=$id >";
