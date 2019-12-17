@@ -101,15 +101,13 @@ if(!$conn->connect_error){
 $sql = 'select * from supplier where deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
+    echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
         echo '<thead>';
         echo '<tr>';
         echo '<th>Supplier Name</th>';
         echo '<th>Email Address</th>';
         echo '<th>Work Phone</th>';
-        echo '<th>Mobile Number</th>';
         echo '<th>Work Address</th>';
-        echo '<th>Home Address</th>';
         echo '<th>Actions</th>';
         echo '</tr>';
         echo '</thead>';
@@ -120,11 +118,8 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['user_name'] . '</td>';
             echo  '<td>' . $row['email_address'] . '</td>';
             echo  '<td>' . $row['work_phone'] . '</td>';
-            echo  '<td>' . $row['mobile_number'] . '</td>';
             echo  '<td>' . $row['work_address'] . '</td>';
-            echo  '<td>' . $row['home_address'] . '</td>';
             echo '<td style="text-align:center">
-            
             <form action="update-supplier.php" method="POST">
             <input type="hidden" name="id" id="sid" value=' .$row["supplier_id"]. 
                 '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
@@ -200,31 +195,6 @@ if($res->num_rows > 0 ){
 				</div>
 			</div>
 			<!-- end modal large -->
-
-            			<!-- modal static -->
-			<!-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
-			 data-backdrop="static">
-				<div class="modal-dialog modal-sm" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticModalLabel">Confirmation</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<p>
-								Are you sure You want to delete this record ?
-							</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary falsebutton" data-dismiss="modal">Cancel</button>
-							<button type="button" class="btn btn-primary confirmbutton">Confirm</button>
-						</div>
-					</div>
-				</div>
-			</div> -->
-			<!-- end modal static -->
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>

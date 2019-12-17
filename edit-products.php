@@ -103,18 +103,18 @@ if(!$conn->connect_error){
                                                 <div class="col col-md-3">
                                                     <label for="brandname" class=" form-control-label">Brand</label>
                                                 </div>
-                                                <div class="col-12 col-md-7 brandname" >
+                                                <div class="col col-md-8 brandname" >
 
                                                 </div>
                                                 
                                             </div> 
 
-                                            <div class="row form-group" id="btns" style="width:50%;margin:auto">
+                                            <div class="row form-group" id="btns" style="width:100%;margin:15px">
                                             
                                                 <!-- three buttons -->
                                             </div> 
 
-                                            <div class="row form-group" id="functions" style="width:50%;margin:auto">
+                                            <div class="row form-group" id="functions" style="width:100%;margin:15px">
                                             
                                                 
                                             </div> 

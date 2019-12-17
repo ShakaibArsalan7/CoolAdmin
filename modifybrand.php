@@ -15,28 +15,25 @@ $form = $_POST['fform'];
 
 if($form === "one"){
     echo "<input type='hidden' name='id' id='brandid' value=$id >";
-    echo "<div>";
     echo '<button type="button" style="margin:15px 5px" class="btn btn-info" id="cbn">Change Brand Name</button>';
     echo '<button type="button" style="margin:15px 5px" class="btn btn-success" id="apo">Add Packing Option</button>';
     echo '<button type="button" style="margin:15px 5px" class="btn btn-danger" id="rpo">Remove Packing Option</button>';
-    echo "</div>";
 
 }else if($form === "cbn"){
     echo "<input type='hidden' name='id1' id='brandid1' value=$id >";
 
-    echo '<div class="row form-group" style="margin:15px">';
-    echo '<div class="col col-md-4">';
+    echo '<div class="col col-md-2">';
     echo '<label for="hf-brandname" class=" form-control-label">Brand Name</label>';
     echo '</div>';
-    echo '<div class="col-12 col-md-6">';
+
+    echo '<div class="col col-md-4">';
     echo '<input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Brand name..." class="form-control">';
     echo '</div>';
-    echo '</div>';
-    echo '<div class="row form-group">';
+
+
     echo '<div class="col col-md-2">';
-    echo '<button type="button" style="margin:5px" class="btn btn-info" id="changebname">Change</button>';
+    echo '<button type="button" class="btn btn-info form-control" id="changebname">Change</button>';
     echo '</div>';
-    echo '</div> ';
 
 
 }else if($form === "apo"){
@@ -81,25 +78,19 @@ if($form === "one"){
     // packing option drop down 
     // add option button --> request to modify brand --> check if option already there then not add else add.
 
-    echo '<div class="row form-group" style="margin:15px">';
     echo '<div class="col col-md-3">';
-
     echo '<label for="packingSizes" class=" form-control-label">Packing Options</label>';
-
     echo '</div>';
-    echo '<div class="col-12 col-md-7">';
 
+    echo '<div class="col col-md-3">';
     echo '<select class="form-control" id="packingopt" name="packingopt">';
     echo "<option value='select'>select option</option>$opt";
     echo '</select>';
+    echo '</div>';
 
-    echo '</div>';
-    echo '</div>';
-    echo '<div class="row form-group">';
     echo '<div class="col col-md-2">';
-    echo '<button type="button" style="margin:5px" class="btn btn-success" id="addPackingSize">Add Size</button>';
+    echo '<button type="button" class="btn btn-success" id="addPackingSize">Add Size</button>';
     echo '</div>';
-    echo '</div> ';
     
 }else if($form === "rpo"){
 
@@ -122,25 +113,19 @@ if($form === "one"){
     // packing option drop down 
     // add option button --> request to modify brand --> check if option already there then not add else add.
 
-    echo '<div class="row form-group" style="margin:15px">';
     echo '<div class="col col-md-3">';
-
     echo '<label for="packingSizes" class=" form-control-label">Packing Options</label>';
-
     echo '</div>';
-    echo '<div class="col-12 col-md-7">';
 
+    echo '<div class="col col-md-4">';
     echo '<select class="form-control" id="packingopt" name="packingopt">';
     echo "<option value='select'>select option</option>$opt";
     echo '</select>';
+    echo '</div>';
 
-    echo '</div>';
-    echo '</div>';
-    echo '<div class="row form-group">';
     echo '<div class="col col-md-2">';
-    echo '<button type="button" style="margin:5px" class="btn btn-danger" id="remPackingSize">Remove Size</button>';
+    echo '<button type="button" style="margin:5px" class="btn btn-success" id="addPackingSize">Add Size</button>';
     echo '</div>';
-    echo '</div> ';
     
     
 
@@ -154,19 +139,20 @@ if($form === "one"){
        if($res){
         echo "<input type='hidden' name='id1' id='brandid1' value=$id >";
 
-        echo '<div class="row form-group" style="margin:15px">';
+
         echo '<div class="col col-md-4">';
         echo '<label for="hf-brandname" class=" form-control-label">Brand Name</label>';
         echo '</div>';
-        echo '<div class="col-12 col-md-6">';
+
+        echo '<div class="col col-md-6">';
         echo '<input type="text" id="hf-brandname" name="hf-brandname" placeholder="Enter Brand name..." class="form-control">';
         echo '</div>';
-        echo '</div>';
-        echo '<div class="row form-group">';
+
+
         echo '<div class="col col-md-2">';
-        echo '<button type="button" style="margin:5px" class="btn btn-info" id="changebname">Change</button>';
+        echo '<button type="button" class="btn btn-info form-control" id="changebname">Change</button>';
         echo '</div>';
-        echo '</div> ';
+
 
         echo "<script>snackbar('Name Changed Succesfully')</script>";
        }else{
@@ -228,29 +214,24 @@ if($form === "one"){
         
     
         echo "<input type='hidden' name='id2' id='brandid2' value=$id >";
-    
+
+
         // packing option drop down 
         // add option button --> request to modify brand --> check if option already there then not add else add.
     
-        echo '<div class="row form-group" style="margin:15px">';
         echo '<div class="col col-md-3">';
-    
         echo '<label for="packingSizes" class=" form-control-label">Packing Options</label>';
-    
         echo '</div>';
-        echo '<div class="col-12 col-md-7">';
     
+        echo '<div class="col col-md-3">';
         echo '<select class="form-control" id="packingopt" name="packingopt">';
         echo "<option value='select'>select option</option>$opt";
         echo '</select>';
+        echo '</div>';
     
-        echo '</div>';
-        echo '</div>';
-        echo '<div class="row form-group">';
         echo '<div class="col col-md-2">';
-        echo '<button type="button" style="margin:5px" class="btn btn-success" id="addPackingSize">Add Size</button>';
+        echo '<button type="button" class="btn btn-success" id="addPackingSize">Add Size</button>';
         echo '</div>';
-        echo '</div> ';
 
         echo "<script>snackbar('Size Added Succesfully')</script>";
        }else{
@@ -294,25 +275,19 @@ if($form === "one"){
         // packing option drop down 
         // add option button --> request to modify brand --> check if option already there then not add else add.
     
-        echo '<div class="row form-group" style="margin:15px">';
         echo '<div class="col col-md-3">';
-    
         echo '<label for="packingSizes" class=" form-control-label">Packing Options</label>';
-    
         echo '</div>';
-        echo '<div class="col-12 col-md-7">';
-    
+
+        echo '<div class="col col-md-4">';
         echo '<select class="form-control" id="packingopt" name="packingopt">';
         echo "<option value='select'>select option</option>$opt";
         echo '</select>';
-    
         echo '</div>';
-        echo '</div>';
-        echo '<div class="row form-group">';
+
         echo '<div class="col col-md-2">';
         echo '<button type="button" style="margin:5px" class="btn btn-success" id="addPackingSize">Add Size</button>';
         echo '</div>';
-        echo '</div> ';
 
         echo "<script>snackbar('Size Removed Succesfully')</script>";
        }else{

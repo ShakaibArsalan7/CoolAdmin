@@ -98,15 +98,13 @@ if(!$conn->connect_error){
 $sql = 'select * from client where deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
+    echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
         echo '<thead>';
         echo '<tr>';
         echo '<th>Client Name</th>';
         echo '<th>Email Address</th>';
         echo '<th>Work Phone</th>';
-        echo '<th>Mobile Number</th>';
         echo '<th>Work Address</th>';
-        echo '<th>Home Address</th>';
         echo '<th>Actions</th>';
         echo '</tr>';
         echo '</thead>';
@@ -116,9 +114,7 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['user_name'] . '</td>';
             echo  '<td>' . $row['email_address'] . '</td>';
             echo  '<td>' . $row['work_phone'] . '</td>';
-            echo  '<td>' . $row['mobile_number'] . '</td>';
             echo  '<td>' . $row['work_address'] . '</td>';
-            echo  '<td>' . $row['home_address'] . '</td>';
             echo '<td style="text-align:center">
             
             <form action="update-client.php" method="POST">
@@ -222,7 +218,9 @@ if($res->num_rows > 0 ){
 
     <script>
     $(document).ready(function() {
-    $('#example').DataTable();
+    $('#example').DataTable({
+        "scrollX": true
+    });
     $('body').on('click','.mid',function(){ // Click to only happen on announce links
     //var a = document.getElement
     $("#idval").val($(this).data('id'));

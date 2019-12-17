@@ -101,7 +101,7 @@ if(!$conn->connect_error){
 $sql = 'select * from nutrition where deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
+    echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
         echo '<thead>';
         echo '<tr>';
         echo '<th>Nutrient ID</th>';

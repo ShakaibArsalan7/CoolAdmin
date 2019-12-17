@@ -39,7 +39,7 @@ if($res1->num_rows > 0 ){
 
 
 if($res1->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
+    echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
         echo '<thead>';
         echo '<tr>';
         echo '<th>Raw material</th>';

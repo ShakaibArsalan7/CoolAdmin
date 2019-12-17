@@ -80,7 +80,7 @@ if(!$conn->connect_error){
 $sql = 'select e.user_name,att.typeName,la.* from laborAttendance la inner join employee e on e.employee_id = la.employee_id inner join AttenadnceType att on la.attendance_description = att.typeID where la.deleted != 1';
 $res = $conn->query($sql);
 if($res->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
+    echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
         echo '<thead>';
         echo '<tr>';
         echo '<th>Date</th>';

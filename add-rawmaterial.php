@@ -137,7 +137,7 @@ if(!$conn->connect_error){// if database connected.
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-rawmaterialname" class=" form-control-label">Raw Material Name</label>
                                                 </div>
                                                 <div class="col-12 col-md-5">

@@ -193,7 +193,7 @@ if(!$conn->connect_error){// if database connected.
                                                         </div>
                                                     </div>
                                                    
-                                            <div class="row form-group">
+                                            <div class="row form-group" >
                                                 <div class="col col-md-3">
                                                 <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
                                                 </div>

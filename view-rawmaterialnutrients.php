@@ -191,6 +191,10 @@ $(document).ready(function () {
         if(rawid != "select"){
             $('#nutridata').load("rawmatnutridata.php", {
         fmodid : rawid
+         },function(){
+            $('#example').DataTable({
+        "scrollX": true
+    } );
          });
          $("#updatenutri").text("");
         }else{

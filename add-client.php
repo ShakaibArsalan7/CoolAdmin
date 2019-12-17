@@ -105,7 +105,7 @@ if(!$conn->connect_error){// if database connected.
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
                                         Add <strong>Client</strong>
@@ -113,84 +113,84 @@ if(!$conn->connect_error){// if database connected.
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-username" class=" form-control-label">Client Name</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="text" id="hf-username" name="hf-username" placeholder="Enter Username..." class="form-control" value="<?php echo $username;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-emailaddress" class=" form-control-label">Email Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="email" id="hf-emailaddress" name="hf-emailaddress" placeholder="Enter Email Address..." class="form-control" value="<?php echo $emailaddress;?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-workphone" class=" form-control-label">Work Phone</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="tel" id="hf-workphone" name="hf-workphone" placeholder="Enter Work Phone..." class="form-control" value="<?php echo $workphone;?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-mobilenumber" class=" form-control-label">Mobile Number</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="tel" id="hf-mobilenumber" name="hf-mobilenumber" placeholder="Enter Mobile Number..." class="form-control" value="<?php echo $mobilenumber;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-workaddress" class=" form-control-label">Work Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="text" id="hf-workaddress" name="hf-workaddress" placeholder="Enter Work Address..." class="form-control" value="<?php echo $workaddress;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <label for="hf-homeaddress" class=" form-control-label">Home Address</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
+                                                <div class="col-12 col-md-7">
                                                     <input type="text" id="hf-homeaddress" name="hf-homeaddress" placeholder="Enter Home Address..." class="form-control" value="<?php echo $homeaddress;?>">
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                    <div class="col col-md-2">
+                                                    <div class="col col-md-3">
                                                         <label for="hf-bankaccounttitle" class=" form-control-label">Bank Account Title</label>
                                                     </div>
-                                                    <div class="col-12 col-md-5">
+                                                    <div class="col-12 col-md-7">
                                                         <input type="text" id="hf-bankaccounttitle" name="hf-bankaccounttitle" placeholder="Enter Bank Account Title..." class="form-control" value="<?php echo $bankaccounttitle;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                    <div class="col col-md-2">
+                                                    <div class="col col-md-3">
                                                         <label for="hf-bankaccountnumber" class=" form-control-label">Bank Account Number</label>
                                                     </div>
-                                                    <div class="col-12 col-md-5">
+                                                    <div class="col-12 col-md-7">
                                                         <input type="text" id="hf-bankaccountnumber" name="hf-bankaccountnumber" placeholder="Enter Bank Account Number..." class="form-control" value="<?php echo $bankaccountnumber;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                    <div class="col col-md-2">
+                                                    <div class="col col-md-3">
                                                         <label for="hf-bankname" class=" form-control-label">Bank Name</label>
                                                     </div>
-                                                    <div class="col-12 col-md-5">
+                                                    <div class="col-12 col-md-7">
                                                         <input type="text" id="hf-bankname" name="hf-bankname" placeholder="Enter Bank Name..." class="form-control" value="<?php echo $bankname;?>">
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                        <div class="col col-md-2">
+                                                        <div class="col col-md-3">
                                                                 <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
                                                         </div>
-                                                        <div class="col-12 col-md-5">
+                                                        <div class="col-12 col-md-7">
                                                                 <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
                                                         </div>
                                                     </div>

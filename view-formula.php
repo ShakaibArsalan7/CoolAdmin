@@ -41,6 +41,7 @@ if(!$conn->connect_error){
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+    <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
@@ -85,7 +86,6 @@ if(!$conn->connect_error){
                         
                     <div class="row">
                             <div class="col-md-12">
-                            <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
                                                     <label for="brandname" class=" form-control-label">Brand Name</label>
@@ -101,7 +101,7 @@ if(!$conn->connect_error){
                                                
                                             </div> 
 
-                                            <div class="row form-group" id="rawmaterialdetail">
+                                            <div id="rawmaterialdetail">
                                                 
                                             </div>
 
@@ -111,7 +111,6 @@ if(!$conn->connect_error){
                                                 </div>
                                                 
                                             </div> -->
-                                        </form>
                             </div>
                     </div>
 
@@ -138,6 +137,9 @@ if(!$conn->connect_error){
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
     <!-- Vendor JS       -->
+
+    <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
+    <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
     <script src="vendor/slick/slick.min.js">
     </script>
     <script src="vendor/wow/wow.min.js"></script>
@@ -189,6 +191,10 @@ $(document).ready(function () {
                 bmodid :  brandid,
                 fmodid : formulaid,
                 fform : "rawmatlist"
+            },function(){
+                $('#example').DataTable({
+                    "scrollX": true
+                });
             });
         }else{
             $("#rawmaterialdetail").text("");

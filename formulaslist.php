@@ -161,7 +161,7 @@ if(!$conn->connect_error){
 
 
         if(count($brandformulasdata) > 0 ){
-                echo '<table id="example" class="table table-striped table-bordered">';
+                echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
                 echo '<thead>';
                 echo '<tr>';
                 echo '<th>Sr.</th>';

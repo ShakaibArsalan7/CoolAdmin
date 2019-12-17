@@ -115,10 +115,10 @@ if(!$conn->connect_error){// if database connected.
                                                     </div>
 
                                                                 <div class="row form-group">
-                                                                    <div class="col col-md-2">
+                                                                    <div class="col col-md-3">
                                                                         <label for="employeeid" class=" form-control-label">Employee ID</label>
                                                                     </div>
-                                                                    <div class="col-12 col-md-4">
+                                                                    <div class="col col-md-5">
                                                                         <select class="form-control" name="employeeid" id="employeeid">
                                                                             <option value="select">select option</option><?php echo $opt;?>
                                                                         </select>
@@ -126,19 +126,19 @@ if(!$conn->connect_error){// if database connected.
                                                                 </div>
 
                                                                 <div class="row form-group">
-                                                                    <div class="col col-md-2">
+                                                                    <div class="col col-md-3">
                                                                         <label for="hf-date" class=" form-control-label">Date</label>
                                                                     </div>
-                                                                    <div class="col-12 col-md-4">
+                                                                    <div class="col col-md-5">
                                                                         <input type="date" id="hf-date" name="hf-date" placeholder="Enter Date..." class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row form-group">
-                                                                    <div class="col col-md-2">
+                                                                    <div class="col col-md-3">
                                                                         <label for="hf-attendancestatus" class=" form-control-label">Attendance Status</label>
                                                                     </div>
-                                                                    <div class="col-12 col-md-4">
+                                                                    <div class="col col-md-5">
                                                                         <select class="form-control" name="attendancestatus" id="attendancestatus">
                                                                             <option value="select">select option</option><?php echo $opt1;?>
                                                                         </select>

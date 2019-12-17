@@ -110,7 +110,7 @@ $expenses = $row4['c4'];
                                             </div>
                                             <div class="text">
                                                 <h2><?php echo "$activeEmployees";?></h2>
-                                                <span>Active Employees</span>
+                                                <span>Employees</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
@@ -163,8 +163,8 @@ $expenses = $row4['c4'];
                                                 <i class="zmdi zmdi-money"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$expenses";?></h2>
-                                                <span>Expenses(this month)</span>
+                                                <h2 style="font-size:2rem;"><?php echo "$expenses";?></h2>
+                                                <span>Expenses<br>(this month)</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
