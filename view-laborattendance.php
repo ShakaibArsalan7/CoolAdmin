@@ -1,4 +1,7 @@
-<?php require_once('session.php') ?>
+<?php require_once('session.php');
+        require_once("connection.php"); 
+        
+        ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +25,8 @@
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+    <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
@@ -64,6 +69,47 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         
+                    <div class="row">
+                            <div class="col-md-12">
+
+<?php 
+
+
+if(!$conn->connect_error){
+
+$sql = 'select e.user_name,att.typeName,la.* from laborAttendance la inner join employee e on e.employee_id = la.employee_id inner join AttenadnceType att on la.attendance_description = att.typeID where la.deleted != 1';
+$res = $conn->query($sql);
+if($res->num_rows > 0 ){
+    echo '<table id="example" class="table table-striped table-bordered">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Date</th>';
+        echo '<th>Employee Name</th>';
+        echo '<th>Attendance Status</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        while($row = $res->fetch_assoc()){
+            echo  '<tr>';
+            echo  '<td>' . $row['date'] . '</td>';
+            echo  '<td>' . $row['user_name'] . '</td>';
+            echo  '<td>' . $row['typeName'] . '</td>';
+            echo '</tr>';
+        }
+
+       
+        
+        
+        echo '</tbody>';
+    echo '</table>';
+
+
+}   
+}
+?>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
@@ -85,6 +131,9 @@
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+
+    <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
+    <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
     <!-- Vendor JS       -->
     <script src="vendor/slick/slick.min.js">
     </script>
@@ -103,6 +152,13 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('#example').DataTable();
+
+    });
+    </script>
 
 </body>
 

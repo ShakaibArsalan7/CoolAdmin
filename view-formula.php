@@ -193,6 +193,8 @@ $(document).ready(function () {
         }else{
             $("#rawmaterialdetail").text("");
         }
+
+        
         // $("#functions").text("");
         // $('#functions').load("modifybrand.php", {
         // fmodid : brandid,

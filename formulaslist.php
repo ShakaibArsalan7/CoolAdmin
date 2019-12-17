@@ -177,7 +177,8 @@ if(!$conn->connect_error){
 
 
 
-                foreach($tabledata as $tdr){ // this will run 13 times.
+                foreach($tabledata as $tdr){
+                     // this will run 13 times.
                     $i=0;
                     $s = count($tdr)-1;
                     echo  '<tr>';

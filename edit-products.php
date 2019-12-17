@@ -109,7 +109,7 @@ if(!$conn->connect_error){
                                                 
                                             </div> 
 
-                                            <div class="row form-group" id="btns" style="width:80%;margin:auto">
+                                            <div class="row form-group" id="btns" style="width:50%;margin:auto">
                                             
                                                 <!-- three buttons -->
                                             </div> 

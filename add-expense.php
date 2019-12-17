@@ -225,10 +225,10 @@ function validateForm() {
     var date = document.getElementById('hf-date').value;
     var amount = document.getElementById('hf-amount').value;
     var comment = document.getElementById('hf-comment').value;
-    alert(expensetype);
-    alert(date);
-    alert(amount);
-    alert(comment);
+    // alert(expensetype);
+    // alert(date);
+    // alert(amount);
+    // alert(comment);
     if(expensetype == "select"){
         snackbar("Expense type is required");
         return false;
@@ -241,17 +241,23 @@ function validateForm() {
         snackbar("Expense amount is required");
         return false;
     }
+    
     if(comment == ""){
         snackbar("describe nature of expense in comment section");
         return false;
     }
-    var fl = validateQuantity(quantity);
+    var fl = validateQuantity(amount);
     if(!fl){
             snackbar("Amount field is not valid. only numeral allowed.");
             return false;
         }
 
-    return false;
+        if(parseFloat(amount) < 0 ){
+        snackbar("Expense amount can't be negetive.");
+        return false;
+    }
+
+    return true;
 }
 
 function validateQuantity(s) {

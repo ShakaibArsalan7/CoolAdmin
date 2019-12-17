@@ -25,6 +25,9 @@ if(!$conn->connect_error){// if database connected.
            $rawmaterialname  = "";
            $sql2 = "select raw_material_id from rawMaterial where adding_timestamp = '$timestamp' && deleted != 1";
            $res1 = $conn->query($sql2)->fetch_object()->raw_material_id;
+
+           $sql3 = "insert into rawmaterialStock(rawmaterial_id,weight,deleted) values($res1,0,false);";
+            $res3 = $conn->query($sql3);
        
        
            //echo "<script>alert('$res1');</script>";

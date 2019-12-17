@@ -1,75 +1,37 @@
 <?php require_once('session.php') ?>
 
 <?php
-require_once("connection.php");
-
-$rawmaterialname  = "";
-$err = "";
-
-
- 
+require_once("connection.php"); 
 
 if(!$conn->connect_error){// if database connected.
-    
-    if(isset($_REQUEST['submit'])){ // if submit button clicked
-        
-        $rawmaterialname  =  $_REQUEST['hf-rawmaterialname'];
 
-
-   
-    //validation passed
-        $timestamp= time();
-        $sql = "insert into rawMaterial(raw_material_name,unit_of_purchase,unit_of_usage,adding_timestamp,deleted) values('$rawmaterialname','kg','kg','$timestamp',false);";
-        $res = $conn->query($sql);
-       if($res){
-           //echo "inserted succesfully";
-           $rawmaterialname  = "";
-           $sql2 = "select raw_material_id from rawMaterial where adding_timestamp = '$timestamp' && deleted != 1";
-           $res1 = $conn->query($sql2)->fetch_object()->raw_material_id;
-       
-       
-           //echo "<script>alert('$res1');</script>";
-           foreach ($_POST as $name => $value) {
-           if (strpos($name, 'nutrient') !== false) {
-                $qname =  "quantity" .  substr($name,8);
-                $qquan = $_POST[$qname];
-               $que = "insert into RawmaterialNutrients(raw_material_id,Nutrition_id,percentageperkg,deleted) values('$res1','$value',$qquan,false)";
-               $res2 = $conn->query($que);
-           }
-        //echo "<script>alert('$name - $value')</script>";
-
-        }
-       }
-           
-   }else{// if not submit, first visit to page or refresh
-
-    $brandname  = "";
     $opt = "";
-    $sql =  "select brand_id, brand_name from brand where deleted != 1";
+    $sql =  "select employee_id, user_name from employee where deleted != 1";
     $res = $conn->query($sql);
     if($res->num_rows > 0 ){
     while($row = $res->fetch_assoc()){
         // echo "<script>alert('a')</script>";
-        $opt .='<option value='. $row['brand_id'] .'>'. $row['brand_id'] . ' - ' . $row['brand_name'] .'</option>';
+        $opt .='<option value='. $row['employee_id'] .'>'. $row['employee_id'] . ' - ' . $row['user_name'] .'</option>';
 
-        }
-    // echo "<script>alert('$opt')</script>";
+        
+
     }
-    
-    $rawmaterialname  = "";
+    }
+
+
     $opt1 = "";
-    $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
+    $sql =  "select typeID,typeName from AttenadnceType where deleted != 1";
     $res = $conn->query($sql);
     if($res->num_rows > 0 ){
     while($row = $res->fetch_assoc()){
         // echo "<script>alert('a')</script>";
-        $opt1 .='<option value='. $row['raw_material_id'] .'>'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
+        $opt1 .='<option value='. $row['typeID'] .'>'. $row['typeName'] .'</option>';
+
+        
 
     }
-    // echo "<script>alert('$opt')</script>";
     }
 
-}
 
 }
 
@@ -146,34 +108,55 @@ if(!$conn->connect_error){// if database connected.
 
 
                                     <div class="card-body card-block">
-                                        <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-8">
                                                     <div class="row">
                                                         <div class="col-sm-8" id="tabletitle"><h2>Attendance Details</h2></div>
                                                     </div>
 
-                                                    <table id="myTable" class=" table table-bordered order-list ">
-                                                        <thead>
-                                                            <tr class="rmtab">
-                                                                <td>Employee name</td>
-                                                                <td>Attendance Status</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                                <div class="row form-group">
+                                                                    <div class="col col-md-2">
+                                                                        <label for="employeeid" class=" form-control-label">Employee ID</label>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-4">
+                                                                        <select class="form-control" name="employeeid" id="employeeid">
+                                                                            <option value="select">select option</option><?php echo $opt;?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
 
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                                <div class="row form-group">
+                                                                    <div class="col col-md-2">
+                                                                        <label for="hf-date" class=" form-control-label">Date</label>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-4">
+                                                                        <input type="date" id="hf-date" name="hf-date" placeholder="Enter Date..." class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row form-group">
+                                                                    <div class="col col-md-2">
+                                                                        <label for="hf-attendancestatus" class=" form-control-label">Attendance Status</label>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-4">
+                                                                        <select class="form-control" name="attendancestatus" id="attendancestatus">
+                                                                            <option value="select">select option</option><?php echo $opt1;?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row form-group">
+                                                                    <div class="col col-md-3">
+                                                                    <button class="btn btn-primary btn-lg" onclick="submitform()">Add Attendance<button>
+                                                                </div>
+                                                                <div id="addatt">
+                                                                </div>
                                             </div>
 
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Add Formula" />
-                                                </div>
-                                                
+                                                    </div>
+
+                                                    
                                             </div>
-                                        </form>
                                     </div>
 
 
@@ -223,134 +206,54 @@ if(!$conn->connect_error){// if database connected.
     <script src="js/main.js"></script>
 
 
-    <script>
-$(document).ready(function () {
 
-     
-    var counter = 0;
-
-    $("#addrow").on("click", function () {
-        // alert("a");
-        var newRow = $("<tr class='packtab'>");
-        var cols = "";
-
-        cols += '<td><i class="fa fa-circle"></i></td>';
-        // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
-        cols += '<td>'+
-        '<select class="form-control pw" name="rawmaterial' + counter + '">'
-        +'<option value="select">select option</option><?php echo $opt1;?>'
-
-           
-        
-
-
-        +'</select>'
-        +'</td>';
-        cols+='<td><input type="text" class="form-control qw" id="rawmaterialweight' + counter +'" name="rmweight' + counter + '" placeholder="Enter Weight..." ></td>';
-
-        // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
-        
-        newRow.append(cols);
-        $("table.order-list").append(newRow);
-        counter++;
-    });
-
-
-
-    $("table.order-list").on("click", ".ibtnDel", function (event) {
-        $(this).closest("tr").remove();
-        counter -= 1;
-    });
-
-
-});
-</script>
 
 <script>
-function validateForm() {
-    var bname = document.getElementById("brandedit").value;
-    if(bname == "select"){
-        snackbar("Please Select Brand name from drop down.");
-        return false;
-    }
 
-    var fname = document.getElementById("formulaname").value;
-    if(fname == ""){
-        snackbar("Formula name is required.");
-        return false;
-    }
-    
+function submitform() {
+  if(checkValidity()) {
+        //send request to form
+    var employeeid = document.getElementById('employeeid').value;
+    var date = document.getElementById('hf-date').value;
+    var attendancestatus = document.getElementById('attendancestatus').value;
 
-    var els = document.getElementsByClassName('pw');
-    //alert(els.length);
-    if(els.length == 0){
-        snackbar("No Raw Material Detail is added.");
-        return false;
-    }
-    var packArray = [];
-    // var reason =1;
-    for(var i = 0; i< els.length; i++){
-        var el = els[i];
-        if(el.value == "select"){
-        snackbar("One of the raw material name is not selected.");
-        return false;
-    }else{
-        if(packArray.indexOf(el.value) > -1){
-            //in the array
-            snackbar(el.options[el.selectedIndex].text +" option is selected twice.");
-            return false;
-        }else{
-            packArray.push(el.value);
-            // console.log();
-        }
-        
-    }
-    }
+    $('#addatt').load("attendance.php", {
+        empid : employeeid,
+        date: date,
+        attsta : attendancestatus
+         },function(){
+            snackbar("Attendance Added.");    
+            document.getElementById('employeeid').value = "select";
+            document.getElementById('hf-date').value = "";
+            document.getElementById('attendancestatus').value = ""  ; 
+         });
 
-    var elq = document.getElementsByClassName('qw');
-    // var reason =1;
-    var formulaSum = 0.0;
-    for(var i = 0; i< elq.length; i++){
-        var el = elq[i];
-        
-    
-        if(el.value == ""){
-        snackbar("One of the weight field is empty.");
-        return false;
-    }
-    else{
-        var v=  validateQuantity(el.value);
-        if(!v){
-            snackbar("only numeral allowed in weight field.");
-            return false;
-        }
-    }
-
-    formulaSum += parseFloat(el.value);
-
-
-
-    }
-
-    if(formulaSum != 100.0000){
-        if(formulaSum < 100){
-            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is less than 100");
-
-        }else{
-            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is greater than 100");
-
-        }
-    }
-
-
-    return false;
+  }
 }
 
-function validateQuantity(s) {
-    var rgx = /^[0-9]*\.?[0-9]*$/;
-    return s.match(rgx);
+function checkValidity(){
+    var employeeid = document.getElementById('employeeid').value;
+    var date = document.getElementById('hf-date').value;
+    var attendancestatus = document.getElementById('attendancestatus').value;
+    // alert(employeeid);
+    // alert(date);
+    // alert(attendancestatus);
+    if(employeeid == "select"){
+        snackbar("Employee ID is required");
+        return false;
+    }
+    if(date == ""){
+        snackbar("Date is required");
+        return false;
+    }
+    if(attendancestatus == "select"){
+        snackbar("Attendance Status is required");
+        return false;
+    }
+    return true;
 }
+
+
 
 function snackbar(message) {
   // Get the snackbar DIV
