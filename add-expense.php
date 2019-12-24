@@ -230,30 +230,30 @@ function validateForm() {
     // alert(amount);
     // alert(comment);
     if(expensetype == "select"){
-        snackbar("Expense type is required");
+        snackbar("Expense type is required","red");
         return false;
     }
     if(date == ""){
-        snackbar("Expense date is required");
+        snackbar("Expense date is required","red");
         return false;
     }
     if(amount == '0' || amount == ''){
-        snackbar("Expense amount is required");
+        snackbar("Expense amount is required","red");
         return false;
     }
     
     if(comment == ""){
-        snackbar("describe nature of expense in comment section");
+        snackbar("describe nature of expense in comment section","red");
         return false;
     }
     var fl = validateQuantity(amount);
     if(!fl){
-            snackbar("Amount field is not valid. only numeral allowed.");
+            snackbar("Amount field is not valid. only numeral allowed.","red");
             return false;
         }
 
         if(parseFloat(amount) < 0 ){
-        snackbar("Expense amount can't be negetive.");
+        snackbar("Expense amount can't be negetive.","red");
         return false;
     }
 
@@ -265,14 +265,14 @@ function validateQuantity(s) {
     return s.match(rgx);
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

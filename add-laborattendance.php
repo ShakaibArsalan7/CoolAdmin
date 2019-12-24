@@ -5,18 +5,20 @@ require_once("connection.php");
 
 if(!$conn->connect_error){// if database connected.
 
-    $opt = "";
-    $sql =  "select employee_id, user_name from employee where deleted != 1";
-    $res = $conn->query($sql);
-    if($res->num_rows > 0 ){
-    while($row = $res->fetch_assoc()){
-        // echo "<script>alert('a')</script>";
-        $opt .='<option value='. $row['employee_id'] .'>'. $row['employee_id'] . ' - ' . $row['user_name'] .'</option>';
+    //if submit
 
-        
+    $att = "";
+    $att .='<div class="row form-group">';
+    $att .='<div class="col col-md-3">';
+    $att .='<label for="employeeid" class=" form-control-label">Employee ID</label>';
+    $att .='</div>';
+    $att .='<div class="col col-md-5">';
+    $att .='<label for="hf-attendancestatus" class=" form-control-label">Attendance Status</label>';
+    $att .='</div>';
+    $att .='</div>';
 
-    }
-    }
+
+                                                                
 
 
     $opt1 = "";
@@ -31,6 +33,41 @@ if(!$conn->connect_error){// if database connected.
 
     }
     }
+
+    $opt = "";
+    $sql =  "select employee_id, user_name from employee where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+        $counter = 0;
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        // $opt .='<option value='. $row['employee_id'] .'>'. $row['employee_id'] . ' - ' . $row['user_name'] .'</option>';
+
+
+        $att .='<div class="row form-group">';
+            
+        $att .='<div class="col col-md-3">';
+        $att .="<input type='hidden' name='name$counter' id='name$counter' value=$row[employee_id]>";
+        $att .="<label for='employeeid' class='form-control-label'>$row[employee_id] - $row[user_name]</label>";
+        $att .='</div>';
+
+        $att .='<div class="col col-md-5">';
+        $att .="<select class='form-control astatus' name='attendancestatus$counter' id='attendancestatus$counter'>";
+        $att .="<option value='select'>select option</option>$opt1";
+        $att .='</select>';
+        $att .='</div>';
+        
+        $att .='</div>';
+
+
+        $counter++;
+        
+
+    }
+    }
+
+
+
 
 
 }
@@ -112,19 +149,7 @@ if(!$conn->connect_error){// if database connected.
                                                 <div class="col col-md-8">
                                                     <div class="row">
                                                         <div class="col-sm-8" id="tabletitle"><h2>Attendance Details</h2></div>
-                                                    </div>
-
-                                                                <div class="row form-group">
-                                                                    <div class="col col-md-3">
-                                                                        <label for="employeeid" class=" form-control-label">Employee ID</label>
-                                                                    </div>
-                                                                    <div class="col col-md-5">
-                                                                        <select class="form-control" name="employeeid" id="employeeid">
-                                                                            <option value="select">select option</option><?php echo $opt;?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
+                                                    </div>      
                                                                 <div class="row form-group">
                                                                     <div class="col col-md-3">
                                                                         <label for="hf-date" class=" form-control-label">Date</label>
@@ -134,16 +159,7 @@ if(!$conn->connect_error){// if database connected.
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row form-group">
-                                                                    <div class="col col-md-3">
-                                                                        <label for="hf-attendancestatus" class=" form-control-label">Attendance Status</label>
-                                                                    </div>
-                                                                    <div class="col col-md-5">
-                                                                        <select class="form-control" name="attendancestatus" id="attendancestatus">
-                                                                            <option value="select">select option</option><?php echo $opt1;?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
+                                                                <?php echo $att; ?>
 
                                                                 <div class="row form-group">
                                                                     <div class="col col-md-3">
@@ -213,56 +229,69 @@ if(!$conn->connect_error){// if database connected.
 function submitform() {
   if(checkValidity()) {
         //send request to form
-    var employeeid = document.getElementById('employeeid').value;
+    var els = document.getElementsByClassName('astatus');
     var date = document.getElementById('hf-date').value;
-    var attendancestatus = document.getElementById('attendancestatus').value;
 
-    $('#addatt').load("attendance.php", {
-        empid : employeeid,
-        date: date,
-        attsta : attendancestatus
-         },function(){
-            snackbar("Attendance Added.");    
-            document.getElementById('employeeid').value = "select";
-            document.getElementById('hf-date').value = "";
-            document.getElementById('attendancestatus').value = ""  ; 
-         });
+    var attendanceData = [];
+    for(var i = 0; i< els.length; i++){
+        var el = els[i];
+        var id = "name"+i;
+        var employeeid = document.getElementById(id).value;
+
+        var arr = [employeeid, el.value, date];
+
+        attendanceData.push(arr);
 
   }
+
+  $('#addatt').load("attendance.php", {
+        attendanceData : JSON.stringify(attendanceData)
+         },function(){
+            snackbar("Attendance Added.","green"); 
+         });
+
+}
 }
 
 function checkValidity(){
-    var employeeid = document.getElementById('employeeid').value;
+    var els = document.getElementsByClassName('astatus');
     var date = document.getElementById('hf-date').value;
-    var attendancestatus = document.getElementById('attendancestatus').value;
-    // alert(employeeid);
-    // alert(date);
-    // alert(attendancestatus);
-    if(employeeid == "select"){
-        snackbar("Employee ID is required");
-        return false;
-    }
+
     if(date == ""){
-        snackbar("Date is required");
+        snackbar("Date is required","red");
         return false;
     }
-    if(attendancestatus == "select"){
-        snackbar("Attendance Status is required");
+    
+    //alert(els.length);
+    if(els.length == 0){
+        snackbar("No Attendance Detail to Add.","red");
         return false;
     }
+    // var reason =1;
+    for(var i = 0; i< els.length; i++){
+        var el = els[i];
+        if(el.value == "select"){
+            
+        snackbar("One of the Attendance status is not provided.","red");
+        return false;
+        }
+    }
+
     return true;
+
+
 }
 
 
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

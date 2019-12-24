@@ -262,41 +262,41 @@ function validateForm() {
     var bankname = document.getElementById("hf-bankname").value;
     var profilepic = document.getElementById("hf-profilepic").value;
     if (username == "") {
-    snackbar("Supplier name is required.");
+    snackbar("Supplier name is required.","red");
     return false;
     }
     if (emailaddress == "") {
-    snackbar("Email Address is required.");
+    snackbar("Email Address is required.","red");
     return false;
     }
     if (workphone == "") {
-    snackbar("Work Phone is required.");
+    snackbar("Work Phone is required.","red");
     return false;
     }
     if (mobilenumber == "") {
-    snackbar("Mobile Number is required.");
+    snackbar("Mobile Number is required.","red");
     return false;
     }
     if (workaddress == "") {
-    snackbar("Work Address is required.");
+    snackbar("Work Address is required.","red");
     return false;
     }
     if (homeaddress == "") {
-    snackbar("Home Address is required.");
+    snackbar("Home Address is required.","red");
     return false;
     }
 
     return true;
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

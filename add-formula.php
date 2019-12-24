@@ -299,13 +299,13 @@ $(document).ready(function () {
 function validateForm() {
     var bname = document.getElementById("brandedit").value;
     if(bname == "select"){
-        snackbar("Please Select Brand name from drop down.");
+        snackbar("Please Select Brand name from drop down.","red");
         return false;
     }
 
     var fname = document.getElementById("formulaname").value;
     if(fname == ""){
-        snackbar("Formula name is required.");
+        snackbar("Formula name is required.","red");
         return false;
     }
     
@@ -313,7 +313,7 @@ function validateForm() {
     var els = document.getElementsByClassName('pw');
     //alert(els.length);
     if(els.length == 0){
-        snackbar("No Raw Material Detail is added.");
+        snackbar("No Raw Material Detail is added.","red");
         return false;
     }
     var packArray = [];
@@ -321,12 +321,12 @@ function validateForm() {
     for(var i = 0; i< els.length; i++){
         var el = els[i];
         if(el.value == "select"){
-        snackbar("One of the raw material name is not selected.");
+        snackbar("One of the raw material name is not selected.","red");
         return false;
     }else{
         if(packArray.indexOf(el.value) > -1){
             //in the array
-            snackbar(el.options[el.selectedIndex].text +" option is selected twice.");
+            snackbar(el.options[el.selectedIndex].text +" option is selected twice.","red");
             return false;
         }else{
             packArray.push(el.value);
@@ -344,13 +344,13 @@ function validateForm() {
         
     
         if(el.value == ""){
-        snackbar("One of the weight field is empty.");
+        snackbar("One of the weight field is empty.","red");
         return false;
     }
     else{
         var v=  validateQuantity(el.value);
         if(!v){
-            snackbar("only numeral allowed in weight field.");
+            snackbar("only numeral allowed in weight field.","red");
             return false;
         }
     }
@@ -363,10 +363,10 @@ function validateForm() {
 
     if(formulaSum != 100.0000){
         if(formulaSum < 100){
-            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is less than 100");
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is less than 100","red");
             return false;
         }else{
-            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is greater than 100");
+            snackbar("Formula is made for 100 kg , the cummulative sum of raw materials weight is greater than 100","red");
             return false;
         }
     }
@@ -380,14 +380,14 @@ function validateQuantity(s) {
     return s.match(rgx);
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

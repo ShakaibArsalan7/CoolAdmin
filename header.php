@@ -171,7 +171,7 @@
 
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
-                                <i class="fas fa-industry"></i>Production
+                                <i class="fas fa-industry"></i>Formulas
                                 </a>
                                 <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                     <li>
@@ -209,7 +209,7 @@
                                         <a href="rawmaterialstocks.php">Raw Material Stock</a>
                                     </li>
                                     <li>
-                                        <a href="productstock.php">Product Stock</a>
+                                        <a href="productstock.php">Production Stock</a>
                                     </li>
                                 </ul>
                             </li>

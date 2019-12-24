@@ -36,9 +36,9 @@ if(!$conn->connect_error){
         $rawstocksinfo = array();
         while($i < $s){
             $row = $brandformulasdata[$i];
-            if($row[weightRequired] > $row[weight]){
-                $less = $row[weightRequired] - $row[weight];
-                $info = array($less, $row[rawmaterial_id],$row[raw_material_name]);
+            if($row['weightRequired'] > $row['weight']){
+                $less = $row['weightRequired'] - $row['weight'];
+                $info = array($less, $row['rawmaterial_id'],$row['raw_material_name']);
                 $rawstocksinfo[] = $info;
                 $permission = "denied";
             }
@@ -58,8 +58,8 @@ if(!$conn->connect_error){
                 //echo "inserted succesfully";
                 //update the rawmaterial in the rawmaterial stock
                 foreach($brandformulasdata as $row){
-                    $weight = $row[weightRequired];
-                    $rawmaterialid = $row[rawmaterial_id];
+                    $weight = $row['weightRequired'];
+                    $rawmaterialid = $row['rawmaterial_id'];
                     $sql = "UPDATE rawmaterialStock rms SET  rms.weight  =rms.weight - $weight WHERE rms.rawmaterial_id = $rawmaterialid";
                     $res1 = $conn->query($sql);
                     if($res1){
@@ -309,7 +309,7 @@ if(!$conn->connect_error){
 $(document).ready(function(){
 
     var noti = "<?php echo $notification; ?>";
-    var lessarray = <?php echo json_encode($rawstocksinfo)?>;
+    <?php echo "var lessarray =", json_encode($rawstocksinfo)?>;
     if(lessarray !=null){
         var str= "";
         
@@ -321,11 +321,11 @@ $(document).ready(function(){
     
 
     if(noti == "adddo"){
-        snackbar("Added Successfully");
+        snackbar("Added Successfully","green");
     }else if(noti == "gr"){
-        snackbar("Weight added is greater than weight present in inventory.");
+        snackbar("Weight added is greater than weight present in inventory.","red");
     }else if(noti == "do"){
-        snackbar("Removed Successfully");
+        snackbar("Removed Successfully","green");
     }
 
     $('body').on('click','#arms',function(){ // Click to only happen on announce links
@@ -409,32 +409,32 @@ function validateForm() {
     
     
     if(brandid == "select"){
-        snackbar("Brand Name is required");
+        snackbar("Brand Name is required","red");
         return false;
         
     }else{
         var formulaid = document.getElementById('formulasid').value;
         if(formulaid == "select"){
-        snackbar("Formula Name is required");
+        snackbar("Formula Name is required","red");
         return false;
         }else{
         
         var packingsize = document.getElementById('packingSizes').value;
         if(packingsize == "select"){
-        snackbar("Packing Size is required.");
+        snackbar("Packing Size is required.","red");
         return false;
         }else{
             if(noofbags == "" || noofbags == '0'){
-        snackbar("No of bags field is required");
+        snackbar("No of bags field is required","red");
         return false;
         }else{
             var fl = validateQuantity(noofbags);
             if(!fl){
-            snackbar("No of Bags can only be integers. field is not valid");
+            snackbar("No of Bags can only be integers. field is not valid","red");
             return false;
             }else{    
                 if(date == ""){
-                snackbar("Date Field is required");
+                snackbar("Date Field is required","red");
                 return false;
                 }else{
                     return true;
@@ -459,32 +459,32 @@ function validateremForm() {
     
     
     if(brandid == "select"){
-        snackbar("Brand Name is required");
+        snackbar("Brand Name is required","red");
         return false;
         
     }else{
         var formulaid = document.getElementById('formulasid').value;
         if(formulaid == "select"){
-        snackbar("Formula Name is required");
+        snackbar("Formula Name is required","red");
         return false;
         }else{
         
         var packingsize = document.getElementById('packingSizes').value;
         if(packingsize == "select"){
-        snackbar("Packing Size is required.");
+        snackbar("Packing Size is required.","red");
         return false;
         }else{
             if(noofbags == "" || noofbags == '0'){
-        snackbar("No of bags field is required");
+        snackbar("No of bags field is required","red");
         return false;
         }else{
             var fl = validateQuantity(noofbags);
             if(!fl){
-            snackbar("No of Bags can only be integers. field is not valid");
+            snackbar("No of Bags can only be integers. field is not valid","red");
             return false;
             }else{    
                 if(date == ""){
-                snackbar("Date Field is required");
+                snackbar("Date Field is required","red");
                 return false;
                 }else{
                     return true;
@@ -506,16 +506,16 @@ function validateQuantity(s) {
     return s.match(rgx);
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 7000);
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
     </script>
 

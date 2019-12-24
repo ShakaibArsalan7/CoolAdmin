@@ -245,11 +245,11 @@ $(document).ready(function () {
 
     var noti = "<?php echo $notification; ?>";
     if(noti == "adddo"){
-        snackbar("Added Successfully");
+        snackbar("Added Successfully","green");
     }else if(noti == "gr"){
-        snackbar("Weight added is greater than weight present in inventory.");
+        snackbar("Weight added is greater than weight present in inventory.","red");
     }else if(noti == "do"){
-        snackbar("Removed Successfully");
+        snackbar("Removed Successfully","green");
     }
 
     $('body').on('click','#arms',function(){ // Click to only happen on announce links
@@ -353,42 +353,42 @@ function validateForm() {
     var rate = document.getElementById('hf-rate').value;
     
     if(rawmaterialid == "select"){
-        snackbar("Raw Material ID is required");
+        snackbar("Raw Material ID is required","red");
         return false;
     }
     if(date == ""){
-        snackbar("Date Field is required");
+        snackbar("Date Field is required","red");
         return false;
     }
     if(weight == '0' || weight == ''){
-        snackbar("Weight Field is required");
+        snackbar("Weight Field is required","red");
         return false;
     }
     
     var fl = validateQuantity(weight);
     if(!fl){
-            snackbar("Weight field is not valid. only numeral allowed.");
+            snackbar("Weight field is not valid. only numeral allowed.","red");
             return false;
         }
 
         if(parseFloat(weight) < 0 ){
-        snackbar("Expense amount can't be negetive.");
+        snackbar("Expense amount can't be negetive.","red");
         return false;
     }
 
     if(rate == '0' || rate == ''){
-        snackbar("Rate Field is required");
+        snackbar("Rate Field is required","red");
         return false;
     }
     
     var fl = validateQuantity(rate);
     if(!fl){
-            snackbar("Rate field is not valid. only numeral allowed.");
+            snackbar("Rate field is not valid. only numeral allowed.","red");
             return false;
         }
 
         if(parseFloat(rate) < 0 ){
-        snackbar("Rate can't be negetive.");
+        snackbar("Rate can't be negetive.","red");
         return false;
     }
 
@@ -404,30 +404,30 @@ function validateremForm() {
     var comment = document.getElementById('hf-comment').value;
 
     if(rawmaterialid == "select"){
-        snackbar("Raw Material ID is required");
+        snackbar("Raw Material ID is required","red");
         return false;
     }
     if(date == ""){
-        snackbar("Date Field is required");
+        snackbar("Date Field is required","red");
         return false;
     }
     if(comment == ""){
-        snackbar("describe why you are removing in comment section");
+        snackbar("describe why you are removing in comment section","red");
         return false;
     }
     if(weight == '0' || weight == ''){
-        snackbar("Weight Field is required");
+        snackbar("Weight Field is required","red");
         return false;
     }
     
     var fl = validateQuantity(weight);
     if(!fl){
-            snackbar("Weight field is not valid. only numeral allowed.");
+            snackbar("Weight field is not valid. only numeral allowed.","red");
             return false;
         }
 
         if(parseFloat(weight) < 0 ){
-        snackbar("Expense amount can't be negetive.");
+        snackbar("Expense amount can't be negetive.","red");
         return false;
     }
 
@@ -439,14 +439,14 @@ function validateQuantity(s) {
     return s.match(rgx);
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

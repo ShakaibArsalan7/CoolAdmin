@@ -232,11 +232,37 @@ a {
     transition: all 0.3s ease;
 }
 
+/* .modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../images/loading.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+/* body.loading .modal {
+    overflow: hidden;   
+} */
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+/* body.loading .modal {
+    display: block;
+} */ 
+
 #snackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
     min-width: 250px; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
-    background-color: rgb(241, 32, 32); /* Black background color */
+    /* background-color: rgb(241, 32, 32); Black background color */
     color: #fff; /* White text color */
     text-align: center; /* Centered text */
     border-radius: 2px; /* Rounded borders */
@@ -254,9 +280,11 @@ a {
     visibility: visible; /* Show the snackbar */
     /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
     However, delay the fade out process for 2.5 seconds */
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 5.5s;
+    animation: fadein 0.5s, fadeout 0.5s 5.5s;
   }
+
+
   
 
   /* #tabletitle {
@@ -3337,7 +3365,7 @@ section {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
-    background: #ffdb58;
+    /* background: #ffdb58; */
     overflow: hidden;
 }
 

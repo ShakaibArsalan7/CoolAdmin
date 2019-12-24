@@ -278,7 +278,7 @@ $(document).ready(function () {
 function validateForm() {
     var nname = document.getElementById("hf-rawmaterialname").value;
     if (nname == "") {
-    snackbar("Raw material name is required.");
+    snackbar("Raw material name is required.","red");
     return false;
     }
 
@@ -287,7 +287,7 @@ function validateForm() {
     var els = document.getElementsByClassName('pw');
     //alert(els.length);
     if(els.length == 0){
-        snackbar("No Nutrient Detail is added.");
+        snackbar("No Nutrient Detail is added.","red");
         return false;
     }
     var packArray = [];
@@ -295,12 +295,12 @@ function validateForm() {
     for(var i = 0; i< els.length; i++){
         var el = els[i];
         if(el.value == "select"){
-        snackbar("One of the option field is empty.");
+        snackbar("One of the option field is empty.","red");
         return false;
     }else{
         if(packArray.indexOf(el.value) > -1){
             //in the array
-            snackbar(el.options[el.selectedIndex].text +" option is selected twice.");
+            snackbar(el.options[el.selectedIndex].text +" option is selected twice.","red");
             return false;
         }else{
             packArray.push(el.value);
@@ -315,13 +315,13 @@ function validateForm() {
     for(var i = 0; i< elq.length; i++){
         var el = elq[i];
         if(el.value == ""){
-        snackbar("One of the quantity field is empty.");
+        snackbar("One of the quantity field is empty.","red");
         return false;
     }
     else{
         var v=  validateQuantity(el.value);
         if(!v){
-            snackbar("One of the quantity field is not valid. only numeral allowed.");
+            snackbar("One of the quantity field is not valid. only numeral allowed.","red");
             return false;
         }
     }
@@ -336,14 +336,14 @@ function validateQuantity(s) {
     return s.match(rgx);
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }

@@ -103,9 +103,9 @@ if(!$conn->connect_error){
         
         foreach($brandformulasdata as $weightage){ // this will run the number of raw materials in formula, for example 11 in this case.
             $tabledatarow = array();
-            $tabledatarow[] = $weightage[id];
-            $tabledatarow[] = $weightage[raw_material_name];
-            $tabledatarow[] = $weightage[weightinkg];
+            $tabledatarow[] = $weightage['id'];
+            $tabledatarow[] = $weightage['raw_material_name'];
+            $tabledatarow[] = $weightage['weightinkg'];
             // if we get the nutrient data in raw materials
             $sql1 = "SELECT * FROM RawmaterialNutrients rmn where rmn.raw_material_id = $weightage[rawmaterial_id]";
             //echo "<script>alert('$sql1')</script>";
@@ -114,7 +114,7 @@ if(!$conn->connect_error){
             $res = $conn->query($sql1);
             if($res->num_rows > 0 ){
                 while($row = $res->fetch_assoc()){ // this will run 14 number of times as their are 13 nutrients and 1 rate.
-                    $tabledatarow[]  = $weightage[weightinkg] * $row[percentageperkg];
+                    $tabledatarow[]  = $weightage['weightinkg'] * $row['percentageperkg'];
                 }
             }
             //add to table data array.

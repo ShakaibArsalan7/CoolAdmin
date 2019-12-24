@@ -131,6 +131,8 @@ if(!$conn->connect_error){
 
     </div>
 
+    <!-- <div class="modal">Place at bottom of page</div> -->
+
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
@@ -211,6 +213,14 @@ $(document).ready(function () {
 
 
 });
+
+
+// $body = $("body");
+
+// $(document).on({
+//     ajaxStart: function() { $body.addClass("loading");    },
+//      ajaxStop: function() { $body.removeClass("loading"); }    
+// });
 </script>
 
 </body>

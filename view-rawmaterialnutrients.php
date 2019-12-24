@@ -3,24 +3,21 @@
 <?php
 require_once("connection.php");
 
-if(!$conn->connect_error){
+if (!$conn->connect_error) {
 
 
-        
+
     $rawmaterialname  = "";
     $opt = "";
     $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
     $res = $conn->query($sql);
-    if($res->num_rows > 0 ){
-    while($row = $res->fetch_assoc()){
-        // echo "<script>alert('a')</script>";
-        $opt .='<option value=\"'. $row['raw_material_id'] .'\">'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
-
-        
-
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            // echo "<script>alert('a')</script>";
+            $opt .= '<option value=\"' . $row['raw_material_id'] . '\">' . $row['raw_material_id'] . ' - ' . $row['raw_material_name'] . '</option>';
+        }
+        // echo "<script>alert('$opt')</script>";
     }
-    // echo "<script>alert('$opt')</script>";
-}
 }
 
 ?>
@@ -48,7 +45,7 @@ if(!$conn->connect_error){
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
     <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    
+
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
@@ -68,33 +65,33 @@ if(!$conn->connect_error){
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                        
-                    <div class="row">
+
+                        <div class="row">
                             <div class="col-md-12">
-                            <div class="card">
+                                <div class="card">
                                     <div class="card-header">
                                         View <strong>Raw Material Nutrients</strong>
                                     </div>
@@ -104,23 +101,23 @@ if(!$conn->connect_error){
                                                 <div class="col col-md-2">
                                                     <label for="rawmaterialname" class=" form-control-label">Raw Material</label>
                                                 </div>
-                                                <div class="col-12 col-md-5 rawmaterialname" >
+                                                <div class="col-12 col-md-5 rawmaterialname">
                                                 </div>
-                                            </div> 
+                                            </div>
 
 
-                                            
-                                                
+
+
                                         </form>
                                     </div>
                                 </div>
 
                                 <div id='nutridata'>
-                                    
+
                                 </div>
 
                                 <div id='updatenutri'>
-                                    
+
                                 </div>
 
 
@@ -174,51 +171,51 @@ if(!$conn->connect_error){
     <script src="js/main.js"></script>
 
     <script>
-$(document).ready(function () {
+        $(document).ready(function() {
 
-   
-        var cols = "";
 
-        cols += '<select class="form-control" id="rawmat" name="rawmaterial">'
-        +'<option value="select">select option</option><?php echo $opt;?>'
-        +'</select>';
-        $(".rawmaterialname").append(cols);
+            var cols = "";
 
-       
-
-    $('#rawmat').on('change', function() {
-        var rawid = this.value;
-        if(rawid != "select"){
-            $('#nutridata').load("rawmatnutridata.php", {
-        fmodid : rawid
-         },function(){
-            $('#example').DataTable({
-        "scrollX": true
-    } );
-         });
-         $("#updatenutri").text("");
-        }else{
-            $("#nutridata").text("");
-        }
-        
-    });
-
-    $('body').on('click','#editnutri',function(){
-         // Click to only happen on announce links
-    var rawmatid = parseInt($('#sid').val());
-
-    
-
-        $('#updatenutri').load("update-rawmatnutridata.php", {
-        fmodid : rawmatid,
-        fform : "updatenutri"
-         });
-        });
+            cols += '<select class="form-control" id="rawmat" name="rawmaterial">' +
+                '<option value="select">select option</option><?php echo $opt; ?>' +
+                '</select>';
+            $(".rawmaterialname").append(cols);
 
 
 
-         $('body').on('change','#nutrientID',function(){
-         // Click to only happen on announce links
+            $('#rawmat').on('change', function() {
+                var rawid = this.value;
+                if (rawid != "select") {
+                    $('#nutridata').load("rawmatnutridata.php", {
+                        fmodid: rawid
+                    }, function() {
+                        $('#example').DataTable({
+                            "scrollX": true
+                        });
+                    });
+                    $("#updatenutri").text("");
+                } else {
+                    $("#nutridata").text("");
+                }
+
+            });
+
+            $('body').on('click', '#editnutri', function() {
+                // Click to only happen on announce links
+                var rawmatid = parseInt($('#sid').val());
+
+
+
+                $('#updatenutri').load("update-rawmatnutridata.php", {
+                    fmodid: rawmatid,
+                    fform: "updatenutri"
+                });
+            });
+
+
+
+            $('body').on('change', '#nutrientID', function() {
+                // Click to only happen on announce links
                 var valnum = $('#nutrientID').val();
                 var quan = document.getElementById(valnum).textContent;
 
@@ -227,74 +224,86 @@ $(document).ready(function () {
             });
 
 
-        $('body').on('click','#updatenutriinfo',function(){
-         // Click to only happen on announce links
-        var quantity = $('#nutrientquantity').val();
+            $('body').on('click', '#updatenutriinfo', function() {
+                // Click to only happen on announce links
+                var quantity = $('#nutrientquantity').val();
 
-        if(quantity == ""){
-            snackbar("Quantity Field is empty.");
-        }else{
-            var fl = validateQuantity(quantity);
-            if(!fl){
-            snackbar("Quantity field is not valid. only numeral allowed.");
-            return false;
-        }else{
-
-        
-        var rawmatid = parseInt($('#rawmaterialid').val());
-        var nutrientID = parseInt($('#nutrientID').val());
-
-        // alert(rawmatid);
-        // alert(nutrientID);
-        $("#updatenutri").text("");
-        $('#updatenutri').load("update-rawmatnutridata.php", {
-        fmodid : rawmatid,
-        nutrientID : nutrientID,
-        quantity: quantity,
-        fform : "updatevalue"
-         });
-
-         
-        if(rawmatid != "select"){
-            $('#nutridata').load("rawmatnutridata.php", {
-            fmodid : rawmatid
-         });
-        }
-
-        }
-        }
+                if (quantity == "") {
+                    snackbar("Quantity Field is empty.","red");
+                } else {
+                    var fl = validateQuantity(quantity);
+                    if (!fl) {
+                        snackbar("Quantity field is not valid. only numeral allowed.","red");
+                        return false;
+                    } else {
 
 
-    
+                        var rawmatid = parseInt($('#rawmaterialid').val());
+                        var nutrientID = parseInt($('#nutrientID').val());
 
-        // $('#updatenutri').load("update-rawmatnutridata.php", {
-        // fmodid : rawmatid,
-        // fform : "updatenutri"
-        //  });
+                        // alert(rawmatid);
+                        // alert(nutrientID);
+                        $("#updatenutri").text("");
+                        $('#updatenutri').load("update-rawmatnutridata.php", {
+                            fmodid: rawmatid,
+                            nutrientID: nutrientID,
+                            quantity: quantity,
+                            fform: "updatevalue"
+                        }, function() {
+                            if (rawmatid != "select") {
+                            $('#nutridata').load("rawmatnutridata.php", {
+                                fmodid: rawmatid
+                            },function(){
+                                $('#example').DataTable({
+                                "scrollX": true
+                            });
+                            });
+                            }
+
+                            
+                        });
+
+
+                        // if (rawmatid != "select") {
+                        //     $('#nutridata').load("rawmatnutridata.php", {
+                        //         fmodid: rawmatid
+                        //     });
+                        // }
+
+                    }
+                }
+
+
+
+
+                // $('#updatenutri').load("update-rawmatnutridata.php", {
+                // fmodid : rawmatid,
+                // fform : "updatenutri"
+                //  });
+            });
+
+
+
+
         });
 
+        function validateQuantity(s) {
+            var rgx = /^[0-9]*\.?[0-9]*$/;
+            return s.match(rgx);
+        }
 
-
-
-});
-
-function validateQuantity(s) {
-    var rgx = /^[0-9]*\.?[0-9]*$/;
-    return s.match(rgx);
-}
-
-function snackbar(message) {
+        function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
-</script>
+    </script>
 
 </body>
 

@@ -1,55 +1,64 @@
 <?php require_once('session.php') ?>
+
 <?php
 require_once("connection.php");
-if(!$conn->connect_error){// if database connected.
-    
-if(isset($_REQUEST['submit'])){ // if submit button clicked
-    
-    $productname = $profilepic  = $packingopt = "";
 
-    $productname  =  $_REQUEST['hf-brandname'];
-    //$profilepic = $_REQUEST['hf-profilepic'];
-    $timestamp= time();
-    $sql1 = "insert into brand(brand_name,profile_pic,adding_timestamp,deleted) values('$productname','$profilepic','$timestamp',false)";
-    $res = $conn->query($sql1);
-    $brandid = "";
-    if($res){
-        
-    $sql2 = "select brand_id from brand where adding_timestamp = '$timestamp' && deleted != 1";
-    $res1 = $conn->query($sql2)->fetch_object()->brand_id;
+$notification = "";
+
+if (!$conn->connect_error) { // if database connected.
+
+    if (isset($_REQUEST['submit'])) { // if submit button clicked
+
+        $productname = $profilepic  = $packingopt = "";
+
+        $productname  =  $_REQUEST['hf-brandname'];
+        //$profilepic = $_REQUEST['hf-profilepic'];
+        $timestamp = time();
+        $sql1 = "insert into brand(brand_name,profile_pic,adding_timestamp,deleted) values('$productname','$profilepic','$timestamp',false)";
+        $res = $conn->query($sql1);
+        $brandid = "";
+        if ($res) {
+
+            $sql2 = "select brand_id from brand where adding_timestamp = '$timestamp' && deleted != 1";
+            $res1 = $conn->query($sql2)->fetch_object()->brand_id;
 
 
-    //echo "<script>alert('$res1');</script>";
-    foreach ($_POST as $name => $value) {
-    if (strpos($name, 'packing') !== false) {
-        $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
-        $res2 = $conn->query($que);
+            //echo "<script>alert('$res1');</script>";
+            foreach ($_POST as $name => $value) {
+                if (strpos($name, 'packing') !== false) {
+                    $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
+                    $res2 = $conn->query($que);
+                }
+            }
+
+            $notification = "202"; //insert successfully
+        } else {
+            $notification = "502"; //insert failure
+        }
+
+        $opt = "";
+        $sql =  "select id, packing_size from packings where deleted != 1";
+        $res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                // echo "<script>alert('a')</script>";
+                $opt .= '<option value=\"' . $row['packing_size'] . '\">' . $row['packing_size'] . ' kg</option>';
+            }
+        }
+    } else {
+
+        $opt = "";
+        $sql =  "select id, packing_size from packings where deleted != 1";
+        $res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                // echo "<script>alert('a')</script>";
+                $opt .= '<option value=\"' . $row['packing_size'] . '\">' . $row['packing_size'] . ' kg</option>';
+            }
+        }
     }
- }
-   }else{
-    echo "<script>alert('failure');</script>";
-   }
-
-   
-   //$res = $conn->query($sql);
-
-
-
-}else{
-
-    $opt = "";
-    $sql =  "select id, packing_size from packings where deleted != 1";
-    $res = $conn->query($sql);
-    if($res->num_rows > 0 ){
-    while($row = $res->fetch_assoc()){
-        // echo "<script>alert('a')</script>";
-        $opt .='<option value=\"'. $row['packing_size'] .'\">'. $row['packing_size'] . ' kg</option>';
-
-        
-
-    }
-}
-}
+} else { //if database not connected
+    $notification = "501";
 }
 
 ?>
@@ -93,23 +102,23 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
@@ -133,24 +142,26 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
                                                 </div>
                                             </div>
 
-                                            <div class="row form-group">
+                                            <!-- <div class="row form-group">
                                                         <div class="col col-md-3">
                                                                 <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
                                                         </div>
                                                         <div class="col-12 col-md-9">
                                                                 <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
                                                         </div>
-                                                    </div>
+                                                    </div> -->
 
-        
+
 
                                             <div class="row form-group">
                                                 <div class="col col-md-8">
                                                     <div class="row">
-                                                        <div class="col-sm-8" id="tabletitle"><h2>Packing Details</h2></div>
+                                                        <div class="col-sm-8" id="tabletitle">
+                                                            <h2>Packing Details</h2>
+                                                        </div>
                                                         <div class="col-sm-4">
                                                             <button type="button" class="btn btn-success add-new" id="addrow"><i class="fa fa-plus"></i> Add New</button>
-                                                         </div>
+                                                        </div>
                                                     </div>
 
                                                     <table id="myTable" class=" table table-bordered order-list ">
@@ -168,16 +179,16 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
                                                 </div>
                                             </div>
 
-                                          
+
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Save" />
+                                                    <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Save" />
                                                 </div>
-                                                
-                                            </div>  
-                                      
 
-                                            
+                                            </div>
+
+
+
 
                                         </form>
                                     </div>
@@ -224,94 +235,108 @@ if(isset($_REQUEST['submit'])){ // if submit button clicked
     <!-- Main JS-->
     <script src="js/main.js"></script>
     <script>
+        $(document).ready(function() {
+            //
+            var notification = '<?php echo $notification ?>';
 
-function validateForm() {
-    var brandname = document.getElementById("hf-brandname").value;
-    //var emailaddress = document.getElementById("hf-emailaddress").value;
+            if (notification == "501") {
+                snackbar("database error - database not connected.", "red");
 
-    if (brandname == "") {
-    snackbar("Brand name is required.");
-    return false;
-    }
+            } else if (notification == "202") {
+                snackbar("Brand Added Successfully.", "green");
+            } else if (notification == "502") {
+                snackbar("Insert Failure, Brand Data Not added.", "red");
+            }
+            var counter = 0;
 
-    var els = document.getElementsByClassName('pw');
-    //alert(els.length);
-    if(els.length == 0){
-        snackbar("No Packing Option is added.");
-        return false;
-    }
-    var packArray = [];
-    var reason =1;
-    for(var i = 0; i< els.length; i++){
-        var el = els[i];
-        if(el.value == "select"){
-        snackbar("One of the option field is empty.");
-        return false;
-    }else{
-        if(packArray.indexOf(el.value) > -1){
-            //in the array
-            snackbar(el.value +" option is selected twice.");
-            return false;
-        }else{
-            packArray.push(el.value);
-            // console.log();
-        }
-        
-    }
-    }
+            $("#addrow").on("click", function() {
+                var newRow = $("<tr class='packtab'>");
+                var cols = "";
 
-    return true;
-}
+                cols += '<td><i class="fa fa-circle"></i></td>';
+                // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
+                cols += '<td>' +
+                    '<select class="form-control pw" name="packing' + counter + '">' +
+                    '<option value="select">select option</option><?php echo $opt; ?>'
 
-function snackbar(message) {
-  // Get the snackbar DIV
-  var x = document.getElementById("snackbar");
-  x.innerHTML =message;
+                    +
+                    '</select>' +
+                    '</td>';
 
-  // Add the "show" class to DIV
-  x.className = "show";
 
-  // After 3 seconds, remove the show class from DIV
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-}
+                // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+                cols += '<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
+
+                newRow.append(cols);
+                $("table.order-list").append(newRow);
+                counter++;
+            });
+
+
+
+            $("table.order-list").on("click", ".ibtnDel", function(event) {
+                $(this).closest("tr").remove();
+                counter -= 1;
+            });
+
+
+        });
     </script>
 
     <script>
-$(document).ready(function () {
-    var counter = 0;
+        function validateForm() {
+            var brandname = document.getElementById("hf-brandname").value;
+            //var emailaddress = document.getElementById("hf-emailaddress").value;
 
-    $("#addrow").on("click", function () {
-        var newRow = $("<tr class='packtab'>");
-        var cols = "";
+            if (brandname == "") {
+                snackbar("Brand name is required.", "red");
+                return false;
+            }
 
-        cols += '<td><i class="fa fa-circle"></i></td>';
-        // cols += '<td><input type="text" class="form-control" name="packing' + counter + '"/></td>';
-        cols += '<td>'+
-        '<select class="form-control pw" name="packing' + counter + '">'
-            +'<option value="select">select option</option><?php echo $opt;?>'
-            
-        +'</select>'
-        +'</td>';
-        
+            var els = document.getElementsByClassName('pw');
+            //alert(els.length);
+            if (els.length == 0) {
+                snackbar("No Packing Option is added.", "red");
+                return false;
+            }
+            var packArray = [];
+            var reason = 1;
+            for (var i = 0; i < els.length; i++) {
+                var el = els[i];
+                if (el.value == "select") {
+                    snackbar("One of the option field is empty.", "red");
+                    return false;
+                } else {
+                    if (packArray.indexOf(el.value) > -1) {
+                        //in the array
+                        snackbar(el.value + " option is selected twice.", "red");
+                        return false;
+                    } else {
+                        packArray.push(el.value);
+                        // console.log();
+                    }
 
-        // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
-        
-        newRow.append(cols);
-        $("table.order-list").append(newRow);
-        counter++;
-    });
+                }
+            }
 
+            return true;
+        }
 
+        function snackbar(message, color) {
+            // Get the snackbar DIV
+            var x = document.getElementById("snackbar");
 
-    $("table.order-list").on("click", ".ibtnDel", function (event) {
-        $(this).closest("tr").remove();
-        counter -= 1;
-    });
+            x.innerHTML = message;
+            x.style.background = color;
+            // Add the "show" class to DIV
+            x.className = "show";
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
+    </script>
 
-
-});
-</script>
 
 
 

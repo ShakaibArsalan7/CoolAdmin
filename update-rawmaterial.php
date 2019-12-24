@@ -185,21 +185,21 @@ if(!$conn->connect_error){// if database connected.
 function validateForm() {
     var nname = document.getElementById("hf-rawmaterialname").value;
     if (nname == "") {
-    snackbar("Raw Material name is required.");
+    snackbar("Raw Material name is required.","red");
     return false;
     }
 
     return true;
 }
 
-function snackbar(message) {
+function snackbar(message,color) {
   // Get the snackbar DIV
   var x = document.getElementById("snackbar");
-  x.innerHTML =message;
 
+  x.innerHTML =message;
+  x.style.background = color;
   // Add the "show" class to DIV
   x.className = "show";
-
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
