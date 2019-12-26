@@ -58,6 +58,11 @@ if(!$conn->connect_error){
             while($row = $res->fetch_assoc()){
                 $opt .= '<th style="background-color:red;">'.$row['nutrition_name'] . '</th>';
                 $nutrientsdata[] = $row;
+                // 1 - Oil
+                // 2 - Ash
+                // 3 - Moisture
+                // ... 
+                //14 - Rate
             }
         }
 
@@ -67,6 +72,9 @@ if(!$conn->connect_error){
         if($res->num_rows > 0 ){
         while($row = $res->fetch_assoc()){
             $brandsdata[] = $row;
+            // 1 - Anmol
+            // 2 - Austrian
+            // 3 - sahab
             }
         }
 
@@ -76,6 +84,10 @@ if(!$conn->connect_error){
         if($res->num_rows > 0 ){
         while($row = $res->fetch_assoc()){
             $formulasdata[] = $row;
+            // 1 - Anmol sp
+            // 2 - Austrain sp1
+            // 3 - Austrain sp2
+            // 4 - sahab special
             }
         }
 
@@ -85,6 +97,11 @@ if(!$conn->connect_error){
         if($res->num_rows > 0 ){
         while($row = $res->fetch_assoc()){
             $rawmaterialsdata[] = $row;
+                // 1 - Maize
+                // 2 - Wheat Bran
+                // 3 - Rice Polish
+                // ... 
+                //58 - Poultry Feed Wastage
             }
         }
 
@@ -96,6 +113,10 @@ if(!$conn->connect_error){
         if($res->num_rows > 0 ){
         while($row = $res->fetch_assoc()){
             $brandformulasdata[] = $row;
+            // 1  Maize         1  1  1  23
+            // 2  Wheat Bran    1  1  2  43
+            // 3  Rice Polish   1  1  3  12
+            // 4  Gluten 30%    1  1  12 22
             }
         }
 
@@ -234,6 +255,3 @@ if(!$conn->connect_error){
 
 
 }
-
-
-?>

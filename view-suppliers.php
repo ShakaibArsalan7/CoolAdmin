@@ -119,17 +119,17 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['email_address'] . '</td>';
             echo  '<td>' . $row['work_phone'] . '</td>';
             echo  '<td>' . $row['work_address'] . '</td>';
-            echo '<td style="text-align:center">
+            echo '<td style="text-align:center" class="table-data-feature">
             <form action="update-supplier.php" method="POST">
-            <input type="hidden" name="id" id="sid" value=' .$row["supplier_id"]. 
-                '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            <input type="hidden" name="id" id="sid"  value=' .$row["supplier_id"]. 
+                '><button type="submit" name="edit" style="margin:3px" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
 
                 <form action="" method="POST">
-            <input type="hidden" name="id" value=' .$row["supplier_id"]. 
-                '> <button type="submit" name="delete"  value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+            <input type="hidden" name="id"  value=' .$row["supplier_id"]. 
+                '> <button type="submit" name="delete" style="margin:3px" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
-                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["supplier_id"] .'><i class="fas fa-eye"></i></button>
+                <button class="btn btn-info mid" style="margin:3px" data-toggle="modal" data-id=' . $row["supplier_id"] .'><i class="fas fa-eye"></i></button>
                 
                 
                 

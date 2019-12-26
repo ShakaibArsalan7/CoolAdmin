@@ -1,5 +1,5 @@
 <?php require_once('session.php') ?>
-<?php 
+<?php
 require_once("connection.php");
 $activeEmployees = $supplier = $clients = "";
 
@@ -16,7 +16,7 @@ $activeEmployees = $row1['c1'];
 
 $res2 = $conn->query($sql2);
 $row2 = $res2->fetch_assoc();
-$supplier =$row2['c2'];
+$supplier = $row2['c2'];
 
 $res3 = $conn->query($sql3);
 $row3 = $res3->fetch_assoc();
@@ -29,27 +29,62 @@ $expenses = $row4['c4'];
 $opt = "";
 $sql =  "select id, expense_type from expenseType where deleted != 1";
 $res = $conn->query($sql);
-if($res->num_rows > 0 ){
-while($row = $res->fetch_assoc()){
-    // echo "<script>alert('a')</script>";
-    $opt .='<option value='. $row['id'] .'>'. $row['expense_type'] .'</option>';
-
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        // echo "<script>alert('a')</script>";
+        $opt .= '<option value=' . $row['id'] . '>' . $row['expense_type'] . '</option>';
     }
-// echo "<script>alert('$opt')</script>";
+    // echo "<script>alert('$opt')</script>";
 }
 
 
 $opt1 = "";
+$sql =  "select employee_id, user_name from employee where deleted != 1";
+$res = $conn->query($sql);
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        // echo "<script>alert('a')</script>";
+        $opt1 .= '<option value=' . $row['employee_id'] . '>' . $row['employee_id'] . ' - ' . $row['user_name'] . '</option>';
+    }
+}
+
+$opt2 = "";
+for ($i = 0; $i < 12; $i++) {
+    $time = strtotime(sprintf('%d months', $i));
+    $label = date('F', $time);
+    $value = date('n', $time);
+    $opt2 .= "<option value='$value'>$label</option>";
+}
+
+
+$opt3 = "";
+$already_selected_value = 2019;
+$earliest_year = 2018;
+
+foreach (range(date('Y'), $earliest_year) as $x) {
+    $opt3 .= '<option value="' . $x . '"' . ($x === $already_selected_value ? ' selected="selected"' : '') . '>' . $x . '</option>';
+}
+
+
+$opt4 = "";
 $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
 $res = $conn->query($sql);
-if($res->num_rows > 0 ){
-while($row = $res->fetch_assoc()){
-    // echo "<script>alert('a')</script>";
-    $opt1 .='<option value='. $row['raw_material_id'] .'>'. $row['raw_material_id'] . ' - ' . $row['raw_material_name'] .'</option>';
-
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        // echo "<script>alert('a')</script>";
+        $opt4 .= '<option value=' . $row['raw_material_id'] . '>' . $row['raw_material_id'] . ' - ' . $row['raw_material_name'] . '</option>';
+    }
 }
-}
 
+// $opt1 = "";
+// $sql =  "select employee_id, user_name from employee where deleted != 1";
+// $res = $conn->query($sql);
+// if ($res->num_rows > 0) {
+//     while ($row = $res->fetch_assoc()) {
+//         // echo "<script>alert('a')</script>";
+//         $opt1 .= '<option value=' . $row['employee_id'] . '>' . $row['employee_id'] . ' - ' . $row['user_name'] . '</option>';
+//     }
+// }
 
 ?>
 <!DOCTYPE html>
@@ -88,30 +123,35 @@ while($row = $res->fetch_assoc()){
 
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
+    <link href="css/clock.css" rel="stylesheet" media="all">
     <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+
+    <!-- JavaScript Includes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
 
 </head>
 
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
@@ -136,8 +176,8 @@ while($row = $res->fetch_assoc()){
                                                 <i class="zmdi zmdi-shopping-cart"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$activeEmployees";?></h2>
-                                                <span>Active Employees</span>
+                                                <h2><?php echo "$activeEmployees"; ?></h2>
+                                                <span>Employees</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
@@ -154,7 +194,7 @@ while($row = $res->fetch_assoc()){
                                                 <i class="zmdi zmdi-shopping-cart"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$supplier";?></h2>
+                                                <h2><?php echo "$supplier"; ?></h2>
                                                 <span>Suppliers</span>
                                             </div>
                                         </div>
@@ -172,7 +212,7 @@ while($row = $res->fetch_assoc()){
                                                 <i class="zmdi zmdi-calendar-note"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$clients";?></h2>
+                                                <h2><?php echo "$clients"; ?></h2>
                                                 <span>clients</span>
                                             </div>
                                         </div>
@@ -190,8 +230,8 @@ while($row = $res->fetch_assoc()){
                                                 <i class="zmdi zmdi-money"></i>
                                             </div>
                                             <div class="text">
-                                                <h2 style="font-size:2rem;"><?php echo "$expenses";?></h2>
-                                                <span>Exp. (<?php echo date('M Y');?>)</span>
+                                                <h2 style="font-size:2rem;"><?php echo "$expenses"; ?></h2>
+                                                <span>Exp. (<?php echo date('M Y'); ?>)</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
@@ -203,200 +243,314 @@ while($row = $res->fetch_assoc()){
                         </div>
 
 
-                        <!-- <div class="row">
-                        <div class="col-md-6">
+                        <div class="row">
+
+                            <div class="col-md-12">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
-                                    <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="rawmaterialgraph" id="rawmaterialgraph">
-                                                <option value="select" selected="selected">Select Option</option>
-                                                <?php #echo $opt1; ?>
-                                            </select>
-                                            
-                                            <div class="dropDownSelect2"></div>
+                                        <h3 class="title-2 m-b-40">Current Time</h3>
+                                        <div id="digic">
+
+                                            <div class="clock">
+                                                <div class="hours">
+                                                    <div class="first">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                    <div class="second">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                </div>
+                                                <div class="tick">:</div>
+                                                <div class="minutes">
+                                                    <div class="first">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                    <div class="second">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                </div>
+                                                <div class="tick">:</div>
+                                                <div class="seconds">
+                                                    <div class="first">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                    <div class="second infinite">
+                                                        <div class="number">0</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                <div class="au-card m-b-30">
-                                    <div class="au-card-inner">
-                                        <h3 class="title-2 m-b-40">Raw Material Last 5 Purchases</h3>
-                                        <div id="myChart"><canvas id="sales-chart"></canvas></div>
-                                    </div>
-                                </div>
-                        </div>
-                        
+                            </div>
+
+
                             <div class="col-md-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
-                                        <h3 class="title-2 m-b-40">Team Commits</h3>
-                                        <canvas id="team-chart"></canvas>
+                                        <h3 class="title-2 m-b-40">Raw Material Last 5 Details</h3>
+                                        <div class="rs-select2--light rs-select2--md">
+                                            <select class="js-select2" name="rawmat" id="rawmat">
+                                                <?php echo $opt4;
+                                                ?>
+                                            </select>
+
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                        <div><canvas id="raw-mat-chart"></canvas></div>
                                     </div>
                                 </div>
                             </div>
-                           
-                        </div> -->
+                            
 
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- DATA TABLE -->
-                                <h3 class="title-5 m-b-35" id="amountTotal">Expenses Report</h3>
-                                <div class="table-data__tool">
-                                    <div class="table-data__tool-left">
-                                        <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="category" id="category">
-                                                <option value="all" selected="selected">All Categories</option>
-                                                <?php echo $opt; ?>
+                            <div class="col-md-6">
+                                <div class="au-card m-b-30">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2 m-b-40">Expense Details</h3>
+                                        <div class="rs-select2--light rs-select2--md m-1">
+                                            <select class="js-select2" name="monthexp" id="monthexp">
+                                                <?php echo $opt2;
+                                                ?>
                                             </select>
+
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="time" id="time">
-                                                <option value="today">Today</option>
-                                                <option value="1w">1 Week</option>
-                                                <option value="tm" selected="selected">this Month</option>
-                                                <option value="1m">1 Months</option>
-                                                <option value="1y">1 Year</option>
+                                        <div class="rs-select2--light rs-select2--sm m-1">
+                                            <select class="js-select2" name="yearexp" id="yearexp">
+                                                <?php echo $opt3;
+                                                ?>
                                             </select>
+
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        
+                                        <div><canvas id="exp-det-chart"></canvas></div>
                                     </div>
                                 </div>
-
-
-                                <div class="table-responsive table-responsive-data2" id="expenses">
-                                    
-                                        <?php
-        $sql = "select et.expense_type, ex.* from expenses ex inner join expenseType et on et.id = ex.type_id where ex.deleted != 1 and MONTH(date) = MONTH(CURRENT_DATE()) AND YEAR(date) = YEAR(CURRENT_DATE());";
-
-                                        $res = $conn->query($sql);
-                                        if($res->num_rows > 0 ){
-                                            echo '<table class="table table-data2" id="example" style="width:100%">';
-                                            echo '<thead>';
-                                            echo '<tr>';
-                                            echo '<th>Date</th>';
-                                            echo '<th>Expense Type</th>';
-                                            echo '<th>Comment</th>';
-                                            echo '<th>Amount</th>';
-                                            echo '</tr>';
-                                            echo '</thead>';
-                                            echo '<tbody >';
-                                                $total =0;
-                                        
-                                                while($row = $res->fetch_assoc()){
-                                                    $total +=$row['amount']; 
-                                                    echo '<tr>';
-                                                    echo '<td>' . $row['date'] . '</td>';
-                                                    echo '<td>';
-                                                    echo '<span class="block-email">' .$row['expense_type'] .'</span>';
-                                                    echo '</td>';
-                                                    echo '<td class="desc">' .$row['comment'] .'</td>';
-                                                    echo '<td>'. $row['amount'] .'</td>';
-                                                    echo '</tr>';
-                                                }
-
-                                                
-                                                echo '</tbody>';
-                                                echo '</table>';
-                                        
-                                        }
-                                        
-                                        
-                                        ?>
-                                            
-                                        
-                                </div>
-                                <!-- END DATA TABLE -->
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- DATA TABLE -->
-                                <h3 class="title-5 m-b-35 m-t-50">Raw Material Stock Report</h3>
-                                <div class="table-data__tool">
-                                    <div class="table-data__tool-left">
-                                        <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="rawmaterial" id="rawmaterial">
-                                                <option value="all" selected="selected">All Raw Materials</option>
+                            
+
+                            <div class="col-md-6">
+
+                                <div class="au-card m-b-30">
+                                    <div class="au-card-inner">
+
+                                        <h3 class="title-2 m-b-40">Employee Attendance Details</h3>
+                                        <div class="rs-select2--light rs-select2--md m-1">
+                                            <select class="js-select2" name="employeeid" id="employeeid">
                                                 <?php echo $opt1; ?>
                                             </select>
+
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="time2" id="time2">
-                                                <option value="today">Today</option>
-                                                <option value="1w">1 Week</option>
-                                                <option value="tm" selected="selected">this Month</option>
-                                                <option value="1m">1 Months</option>
-                                                <option value="1y">1 Year</option>
+                                        <div class="rs-select2--light rs-select2--md  m-1">
+                                            <select class="js-select2" name="monthemp" id="monthemp">
+                                                <?php echo $opt2;
+                                                ?>
                                             </select>
+
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        
+                                        <div class="rs-select2--light rs-select2--sm  m-1">
+                                            <select class="js-select2" name="yearemp" id="yearemp">
+                                                <?php echo $opt3;
+                                                ?>
+                                            </select>
+
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                        <div><canvas id="emp-att-chart"></canvas></div>
+
                                     </div>
                                 </div>
 
-
-                                <div class="table-responsive table-responsive-data2" id="rawmaterialstocks">
-                                   
-
-
-                                        <?php
-                                         
-
-                                        $sql = "SELECT rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id WHERE MONTH(date_added) = MONTH(CURRENT_DATE()) AND YEAR(date_added) = YEAR(CURRENT_DATE()) and rmsh.deleted != 1";
-                                        $res = $conn->query($sql);
-                                        if($res->num_rows > 0 ){
-                                            echo '<table class="table table-data2" id="example1" style="width:100%">';
-                                         echo '<thead>';
-                                         echo '<tr>';
-                                         echo '<th>Raw Material Name</th>';
-                                         echo '<th>Quantity</th>';
-                                         echo '<th>Added on</th>';
-                                         echo '</tr>';
-                                         echo '</thead>';
-                                         echo '<tbody >';
-                                                while($row = $res->fetch_assoc()){
-                                                    echo  '<tr>';
-                                                    echo  '<td>' . $row['raw_material_name'] . '</td>';
-                                                    echo  '<td>' . $row['weight_added'] . ' kg</td>';
-                                                    echo  '<td>' . $row['date_added'] . '</td>';
-                                                    echo '</tr>';
-                                                }
-                                                echo '</tbody>';
-                                        echo '</table>';
-                                        
-                                        }
-                                        
-                                        
-                                        ?>
-                                            
-                                        
-                                </div>
-                                <!-- END DATA TABLE -->
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="au-card m-b-30">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2 m-b-40">More Reports will be added after further requirements implementations.</h3>
+                                        <!-- <div class="rs-select2--light rs-select2--md">
+                                            <select class="js-select2" name="rawmat" id="rawmat">
+                                                <option value="select" selected="selected">Select Option</option>
+                                                <?php #echo $opt2; 
+                                                ?>
+                                            </select>
+
+                                            <div class="dropDownSelect2"></div>
+                                        </div> -->
+                                        <div><canvas id="raw-mat-chart1"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
 
-                      
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h3 class="title-5 m-b-35" id="amountTotal">Expenses Report</h3>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left">
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="category" id="category">
+                                            <option value="all" selected="selected">All Categories</option>
+                                            <?php echo $opt; ?>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="time" id="time">
+                                            <option value="today">Today</option>
+                                            <option value="1w">1 Week</option>
+                                            <option value="tm" selected="selected">this Month</option>
+                                            <option value="1m">1 Months</option>
+                                            <option value="1y">1 Year</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+
                                 </div>
+                            </div>
+
+
+                            <div class="table-responsive table-responsive-data2" id="expenses">
+
+                                <?php
+                                $sql = "select et.expense_type, ex.* from expenses ex inner join expenseType et on et.id = ex.type_id where ex.deleted != 1 and MONTH(date) = MONTH(CURRENT_DATE()) AND YEAR(date) = YEAR(CURRENT_DATE());";
+
+                                $res = $conn->query($sql);
+                                if ($res->num_rows > 0) {
+                                    echo '<table class="table table-data2" id="example" style="width:100%">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Date</th>';
+                                    echo '<th>Expense Type</th>';
+                                    echo '<th>Comment</th>';
+                                    echo '<th>Amount</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody >';
+                                    $total = 0;
+
+                                    while ($row = $res->fetch_assoc()) {
+                                        $total += $row['amount'];
+                                        echo '<tr>';
+                                        echo '<td>' . $row['date'] . '</td>';
+                                        echo '<td>';
+                                        echo '<span class="block-email">' . $row['expense_type'] . '</span>';
+                                        echo '</td>';
+                                        echo '<td class="desc">' . $row['comment'] . '</td>';
+                                        echo '<td>' . $row['amount'] . '</td>';
+                                        echo '</tr>';
+                                    }
+
+
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                }
+
+
+                                ?>
+
+
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h3 class="title-5 m-b-35 m-t-50">Raw Material Stock Report</h3>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left">
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="rawmaterial" id="rawmaterial">
+                                            <option value="all" selected="selected">All Raw Materials</option>
+                                            <?php echo $opt1; ?>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="time2" id="time2">
+                                            <option value="today">Today</option>
+                                            <option value="1w">1 Week</option>
+                                            <option value="tm" selected="selected">this Month</option>
+                                            <option value="1m">1 Months</option>
+                                            <option value="1y">1 Year</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="table-responsive table-responsive-data2" id="rawmaterialstocks">
+
+
+
+                                <?php
+
+
+                                $sql = "SELECT rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id WHERE MONTH(date_added) = MONTH(CURRENT_DATE()) AND YEAR(date_added) = YEAR(CURRENT_DATE()) and rmsh.deleted != 1";
+                                $res = $conn->query($sql);
+                                if ($res->num_rows > 0) {
+                                    echo '<table class="table table-data2" id="example1" style="width:100%">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Raw Material Name</th>';
+                                    echo '<th>Quantity</th>';
+                                    echo '<th>Added on</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody >';
+                                    while ($row = $res->fetch_assoc()) {
+                                        echo  '<tr>';
+                                        echo  '<td>' . $row['raw_material_name'] . '</td>';
+                                        echo  '<td>' . $row['weight_added'] . ' kg</td>';
+                                        echo  '<td>' . $row['date_added'] . '</td>';
+                                        echo '</tr>';
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                }
+
+
+                                ?>
+
+
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="copyright">
+                                <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END MAIN CONTENT-->
-            <!-- END PAGE CONTAINER-->
         </div>
+        <!-- END MAIN CONTENT-->
+        <!-- END PAGE CONTAINER-->
+    </div>
 
     </div>
 
-    <div id="rmlfp"></div>
+    <div id="expreport"></div>
+    <div id="empreport"></div>
+    <div id="rawreport"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -425,119 +579,487 @@ while($row = $res->fetch_assoc()){
     <script src="js/main.js"></script>
 
     <script>
+        var expchart = "";
+        var empchart = "";
+        var rawchart = "";
 
-    $(document).ready(function() {
-    $('#example').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
-
-    $('#example1').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
-
-
-    $('#category').on('change', function() {
-        var category = this.value;
-        var time = $('#time').val();
-        // alert(category);
-        // alert(time);
-         $("#expenses").text("");
-            $('#expenses').load("dashboardReports.php", {
-                category : category,
-                time : time,
-                fform : "expenseReport"
-            },function(){
-                $('#example').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
+        $(document).ready(function() {
+            $('#example').DataTable({
+                "scrollX": true,
+                pageLength: 5
             });
 
-        
-    });
-
-
-    $('#time').on('change', function() {
-        var time = this.value;
-        var category = $('#category').val();
-            // alert(category);
-            // alert(time);
-            $("#expenses").text("");
-            $('#expenses').load("dashboardReports.php", {
-                category : category,
-                time : time,
-                fform : "expenseReport"
-            },function(){
-                $('#example').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
-            });
-    });
-
-
-    am("");
-
-
-    $('#rawmaterial').on('change', function() {
-        var rawmaterial = this.value;
-        var time = $('#time2').val();
-        // alert(category);
-        // alert(time);
-         $("#rawmaterialstocks").text("");
-            $('#rawmaterialstocks').load("dashboardReports.php", {
-                rawmaterial : rawmaterial,
-                time : time,
-                fform : "rawmaterialstockreport"
-            },function(){
-                $('#example1').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
+            $('#example1').DataTable({
+                "scrollX": true,
+                pageLength: 5
             });
 
-        
-    });
+
+            $('#category').on('change', function() {
+                var category = this.value;
+                var time = $('#time').val();
+                // alert(category);
+                // alert(time);
+                $("#expenses").text("");
+                $('#expenses').load("dashboardReports.php", {
+                    category: category,
+                    time: time,
+                    fform: "expenseReport"
+                }, function() {
+                    $('#example').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
 
 
-    $('#time2').on('change', function() {
-        var time = this.value;
-        var rawmaterial = $('#rawmaterial').val();
-            // alert(category);
-            // alert(time);
-            $("#rawmaterialstocks").text("");
-            $('#rawmaterialstocks').load("dashboardReports.php", {
-                rawmaterial : rawmaterial,
-                time : time,
-                fform : "rawmaterialstockreport"
-            },function(){
-                $('#example1').DataTable({
-        "scrollX": true,
-        pageLength : 5
-    });
             });
-    });
 
 
-});
-function am(x){
-        if(x == ""){
-            var x = '<?php echo $total;?>';
-        $('#amountTotal').text('Expense Report ------------- Total : '+x);
+            $('#time').on('change', function() {
+                var time = this.value;
+                var category = $('#category').val();
+                // alert(category);
+                // alert(time);
+                $("#expenses").text("");
+                $('#expenses').load("dashboardReports.php", {
+                    category: category,
+                    time: time,
+                    fform: "expenseReport"
+                }, function() {
+                    $('#example').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
 
-        }else{
-            $('#amountTotal').text('Expense Report ------------- Total : '+x);
+
+            am("");
+
+
+            $('#rawmaterial').on('change', function() {
+                var rawmaterial = this.value;
+                var time = $('#time2').val();
+                // alert(category);
+                // alert(time);
+                $("#rawmaterialstocks").text("");
+                $('#rawmaterialstocks').load("dashboardReports.php", {
+                    rawmaterial: rawmaterial,
+                    time: time,
+                    fform: "rawmaterialstockreport"
+                }, function() {
+                    $('#example1').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+
+
+            });
+
+
+            $('#time2').on('change', function() {
+                var time = this.value;
+                var rawmaterial = $('#rawmaterial').val();
+                // alert(category);
+                // alert(time);
+                $("#rawmaterialstocks").text("");
+                $('#rawmaterialstocks').load("dashboardReports.php", {
+                    rawmaterial: rawmaterial,
+                    time: time,
+                    fform: "rawmaterialstockreport"
+                }, function() {
+                    $('#example1').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
+
+
+
+
+
+
+
+
+
+            $('#monthexp').on('change', function() {
+                var month = this.value;
+                var year = $('#yearexp').val();
+
+                $("#expreport").text("");
+                $('#expreport').load("dashboardReports.php", {
+                    month: month,
+                    year: year,
+                    fform: "expensereport"
+                });
+
+            });
+
+
+            $('#yearexp').on('change', function() {
+                var year = this.value;
+                var month = $('#monthexp').val();
+
+                $("#expreport").text("");
+                $('#expreport').load("dashboardReports.php", {
+                    month: month,
+                    year: year,
+                    fform: "expensereport"
+                });
+            });
+
+            $('#employeeid').on('change', function() {
+                var id = this.value;
+                var month = $('#monthemp').val();
+                var year = $('#yearemp').val();
+
+                $("#empreport").text("");
+                $('#empreport').load("dashboardReports.php", {
+                    id: id,
+                    month: month,
+                    year: year,
+                    fform: "empattreport"
+                });
+            });
+
+            $('#monthemp').on('change', function() {
+                var month = this.value;
+                var id = $('#employeeid').val();
+                var year = $('#yearemp').val();
+
+                $("#empreport").text("");
+                $('#empreport').load("dashboardReports.php", {
+                    id: id,
+                    month: month,
+                    year: year,
+                    fform: "empattreport"
+                });
+            });
+
+            $('#yearemp').on('change', function() {
+                var year = this.value;
+                var month = $('#monthemp').val();
+                var id = $('#employeeid').val();
+
+                $("#empreport").text("");
+                $('#empreport').load("dashboardReports.php", {
+                    id: id,
+                    month: month,
+                    year: year,
+                    fform: "empattreport"
+                });
+            });
+
+            $('#rawmat').on('change', function() {
+                var id = this.value;
+
+                $("#rawreport").text("");
+                $('#rawreport').load("dashboardReports.php", {
+                    id: id,
+                    fform: "rawreport"
+                });
+            });
+
+
+            //clock
+
+
+            var hoursContainer = document.querySelector('.hours')
+            var minutesContainer = document.querySelector('.minutes')
+            var secondsContainer = document.querySelector('.seconds')
+            var tickElements = Array.from(document.querySelectorAll('.tick'))
+
+            var last = new Date(0)
+            last.setUTCHours(-1)
+
+            var tickState = true
+
+            function updateTime() {
+                var now = new Date
+
+                var lastHours = last.getHours().toString()
+                var nowHours = now.getHours().toString()
+                if (lastHours !== nowHours) {
+                    updateContainer(hoursContainer, nowHours)
+                }
+
+                var lastMinutes = last.getMinutes().toString()
+                var nowMinutes = now.getMinutes().toString()
+                if (lastMinutes !== nowMinutes) {
+                    updateContainer(minutesContainer, nowMinutes)
+                }
+
+                var lastSeconds = last.getSeconds().toString()
+                var nowSeconds = now.getSeconds().toString()
+                if (lastSeconds !== nowSeconds) {
+                    //tick()
+                    updateContainer(secondsContainer, nowSeconds)
+                }
+
+                last = now
+            }
+
+            function tick() {
+                tickElements.forEach(t => t.classList.toggle('tick-hidden'))
+            }
+
+            function updateContainer(container, newTime) {
+                var time = newTime.split('')
+
+                if (time.length === 1) {
+                    time.unshift('0')
+                }
+
+
+                var first = container.firstElementChild
+                if (first.lastElementChild.textContent !== time[0]) {
+                    updateNumber(first, time[0])
+                }
+
+                var last = container.lastElementChild
+                if (last.lastElementChild.textContent !== time[1]) {
+                    updateNumber(last, time[1])
+                }
+            }
+
+            function updateNumber(element, number) {
+                //element.lastElementChild.textContent = number
+                var second = element.lastElementChild.cloneNode(true)
+                second.textContent = number
+
+                element.appendChild(second)
+                element.classList.add('move')
+
+                setTimeout(function() {
+                    element.classList.remove('move')
+                }, 990)
+                setTimeout(function() {
+                    element.removeChild(element.firstElementChild)
+                }, 990)
+            }
+
+            setInterval(updateTime, 100)
+
+
+            //clock
+
+
+
+
+
+        });
+
+        function am(x) {
+            if (x == "") {
+                var x = '<?php echo $total; ?>';
+                $('#amountTotal').text('Expense Report ------------- Total : ' + x);
+
+            } else {
+                $('#amountTotal').text('Expense Report ------------- Total : ' + x);
+
+            }
 
         }
 
-}
+        function expensedetail(et = "", am = "") {
+            <?php
+
+            $sql = "SELECT * FROM expenseType et WHERE et.deleted != 1";
+            $res = $conn->query($sql);
+            $et = array();
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    $et[] = $row['expense_type'];
+                }
+            }
 
 
 
+            $sql = "SELECT e.type_id,sum(e.amount) as total FROM expenses e WHERE e.deleted != 1 and MONTH(e.date) = MONTH(CURRENT_DATE()) AND YEAR(e.date) = YEAR(CURRENT_DATE()) group by e.type_id";
+            $res = $conn->query($sql);
+            $am = array();
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    $am[] = $row['total'];
+                }
+            }
 
-</script>
+            ?>
+            // console.log(expchart);
+            if (et == "" && am == "") {
+                <?php echo "var etjs =  ", json_encode($et), "; var amjs =  ", json_encode($am), ";" ?>
+            } else {
+                var etjs = et;
+                var amjs = am;
+            }
+
+            // alert(expchart);
+            if (expchart != null && expchart != undefined && expchart != "") {
+                expchart.destroy();
+            }
+
+            // Bar chart
+            expchart = new Chart(document.getElementById("exp-det-chart"), {
+                type: 'bar',
+                data: {
+                    labels: etjs,
+                    datasets: [{
+                        label: "Expense Details",
+                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                        data: amjs
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expense details'
+                    }
+                }
+            });
+        }
+
+        expensedetail("", "");
+
+        function empattendancedetail(da = "") {
+
+            <?php
+
+            $sql = "SELECT count(*) as total FROM AttenadnceType att WHERE att.deleted != 1";
+            $total = $conn->query($sql)->fetch_object()->total;
+            $sql = "SELECT * FROM employee e where e.deleted != 1 limit 1";
+            $id = $conn->query($sql)->fetch_object()->employee_id;
+            $sql = "select la.attendance_description,count(la.attendance_description) as totalc from laborAttendance la where la.deleted != 1 and MONTH(la.date) = MONTH(CURRENT_DATE()) AND YEAR(la.date) = YEAR(CURRENT_DATE()) and la.employee_id = $id group by la.attendance_description";
+            $res = $conn->query($sql);
+            $daatt = array();
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    $daatt[] = $row;
+                }
+            }
+            $da = array();
+            $s = count($daatt);
+            if ($s > 0) {
+                for ($i = 1; $i <= $total; $i++) {
+                    $f = false;
+                    foreach ($daatt as $d) {
+                        if ($d['attendance_description'] == $i) {
+                            $da[] = $d['totalc'];
+                            $f = true;
+                        }
+                    }
+                    if (!$f) {
+                        $da[] = 0;
+                    }
+                }
+            } else {
+                for ($i = 1; $i <= $total; $i++) {
+                    $da[] = 0;
+                }
+            }
+
+
+            ?>
+            // console.log(expchart);
+            if (da == "") {
+                <?php echo "var dajs =  ", json_encode($da), ";" ?>
+            } else {
+                var dajs = da;
+            }
+
+            // alert(expchart);
+            if (empchart != null && empchart != undefined && empchart != "") {
+                empchart.destroy();
+            }
+
+            empchart = new Chart(document.getElementById("emp-att-chart"), {
+                type: 'pie',
+                data: {
+                    labels: ["Present", "Absent", "Full day leave", "Half day Leave", "Sick Leave"],
+                    datasets: [{
+                        label: "Attendance details",
+                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                        data: dajs
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Attendance details'
+                    }
+                }
+            });
+
+
+        }
+        empattendancedetail("");
+
+        function rawmaterialRep(dates = "", weights = "") {
+
+            <?php
+
+
+            $sql = "SELECT * FROM employee e where e.deleted != 1 limit 1";
+            $id = $conn->query($sql)->fetch_object()->employee_id;
+
+
+            $sql = "SELECT * FROM rawMaterialStockAdditionHistory rms WHERE rms.deleted != 1 and rms.rawmaterial_id = $id order by rms.date_added desc limit 5";
+            $res = $conn->query($sql);
+            $dates = array();
+            $weights = array();
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    $dates[] = $row['date_added'];
+                    $weights[] = $row['weight_added'];
+                }
+            }
+
+            ?>
+            // console.log(expchart);
+            if (dates == "" && weights == "" && typeof(dates) == "string") {
+                <?php echo "var datesjs =  ", json_encode($dates), "; var weightsjs =  ", json_encode($weights), ";" ?>
+            } else if (dates.length == 0 && weights.length == 0 && typeof(dates) == "object") {
+                var datesjs = [];
+                var weightsjs = [];
+            } else {
+                var datesjs = dates;
+                var weightsjs = weights;
+            }
+
+            // alert(expchart);
+            if (rawchart != null && rawchart != undefined && rawchart != "") {
+                rawchart.destroy();
+            }
+
+
+
+            rawchart = new Chart(document.getElementById("raw-mat-chart"), {
+                type: 'line',
+                data: {
+                    labels: datesjs, //dates
+                    datasets: [{
+                        data: weightsjs, //weights
+                        label: "Raw Material",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Raw Material Last 5 Details'
+                    }
+                }
+            });
+        }
+
+        rawmaterialRep("", "");
+    </script>
 
 </body>
 

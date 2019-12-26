@@ -257,7 +257,10 @@ a {
 /* body.loading .modal {
     display: block;
 } */ 
-
+td {
+    text-align: center;
+    vertical-align: middle;
+  }
 #snackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
     min-width: 250px; /* Set a default minimum width */

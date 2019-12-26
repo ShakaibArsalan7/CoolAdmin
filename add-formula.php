@@ -277,7 +277,7 @@ $(document).ready(function () {
         cols+='<td><input type="text" class="form-control qw" id="rawmaterialweight' + counter +'" name="rmweight' + counter + '" placeholder="Enter Weight..." ></td>';
 
         // cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-        cols +='<td><i class="ibtnDel fas fa-trash-alt" style="font-size:1.5 rem;color:red;display:inline-block;width:100%;text-align:center"></i></td>';
+        cols +='<td class="table-data-feature"><i  id="addtoreal"'+counter+' class="far fa-plus-square" style="font-size:2rem;color:green;width:50%;height:100%;text-align:center"></i> <i class="ibtnDel fas fa-trash-alt" style="font-size:2rem;color:red;width:50%;height:100%;text-align:center"></i></td>';
         
         newRow.append(cols);
         $("table.order-list").append(newRow);

@@ -104,13 +104,6 @@ if(!$conn->connect_error){
                                             <div id="rawmaterialdetail">
                                                 
                                             </div>
-
-                                            <!-- <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Add Formula" />
-                                                </div>
-                                                
-                                            </div> -->
                             </div>
                     </div>
 
@@ -202,25 +195,11 @@ $(document).ready(function () {
             $("#rawmaterialdetail").text("");
         }
 
-        
-        // $("#functions").text("");
-        // $('#functions').load("modifybrand.php", {
-        // fmodid : brandid,
-        // fform : "cbn"
-        //  });
-
    });
 
 
 });
 
-
-// $body = $("body");
-
-// $(document).on({
-//     ajaxStart: function() { $body.addClass("loading");    },
-//      ajaxStop: function() { $body.removeClass("loading"); }    
-// });
 </script>
 
 </body>

@@ -117,18 +117,18 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['Nutrition_id'] . '</td>';
             echo  '<td>' . $row['nutrition_name'] . '</td>';
             echo  '<td>' . $row['unit_of_usage'] . '</td>';
-            echo '<td style="text-align:center">
+            echo '<td class="table-data-feature">
             
             <form action="update-nutrient.php" method="POST">
             <input type="hidden" name="id" id="sid" value=' .$row["Nutrition_id"]. 
-                '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                '><button type="submit" name="edit" style="margin:3px" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
 
                 <form action="" method="POST">
             <input type="hidden" name="id" value=' .$row["Nutrition_id"]. 
-                '> <button type="submit" name="delete" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                '> <button type="submit" name="delete" style="margin:3px" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
-                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["Nutrition_id"] .'><i class="fas fa-eye"></i></button>
+                <button class="btn btn-info mid" style="margin:3px" data-toggle="modal" data-id=' . $row["Nutrition_id"] .'><i class="fas fa-eye"></i></button>
                 
                 
                 

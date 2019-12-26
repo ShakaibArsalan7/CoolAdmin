@@ -201,6 +201,94 @@ if($form === "expenseReport"){
        echo '</table>';
     } 
 
+}else if($form == "expensereport"){
+    $month = $_POST['month'];
+    $year = $_POST['year'];
+
+    $sql = "SELECT * FROM expenseType et WHERE et.deleted != 1";
+    $res = $conn->query($sql);
+    $et = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $et[] =$row['expense_type'];
+        }
+    }
+
+
+
+    $sql = "SELECT e.type_id,sum(e.amount) as total FROM expenses e WHERE e.deleted != 1 and MONTH(e.date) = $month AND YEAR(e.date) = $year group by e.type_id";
+    $res = $conn->query($sql);
+    $am = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $am[] = $row['total'];
+        }
+    }
+
+    echo "<script>expensedetail(",json_encode($et),",",json_encode($am),");</script>";
+}else if($form == "empattreport"){
+
+    $month = $_POST['month'];
+    $year = $_POST['year'];
+    $id = $_POST['id'];
+
+
+    $sql = "SELECT count(*) as total FROM AttenadnceType att WHERE att.deleted != 1";
+    $total = $conn->query($sql)->fetch_object()->total;
+
+    $sql = "select la.attendance_description,count(la.attendance_description) as totalc from laborAttendance la where la.deleted != 1 and MONTH(la.date) = $month AND YEAR(la.date) = $year and la.employee_id = $id group by la.attendance_description";
+    $res = $conn->query($sql);
+    $daatt = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $daatt[] = $row;
+        }
+    }
+    $da = array();
+    $s = count($daatt);
+    if($s > 0){
+        for($i = 1; $i <= $total; $i++){
+            $f = false;
+            foreach($daatt as $d){
+                if($d['attendance_description'] == $i){
+                    $da[] = $d['totalc'];
+                    $f = true;
+                }
+            }
+            if(!$f){
+                $da[] = 0;
+            }
+
+        }
+
+    }else{
+        for($i = 1; $i <= $total; $i++){
+                $da[] = 0;
+
+        }
+    }
+
+    echo "<script>empattendancedetail(",json_encode($da),");</script>";
+
+}else if($form == "rawreport"){
+    $id = $_POST['id'];
+
+
+
+    $sql = "SELECT * FROM rawMaterialStockAdditionHistory rms WHERE rms.deleted != 1 and rms.rawmaterial_id = $id order by rms.date_added desc limit 5";
+    $res = $conn->query($sql);
+    $dates = array();
+    $weights = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $dates[] = $row['date_added'];
+            $weights[] = $row['weight_added'];
+        }
+        echo "<script>rawmaterialRep(",json_encode($dates),",",json_encode($weights),");</script>";
+    }else{
+        echo "<script>rawmaterialRep([],[]);</script>";
+    }
+
 }
 
 }
