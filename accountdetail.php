@@ -38,12 +38,7 @@ if(!$conn->connect_error){
                                                         <span class="email"><?php echo "$email";?></span>
                                                     </div>
                                                 </div>
-                                                <div class="account-dropdown__body">
-                                                    <div class="account-dropdown__item">
-                                                        <a href="view-users.php">
-                                                            <i class="zmdi zmdi-account"></i>Account Details</a>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div class="account-dropdown__footer">
                                                     <a href="logout.php">
                                                         <i class="zmdi zmdi-power"></i>Logout</a>
