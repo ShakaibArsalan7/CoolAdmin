@@ -8,7 +8,7 @@ if(isset($_COOKIE['USERID'])){
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 
 <head>
     <!-- Required meta tags-->
@@ -42,20 +42,21 @@ if(isset($_COOKIE['USERID'])){
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
 
+
 </head>
 
 <body class="animsition">
     <div class="page-wrapper">
-        <div class="page-content--bge5">
-            <div class="container">
-                <div class="login-wrap">
+        <div class="page-content--bge5" style="background:linear-gradient(to right, #d38312, #a83279);">
+            <div class="container" style="background:linear-gradient(to right, #d38312, #a83279);">
+                <div class="login-wrap" >
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
                                 <img src="images/icon/logo.png" alt="CoolAdmin">
                             </a>
                         </div>
-                        <div class="login-form">
+                        <div class="login-form" >
                             <form action="index.php" method="post">
                                 <div class="form-group">
                                     <label>Email</label>

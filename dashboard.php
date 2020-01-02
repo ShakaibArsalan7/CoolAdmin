@@ -47,7 +47,6 @@ if ($res->num_rows > 0) {
         $opt1 .= '<option value=' . $row['employee_id'] . '>' . $row['employee_id'] . ' - ' . $row['user_name'] . '</option>';
     }
 }
-
 $opt2 = "";
 for ($i = 0; $i < 12; $i++) {
     $time = strtotime(sprintf('%d months', $i));
@@ -58,8 +57,8 @@ for ($i = 0; $i < 12; $i++) {
 
 
 $opt3 = "";
-$already_selected_value = 2019;
-$earliest_year = 2018;
+$already_selected_value = date('Y');
+$earliest_year = 2020;
 
 foreach (range(date('Y'), $earliest_year) as $x) {
     $opt3 .= '<option value="' . $x . '"' . ($x === $already_selected_value ? ' selected="selected"' : '') . '>' . $x . '</option>';

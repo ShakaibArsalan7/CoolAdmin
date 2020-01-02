@@ -122,22 +122,47 @@ if(!$conn->connect_error){
 
         $tabledata = array();
         
-        foreach($brandformulasdata as $weightage){ // this will run the number of raw materials in formula, for example 11 in this case.
+        foreach($brandformulasdata as $id=>$weightage){ // this will run the number of raw materials in formula, for example 11 in this case.
             $tabledatarow = array();
-            $tabledatarow[] = $weightage['id'];
+            $tabledatarow[] = $id+1;
             $tabledatarow[] = $weightage['raw_material_name'];
             $tabledatarow[] = $weightage['weightinkg'];
             // if we get the nutrient data in raw materials
-            $sql1 = "SELECT * FROM RawmaterialNutrients rmn where rmn.raw_material_id = $weightage[rawmaterial_id]";
+
+
+
+
+
+            $sql1 = "SELECT * FROM RawmaterialNutrients rmn where rmn.raw_material_id = $weightage[rawmaterial_id] and rmn.deleted != 1";
             //echo "<script>alert('$sql1')</script>";
             // multiply the weight with nutrient data
-
+            $nutriinfo =array();
             $res = $conn->query($sql1);
             if($res->num_rows > 0 ){
-                while($row = $res->fetch_assoc()){ // this will run 14 number of times as their are 13 nutrients and 1 rate.
-                    $tabledatarow[]  = $weightage['weightinkg'] * $row['percentageperkg'];
+                while($row = $res->fetch_assoc()){
+                    $nutriinfo[] = $row;
                 }
             }
+
+            foreach($nutrientsdata as $nutrient){
+                $found = false;
+                foreach($nutriinfo as $info){
+                    if(!$found){
+                        if($nutrient['Nutrition_id'] == $info['Nutrition_id']){
+                            $tabledatarow[]  = $weightage['weightinkg'] * $info['percentageperkg'];
+                            $found = true;
+                        }
+                    }
+                }
+                if(!$found){ $tabledatarow[]  = $weightage['weightinkg'] * 0.0; }
+            }
+
+
+
+            //$tabledatarow[]  = $weightage['weightinkg'] * $row['percentageperkg'];
+
+
+
             //add to table data array.
             $tabledata[] = $tabledatarow;
 
@@ -223,9 +248,9 @@ if(!$conn->connect_error){
                     $i = 0;
                     foreach($sumrow as $td){
                         if($i == 0){
-                            echo  '<td  style="background-color:green;">' . $td . '</td>';
+                            echo  '<td  style="background-color:light-green;">' . $td . '</td>';
                         }else if($i == 1){
-                            echo  '<td  style="background-color:green;">' . $td . '</td>';
+                            echo  '<td  style="background-color:light-green;">' . $td . '</td>';
                         }else{
                             echo  '<td  style="background-color:red;">' . $td . '</td>';
                         }

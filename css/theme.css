@@ -97,6 +97,8 @@ p {
     border-radius: 3px;
 }
 
+
+
 /* ----- Typography ----- */
 body {
     font-family: "Poppins", sans-serif;
@@ -106,6 +108,7 @@ body {
     color: #31475d;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
 }
 
 h1,

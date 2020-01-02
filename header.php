@@ -142,7 +142,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="has-sub">
+                            <!-- <li class="has-sub">
                                 <a class="js-arrow" href="#">
                                     <i class="far fa-money-bill-alt"></i>Purchasers
                                 </a>
@@ -154,7 +154,7 @@
                                         <a href="view-purchaser.php">View Purchasers</a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
                                     <i class="fas fa-clipboard-check"></i>Labor Attendance
