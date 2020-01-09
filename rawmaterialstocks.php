@@ -3,39 +3,53 @@
 <?php
 require_once("connection.php");
 
-if(!$conn->connect_error){
+if (!$conn->connect_error) {
 
 
-    if(isset($_REQUEST['submit'])){ // if submit button clicked
-        
+    if (isset($_REQUEST['submit'])) { // if submit button clicked
+
         $rawmaterialid  =  $_REQUEST['rawmaterial'];
         $date =  $_REQUEST['hf-date'];
         $weight =  $_REQUEST['hf-weight'];
         $weight = (float) $weight;
         $rate = $_REQUEST['hf-rate'];
-
+        $rate = (float) $rate;
+        $supplierid = $_REQUEST['suppliername'];
+        $supplierid = (int) $supplierid;
+        $modeofpayment = $_REQUEST['modeofpayment'];
+        $totalpayment = $_REQUEST['hf-totalpayment'];
+        $totalpayment = (float) $totalpayment;
+        $paymentmade = $_REQUEST['hf-paymentmade'];
+        $paymentmade = (float) $paymentmade;
+        $discount = $_REQUEST['hf-discount'];
+        $discount = (float) $discount;
+        $remainingpayment = $_REQUEST['hf-remaining'];
+        $remainingpayment = (float) $remainingpayment;
+        $extrapayment = $_REQUEST['hf-extrapayment'];
+        $extrapayment = (float) $extrapayment;
         // get weight and add weight and update weight
 
         $sql = "UPDATE rawmaterialStock rms SET  rms.weight  =rms.weight + $weight WHERE rms.rawmaterial_id = $rawmaterialid";
         $res = $conn->query($sql);
-    //validation passed
-        $sql1 = "insert into rawMaterialStockAdditionHistory(rawmaterial_id,weight_added,date_added,deleted) values($rawmaterialid,$weight,'$date',false);";
+        //validation passed
+        $sql1 = "insert into rawMaterialStockAdditionHistory(rawmaterial_id,weight_added,rate, supplier_id, modeofpayment, totalpayment, paymentmade, discount, remainingpayment, extrapayment, date_added, deleted) values($rawmaterialid,$weight,$rate,$supplierid,'$modeofpayment',$totalpayment,$paymentmade,$discount,$remainingpayment,$extrapayment,'$date',false);";
         $res = $conn->query($sql1);
-       if($res){
-           //echo "inserted succesfully";
-           
-           //update rate in RawmaterialNutrients
-           //get kgs in stocks
+
+        if ($res) {
+            //echo "inserted succesfully";
+
+            //update rate in RawmaterialNutrients
+            //get kgs in stocks
             $sql3 = "SELECT rms.weight FROM rawmaterialStock rms where rms.rawmaterial_id = $rawmaterialid";
             $weightPresent = $conn->query($sql3)->fetch_object()->weight;
             //get current rate of raw material
             $sql4 = "SELECT rmn.percentageperkg FROM RawmaterialNutrients rmn WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
             $currentRate = $conn->query($sql4)->fetch_object()->percentageperkg;
 
-            $rspresent = ($weightPresent-$weight) * $currentRate;
+            $rspresent = ($weightPresent - $weight) * $currentRate;
             $rsadded = $weight * $rate;
 
-            $rsnew = $rsadded +$rspresent;
+            $rsnew = $rsadded + $rspresent;
             $newWeight = $weightPresent;
 
             $newRate = $rsnew / $newWeight;
@@ -45,12 +59,12 @@ if(!$conn->connect_error){
             $sql = "UPDATE RawmaterialNutrients rmn SET  rmn.percentageperkg  =$newRate WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
             $res = $conn->query($sql);
 
-           $notification  = "adddo";
-           
-       }
-           
-   }else if(isset($_REQUEST['submita'])){
-    $rawmaterialid  =  $_REQUEST['rawmaterial'];
+            $notification  = "adddo";
+        } else {
+            echo "<script>alert('no')</script>";
+        }
+    } else if (isset($_REQUEST['submita'])) {
+        $rawmaterialid  =  $_REQUEST['rawmaterial'];
         $date =  $_REQUEST['hf-date'];
         $weight =  $_REQUEST['hf-weight'];
         $comment = $_REQUEST['hf-comment'];
@@ -63,26 +77,22 @@ if(!$conn->connect_error){
         $sql3 = "SELECT rms.weight FROM rawmaterialStock rms where rms.rawmaterial_id = $rawmaterialid";
         $weightPresent = $conn->query($sql3)->fetch_object()->weight; // 79
 
-        if($weightPresent < $weight){
-            $notification ="gr";
+        if ($weightPresent < $weight) {
+            $notification = "gr";
             //can't do this
-        }else{
+        } else {
             $sql = "UPDATE rawmaterialStock rms SET  rms.weight  =rms.weight - $weight WHERE rms.rawmaterial_id = $rawmaterialid";
             $res = $conn->query($sql);
-        //validation passed
+            //validation passed
             $sql1 = "insert into rawMaterialStockLossHistory(rawmaterial_id,weight_lost,date_added,comment,deleted) values($rawmaterialid,$weight,'$date','$comment',false);";
             $res = $conn->query($sql1);
-           if($res){
-               //echo "inserted succesfully";
-               $notification ="do";
-               
-           }
+            if ($res) {
+                //echo "inserted succesfully";
+                $notification = "do";
+            }
         }
-
-        
-}else{
-
-}
+    } else {
+    }
 }
 
 ?>
@@ -128,46 +138,46 @@ if(!$conn->connect_error){
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                    <div class="row" style="width:70%;margin:auto">
-                             <div class="col-md-12" >
+                        <div class="row" style="width:70%;margin:auto">
+                            <div class="col-md-12">
 
-                                    <button type="button" style="margin:15px 5px" class="btn btn-info" id="arms">Add Raw Material Stock</button>
-                                    <button type="button" style="margin:15px 5px" class="btn btn-success" id="vrms">View Raw Material Stock</button>
-                                    <button type="button" style="margin:15px 5px" class="btn btn-danger" id="rrms">Remove Raw Material Stock</button>
-                    
-                                </div>
-                    </div>
+                                <button type="button" style="margin:15px 5px" class="btn btn-info" id="arms">Add Stock</button>
+                                <button type="button" style="margin:15px 5px" class="btn btn-success" id="vrms">View Stock</button>
+                                <button type="button" style="margin:15px 5px" class="btn btn-danger" id="rrms">Remove Stock</button>
 
-                    <div class="row">
-                             <div class="col-md-12" id="content">
+                            </div>
+                        </div>
 
-                                    
-                                </div>
-                    </div>
-                        
+                        <div class="row">
+                            <div class="col-md-12" id="content">
+
+
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
@@ -185,32 +195,32 @@ if(!$conn->connect_error){
     </div>
 
     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="largeModalLabel">Raw Material Stock Detail</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-                        <button type="button" style="margin:15px 5px" class="btn btn-success" id="addedrms">Added</button>
-                        <button type="button" style="margin:15px 5px" class="btn btn-danger" id="removedrms">Removed</button>
-                        <input  type="hidden" id="idval" value=""/>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="largeModalLabel">Raw Material Stock Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" style="margin:15px 5px" class="btn btn-success" id="addedrms">Added</button>
+                    <button type="button" style="margin:15px 5px" class="btn btn-danger" id="removedrms">Removed</button>
+                    <input type="hidden" id="idval" value="" />
 
-							<div id="parawithdata">
-								
+                    <div id="parawithdata">
 
-                                
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- end modal large -->
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal large -->
 
     <div id="snackbar"></div>
 
@@ -241,220 +251,299 @@ if(!$conn->connect_error){
     <!-- Main JS-->
     <script src="js/main.js"></script>
     <script>
-$(document).ready(function () {
+        $(document).ready(function() {
 
-    var noti = "<?php echo $notification; ?>";
-    if(noti == "adddo"){
-        snackbar("Added Successfully","green");
-    }else if(noti == "gr"){
-        snackbar("Weight added is greater than weight present in inventory.","red");
-    }else if(noti == "do"){
-        snackbar("Removed Successfully","green");
-    }
+            var noti = "<?php echo $notification; ?>";
+            if (noti == "adddo") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "gr") {
+                snackbar("Weight added is greater than weight present in inventory.", "red");
+            } else if (noti == "do") {
+                snackbar("Removed Successfully", "green");
+            }
 
-    $('body').on('click','#arms',function(){ // Click to only happen on announce links
-        $("#content").text("");
-        $('#content').load("stock.php", {
-        fform : "arms"
-         });
+            $('body').on('click', '#arms', function() { // Click to only happen on announce links
+                $("#content").text("");
+                $('#content').load("stock.php", {
+                    fform: "arms"
+                });
 
-   });
-
-
-   $('body').on('click','#vrms',function(){ // Click to only happen on announce links
-        $("#content").text("");
-        $('#content').load("stock.php", {
-        fform : "vrms"
-         },function(){
-            $('#example').DataTable();
-         });
+            });
 
 
-
-   });
-
-
-$('body').on('click','#rrms',function(){ // Click to only happen on announce links
-        $("#content").text("");
-        $('#content').load("stock.php", {
-        fform : "rrms"
-         });
-
-   });
-
-   $('body').on('click','.mid',function(){ // Click to only happen on announce links
-    //var a = document.getElement
-    $("#idval").val($(this).data('id'));
-    // debugger;
-    var rawid = parseInt($("#idval").val());
-
-    $('#parawithdata').load("stock.php", {
-        fmodid : rawid,
-        fform : "rawmaterialstockdetail"
-    },function(){
-            $('#modalexample').DataTable();
-         });
-
-
-     $('#largeModal').modal('show');
-
-   });
-
-
-   $('body').on('click','#addedrms',function(){ // Click to only happen on announce links
-    //var a = document.getElement
-    //$("#idval").val($(this).data('id'));
-    // debugger;
-    var rawid = parseInt($("#idval").val());
-    $('#parawithdata').text('');
-    $('#parawithdata').load("stock.php", {
-        fmodid : rawid,
-        fform : "rawmaterialstockdetail"
-    },function(){
-            $('#modalexample').DataTable();
-         });
-
-
-     //$('#largeModal').modal('show');
-
-   });
-
-   $('body').on('click','#removedrms',function(){ // Click to only happen on announce links
-    //var a = document.getElement
-    //$("#idval").val($(this).data('id'));
-    // debugger;
-    var rawid = parseInt($("#idval").val());
-    $('#parawithdata').text('');
-    $('#parawithdata').load("stock.php", {
-        fmodid : rawid,
-        fform : "removedrawmaterialstockdetail"
-    },function(){
-            $('#modalexample').DataTable();
-         });
-
-
-     //$('#largeModal').modal('show');
-
-   });
+            $('body').on('click', '#vrms', function() { // Click to only happen on announce links
+                $("#content").text("");
+                $('#content').load("stock.php", {
+                    fform: "vrms"
+                }, function() {
+                    $('#example').DataTable();
+                });
 
 
 
+            });
 
-});
-</script>
 
-<script>
+            $('body').on('click', '#rrms', function() { // Click to only happen on announce links
+                $("#content").text("");
+                $('#content').load("stock.php", {
+                    fform: "rrms"
+                });
 
-function validateForm() {
-    
-    var rawmaterialid = document.getElementById('rawmaterial').value;
-    var date = document.getElementById('hf-date').value;
-    var weight = document.getElementById('hf-weight').value;
-    var rate = document.getElementById('hf-rate').value;
-    
-    if(rawmaterialid == "select"){
-        snackbar("Raw Material ID is required","red");
-        return false;
-    }
-    if(date == ""){
-        snackbar("Date Field is required","red");
-        return false;
-    }
-    if(weight == '0' || weight == ''){
-        snackbar("Weight Field is required","red");
-        return false;
-    }
-    
-    var fl = validateQuantity(weight);
-    if(!fl){
-            snackbar("Weight field is not valid. only numeral allowed.","red");
-            return false;
+            });
+
+            $('body').on('click', '.mid', function() { // Click to only happen on announce links
+                //var a = document.getElement
+                $("#idval").val($(this).data('id'));
+                // debugger;
+                var rawid = parseInt($("#idval").val());
+
+                $('#parawithdata').load("stock.php", {
+                    fmodid: rawid,
+                    fform: "rawmaterialstockdetail"
+                }, function() {
+                    $('#modalexample').DataTable();
+                });
+
+
+                $('#largeModal').modal('show');
+
+            });
+
+
+            $('body').on('click', '#addedrms', function() { // Click to only happen on announce links
+                //var a = document.getElement
+                //$("#idval").val($(this).data('id'));
+                // debugger;
+                var rawid = parseInt($("#idval").val());
+                $('#parawithdata').text('');
+                $('#parawithdata').load("stock.php", {
+                    fmodid: rawid,
+                    fform: "rawmaterialstockdetail"
+                }, function() {
+                    $('#modalexample').DataTable();
+                });
+
+
+                //$('#largeModal').modal('show');
+
+            });
+
+            $('body').on('click', '#removedrms', function() { // Click to only happen on announce links
+                //var a = document.getElement
+                //$("#idval").val($(this).data('id'));
+                // debugger;
+                var rawid = parseInt($("#idval").val());
+                $('#parawithdata').text('');
+                $('#parawithdata').load("stock.php", {
+                    fmodid: rawid,
+                    fform: "removedrawmaterialstockdetail"
+                }, function() {
+                    $('#modalexample').DataTable();
+                });
+
+
+                //$('#largeModal').modal('show');
+
+            });
+
+
+
+
+        });
+    </script>
+
+    <script>
+        function validateForm() {
+
+            var rawmaterialid = document.getElementById('rawmaterial').value;
+            var date = document.getElementById('hf-date').value;
+            var weight = document.getElementById('hf-weight').value;
+            var rate = document.getElementById('hf-rate').value;
+
+            var suppliername = document.getElementById('suppliername').value;
+            var modeofpayment = document.getElementById('modeofpayment').value;
+            var totalpayment = document.getElementById('hf-totalpayment').value;
+            var paymentmade = document.getElementById('hf-paymentmade').value;
+            var discount = document.getElementById('hf-discount').value;
+            var remainingpayment = document.getElementById('hf-remaining').value;
+            var extrapayment = document.getElementById('hf-extrapayment').value;
+
+
+            if (rawmaterialid == "select") {
+                snackbar("Raw Material ID is required", "red");
+                return false;
+            }
+            if (suppliername == "select") {
+                snackbar("Supplier name is required", "red");
+                return false;
+            }
+            if (date == "") {
+                snackbar("Date Field is required", "red");
+                return false;
+            }
+            if (weight == '0' || weight == '' || parseFloat(weight) < 0) {
+                snackbar("Weight Field is empty or negetive", "red");
+                return false;
+            }
+            if (parseFloat(paymentmade) < 0) {
+                snackbar("Payment made can't be negetive", "red");
+                return false;
+            }
+            if (parseFloat(discount) < 0) {
+                snackbar("Discount can't be negetive", "red");
+                return false;
+            }
+
+
+            var fl = validateQuantity(weight);
+            if (!fl) {
+                snackbar("Weight field is not valid. only numeral allowed.", "red");
+                return false;
+            }
+
+            if (parseFloat(weight) < 0) {
+                snackbar("Expense amount can't be negetive.", "red");
+                return false;
+            }
+
+            if (rate == '0' || rate == '' || parseFloat(rate) < 0) {
+                snackbar("Rate Field is empty or negetive", "red");
+                return false;
+            }
+
+            var fl = validateQuantity(rate);
+            if (!fl) {
+                snackbar("Rate field is not valid. only numeral allowed.", "red");
+                return false;
+            }
+
+            if (parseFloat(rate) < 0) {
+                snackbar("Rate can't be negetive.", "red");
+                return false;
+            }
+
+            return true;
         }
 
-        if(parseFloat(weight) < 0 ){
-        snackbar("Expense amount can't be negetive.","red");
-        return false;
-    }
 
-    if(rate == '0' || rate == ''){
-        snackbar("Rate Field is required","red");
-        return false;
-    }
-    
-    var fl = validateQuantity(rate);
-    if(!fl){
-            snackbar("Rate field is not valid. only numeral allowed.","red");
-            return false;
+        function validateremForm() {
+
+            var rawmaterialid = document.getElementById('rawmaterial').value;
+            var date = document.getElementById('hf-date').value;
+            var weight = document.getElementById('hf-weight').value;
+            var comment = document.getElementById('hf-comment').value;
+
+            if (rawmaterialid == "select") {
+                snackbar("Raw Material ID is required", "red");
+                return false;
+            }
+            if (date == "") {
+                snackbar("Date Field is required", "red");
+                return false;
+            }
+            if (comment == "") {
+                snackbar("describe why you are removing in comment section", "red");
+                return false;
+            }
+            if (weight == '0' || weight == '') {
+                snackbar("Weight Field is required", "red");
+                return false;
+            }
+
+            var fl = validateQuantity(weight);
+            if (!fl) {
+                snackbar("Weight field is not valid. only numeral allowed.", "red");
+                return false;
+            }
+
+            if (parseFloat(weight) < 0) {
+                snackbar("Expense amount can't be negetive.", "red");
+                return false;
+            }
+
+            return true;
         }
 
-        if(parseFloat(rate) < 0 ){
-        snackbar("Rate can't be negetive.","red");
-        return false;
-    }
-
-    return true;
-}
-
-
-function validateremForm() {
-    
-    var rawmaterialid = document.getElementById('rawmaterial').value;
-    var date = document.getElementById('hf-date').value;
-    var weight = document.getElementById('hf-weight').value;
-    var comment = document.getElementById('hf-comment').value;
-
-    if(rawmaterialid == "select"){
-        snackbar("Raw Material ID is required","red");
-        return false;
-    }
-    if(date == ""){
-        snackbar("Date Field is required","red");
-        return false;
-    }
-    if(comment == ""){
-        snackbar("describe why you are removing in comment section","red");
-        return false;
-    }
-    if(weight == '0' || weight == ''){
-        snackbar("Weight Field is required","red");
-        return false;
-    }
-    
-    var fl = validateQuantity(weight);
-    if(!fl){
-            snackbar("Weight field is not valid. only numeral allowed.","red");
-            return false;
+        function validateQuantity(s) {
+            var rgx = /^[0-9]*\.?[0-9]*$/;
+            return s.match(rgx);
         }
 
-        if(parseFloat(weight) < 0 ){
-        snackbar("Expense amount can't be negetive.","red");
-        return false;
-    }
+        function snackbar(message, color) {
+            // Get the snackbar DIV
+            var x = document.getElementById("snackbar");
 
-    return true;
-}
+            x.innerHTML = message;
+            x.style.background = color;
+            // Add the "show" class to DIV
+            x.className = "show";
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
 
-function validateQuantity(s) {
-    var rgx = /^[0-9]*\.?[0-9]*$/;
-    return s.match(rgx);
-}
 
-function snackbar(message,color) {
-  // Get the snackbar DIV
-  var x = document.getElementById("snackbar");
 
-  x.innerHTML =message;
-  x.style.background = color;
-  // Add the "show" class to DIV
-  x.className = "show";
-  // After 3 seconds, remove the show class from DIV
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-}
+        function weightchange() {
+            var w = document.getElementById("hf-weight").value;
+            var r = document.getElementById("hf-rate").value;
+            if (w == 0 || r == 0 || w == "" || r == "") {
+                document.getElementById("hf-totalpayment").value = 0;
+            } else {
+                document.getElementById("hf-totalpayment").value = w * r;
+            }
+
+        }
+
+        function ratechange() {
+            var w = document.getElementById("hf-weight").value;
+            var r = document.getElementById("hf-rate").value;
+            if (w == 0 || r == 0 || w == "" || r == "") {
+                document.getElementById("hf-totalpayment").value = 0;
+            } else {
+                document.getElementById("hf-totalpayment").value = w * r;
+            }
+        }
+
+        function paymentmadechange() {
+            var pm = parseInt(document.getElementById("hf-paymentmade").value);
+            var tp = parseInt(document.getElementById("hf-totalpayment").value);
+            var d = parseInt(document.getElementById("hf-discount").value);
+            debugger;
+            if (pm + d > tp) {
+                document.getElementById("hf-extrapayment").value = (pm + d) - tp;
+                document.getElementById("hf-remaining").value = 0;
+            } else if (pm + d == tp) {
+                document.getElementById("hf-extrapayment").value = 0;
+                document.getElementById("hf-remaining").value = 0;
+            } else {
+                document.getElementById("hf-extrapayment").value = 0;
+                document.getElementById("hf-remaining").value = tp - (pm + d);
+            }
+        }
+
+        function discountchange() {
+            var pm = parseInt(document.getElementById("hf-paymentmade").value);
+            var tp = parseInt(document.getElementById("hf-totalpayment").value);
+            var d = parseInt(document.getElementById("hf-discount").value);
+            debugger;
+            if (pm + d > tp) {
+                document.getElementById("hf-extrapayment").value = (pm + d) - tp;
+                document.getElementById("hf-remaining").value = 0;
+            } else if (pm + d == tp) {
+                document.getElementById("hf-extrapayment").value = 0;
+                document.getElementById("hf-remaining").value = 0;
+            } else {
+                document.getElementById("hf-extrapayment").value = 0;
+                document.getElementById("hf-remaining").value = tp - (pm + d);
+            }
+
+        }
     </script>
 
 </body>
 
 </html>
 <!-- end document-->
-
-

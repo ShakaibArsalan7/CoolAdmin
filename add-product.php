@@ -28,6 +28,8 @@ if (!$conn->connect_error) { // if database connected.
                 if (strpos($name, 'packing') !== false) {
                     $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
                     $res2 = $conn->query($que);
+
+                    
                 }
             }
 

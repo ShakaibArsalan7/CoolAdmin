@@ -48,12 +48,12 @@ require_once("connection.php");
         $value = date('n', $time);
         $opt2 .= "<option value='$value'>$label</option>";
     }
-    
-    
+
+
     $opt3 = "";
     $already_selected_value = date('Y');
-    $earliest_year = 2020;
-    
+    $earliest_year = 2019;
+
     foreach (range(date('Y'), $earliest_year) as $x) {
         $opt3 .= '<option value="' . $x . '"' . ($x === $already_selected_value ? ' selected="selected"' : '') . '>' . $x . '</option>';
     }
@@ -217,8 +217,13 @@ require_once("connection.php");
                 var month = this.value;
                 var year = $('#yearexp').val();
 
-                resetBoxes();
-                
+                // $('.container-sketch').html('');
+                $(".container-sketch").text("");
+                $('.container-sketch').load("attendanceDesign.php", {
+                    month: month,
+                    year: year,
+                    fform: "timechange"
+                });
 
             });
 
@@ -227,14 +232,20 @@ require_once("connection.php");
                 var year = this.value;
                 var month = $('#monthexp').val();
 
-                resetBoxes();
+                $(".container-sketch").text("");
+                $('.container-sketch').load("attendanceDesign.php", {
+                    month: month,
+                    year: year,
+                    fform: "timechange"
+                });
+
             });
 
         });
 
 
         var main = function() {
-            resetBoxes();
+            resetBoxes(noOfEmployees, labattendances, noOfDays, daytoday, enames, true);
         };
 
         //Default width/height values: 10x10
@@ -272,9 +283,9 @@ require_once("connection.php");
         //   var height = 10;
 
 
-        var resetBoxes = function() {
+        var resetBoxes = function(noOfEmployees, labattendances, noOfDays, daytoday, enames, first) {
             $('.container-sketch').html('');
-            //no of days
+
             $('.sketchbox').remove();
             for (var i = 0; i < noOfEmployees + 1; i++) {
                 if (i != 0) {
@@ -282,80 +293,162 @@ require_once("connection.php");
                 }
                 for (var j = 0; j < noOfDays + 1; j++) {
 
+                    if (first == true) {
 
-                    day = j + 1;
 
-                    if (day <= parseInt(daytoday) + 1) {
+                        day = j + 1;
 
-                        //i 0  == dates
-                        // j 0 == names
-                        if (i == 0 && j == 0) {
-                            div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
-                            $('.container-sketch').append(div);
-                        } else if (i == 0) {
-                            div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
-                            $('.container-sketch').append(div);
+                        if (day <= parseInt(daytoday) + 1) {
 
-                        } else if (j == 0) {
-                            div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
-                            $('.container-sketch').append(div);
-                            //names
-                        } else {
-                            //if present then tick, else for absent leave ,cross
-                            // debugger;
-                            m = j;
-                            id = enames[i - 1].employee_id + '_' + m;
-                            var f = false;
-                            for (var k = 0; k < onelabatt.length; k++) {
-                                var d = new Date(onelabatt[k].date).getDate();
-                                if (m == d) {
-                                    // different type of attendances
-                                    var at = onelabatt[k].attendance_description;
-                                    if (at == 1) {
-                                        div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fas fa-check"></i></div>'
-                                        $('.container-sketch').append(div);
-                                    } else {
-                                        div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-times"></i></div>'
-                                        $('.container-sketch').append(div);
+                            //i 0  == dates
+                            // j 0 == names
+                            if (i == 0 && j == 0) {
+                                div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
+                                $('.container-sketch').append(div);
+                            } else if (i == 0) {
+                                div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
+                                $('.container-sketch').append(div);
+
+                            } else if (j == 0) {
+                                div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
+                                $('.container-sketch').append(div);
+                                //names
+                            } else {
+                                //if present then tick, else for absent leave ,cross
+                                // debugger;
+                                m = j;
+                                id = enames[i - 1].employee_id + '_' + m;
+                                var f = false;
+                                for (var k = 0; k < onelabatt.length; k++) {
+                                    var d = new Date(onelabatt[k].date).getDate();
+                                    if (m == d) {
+                                        // different type of attendances
+                                        var at = onelabatt[k].attendance_description;
+                                        if (at == 1) {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fas fa-check"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        } else {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-times"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        }
+                                        f = true;
+                                        break;
                                     }
-                                    f = true;
-                                    break;
                                 }
+                                if (!f) {
+                                    div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue"><i class="fas fa-question"></i></div>'
+                                    $('.container-sketch').append(div);
+                                }
+
+
+
                             }
-                            if (!f) {
-                                div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue"><i class="fas fa-question"></i></div>'
+
+                        } else {
+
+                            //i 0  == dates
+                            // j 0 == names
+                            if (i == 0 && j == 0) {
+                                div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
+                                $('.container-sketch').append(div);
+                            } else if (i == 0) {
+                                div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
+                                $('.container-sketch').append(div);
+
+                            } else if (j == 0) {
+                                div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
+                                $('.container-sketch').append(div);
+                                //names
+                            } else {
+                                //if present then tick, else for absent leave ,cross
+
+                                m = j;
+                                id = i + '_' + m;
+                                div = '<div id =' + id + ' class="sketchbox"></div>'
                                 $('.container-sketch').append(div);
                             }
-
-
 
                         }
 
                     } else {
 
-                        //i 0  == dates
-                        // j 0 == names
-                        if (i == 0 && j == 0) {
-                            div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
-                            $('.container-sketch').append(div);
-                        } else if (i == 0) {
-                            div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
-                            $('.container-sketch').append(div);
+                        day = j + 1;
+                        daytoday = noOfDays;
+                        if (day <= parseInt(daytoday) + 1) {
 
-                        } else if (j == 0) {
-                            div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
-                            $('.container-sketch').append(div);
-                            //names
+                            //i 0  == dates
+                            // j 0 == names
+                            if (i == 0 && j == 0) {
+                                div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
+                                $('.container-sketch').append(div);
+                            } else if (i == 0) {
+                                div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
+                                $('.container-sketch').append(div);
+
+                            } else if (j == 0) {
+                                div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
+                                $('.container-sketch').append(div);
+                                //names
+                            } else {
+                                //if present then tick, else for absent leave ,cross
+                                // debugger;
+                                m = j;
+                                id = enames[i - 1].employee_id + '_' + m;
+                                var f = false;
+                                for (var k = 0; k < onelabatt.length; k++) {
+                                    var d = new Date(onelabatt[k].date).getDate();
+                                    if (m == d) {
+                                        // different type of attendances
+                                        var at = onelabatt[k].attendance_description;
+                                        if (at == 1) {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fas fa-check"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        } else {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-times"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        }
+                                        f = true;
+                                        break;
+                                    }
+                                }
+                                if (!f) {
+                                    
+                                    div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue"></div>'
+                                    $('.container-sketch').append(div);
+                                }
+
+
+
+                            }
+
                         } else {
-                            //if present then tick, else for absent leave ,cross
 
-                            m = j;
-                            id = i + '_' + m;
-                            div = '<div id =' + id + ' class="sketchbox" style="background-color:gray;"></div>'
-                            $('.container-sketch').append(div);
+                            //i 0  == dates
+                            // j 0 == names
+                            // if (i == 0 && j == 0) {
+                            //     div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
+                            //     $('.container-sketch').append(div);
+                            // } else if (i == 0) {
+                            //     div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
+                            //     $('.container-sketch').append(div);
+
+                            // } else if (j == 0) {
+                            //     div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
+                            //     $('.container-sketch').append(div);
+                            //     //names
+                            // } else {
+                            //     //if present then tick, else for absent leave ,cross
+
+                            //     m = j;
+                            //     id = i + '_' + m;
+                            //     div = '<div id =' + id + ' class="sketchbox" style="background-color:gray;"></div>'
+                            //     $('.container-sketch').append(div);
+                            // }
+
                         }
 
                     }
+
 
                 }
                 $('.container-sketch').append('<br style="width:0px;height:0px">');

@@ -13,9 +13,10 @@ if(!$conn->connect_error){
         $formulaid =  $_REQUEST['formulasid'];
         $packingid =  $_REQUEST['packingSizes'];
         $noofbags = $_REQUEST['hf-noofbags'];
+        $noofbags = (int)$noofbags;
         $date =  $_REQUEST['hf-date'];
 
-        $totalweight = (int)$packingid * (int)$noofbags;
+        $totalweight = (int)$packingid * $noofbags;
         $formulamultiplier = (float)$totalweight / 100.0; 
         // $t = gettype($formulamultiplier);
         // echo "<script>alert('$formulamultiplier is a $t')</script>";
@@ -70,6 +71,21 @@ if(!$conn->connect_error){
                 $notification  = "adddo";
                 
             }
+
+            // add to number of bags
+            // already there then update else add row
+            $que = "SELECT p.id,p.noofbags FROM productStockPackingWise p where p.brand_id = $brandid and p.formula_id =$formulaid and p.packing_size =$packingid and p.deleted != 1";
+            $res = $conn->query($que);
+            if($res->num_rows > 0 ){
+                $row = $res->fetch_assoc();
+                $que = "update productStockPackingWise p set p.noofbags = p.noofbags + $noofbags where p.id = $row[id] and p.deleted != 1";
+                $res = $conn->query($que);
+            }else{
+                $que2 = "INSERT INTO productStockPackingWise(brand_id, formula_id, packing_size, noofbags, deleted) VALUES ($brandid,$formulaid,$packingid,$noofbags,false )";
+                $res = $conn->query($que2);
+            }
+            
+        
 
          }
 
@@ -248,7 +264,7 @@ if(!$conn->connect_error){
         </div>
 
     </div>
-
+<!-- 
     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -274,8 +290,8 @@ if(!$conn->connect_error){
 						</div>
 					</div>
 				</div>
-			</div>
-			<!-- end modal large -->
+			</div>  -->
+			<!-- end modal large
 
     <div id="snackbar"></div>
 
@@ -340,19 +356,17 @@ $(document).ready(function(){
         $("#content").text("");
         $('#content').load("pstock.php", {
         fform : "vrms"
-         },function(){
-            $('#example').DataTable();
          });
 
    });
 
-   $('body').on('click','#rrms',function(){ // Click to only happen on announce links
-        $("#content").text("");
-        $('#content').load("pstock.php", {
-        fform : "rrms"
-         });
+//    $('body').on('click','#rrms',function(){ // Click to only happen on announce links
+//         $("#content").text("");
+//         $('#content').load("pstock.php", {
+//         fform : "rrms"
+//          });
 
-   });
+//    });
 
 
    $('body').on('change','#brandid',function(){
@@ -385,6 +399,44 @@ $(document).ready(function(){
         bmodid : brandid,
         fform : "showpackings"
     });
+    }
+
+
+   });
+
+//    *******************************************************
+
+
+   $('body').on('change','#brandid1',function(){
+    var brandid = parseInt($("#brandid1").val());
+
+    if(brandid == "select"){
+        $("#formulashere1").text("");
+    }else{
+        $('#formulashere1').load("pstock.php", {
+        bmodid : brandid,
+        fform : "showformulas1"
+    });
+    }
+    
+
+   });
+
+
+   $('body').on('change','#formulasid1',function(){
+    var formulasid = parseInt($("#formulasid1").val());
+    var brandid = parseInt($("#brandid1").val());
+    // debugger;
+    if(formulasid == "select"){
+        $("#stockhere1").text("");
+    }else{
+        $('#stockhere1').load("pstock.php", {
+        bmodid : brandid,
+        formulasid : formulasid,
+        fform : "showstock"
+    },function(){
+            $('#example2').DataTable();
+         });
     }
 
 
@@ -517,6 +569,9 @@ function snackbar(message,color) {
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
+
+
+
     </script>
 
 </body>

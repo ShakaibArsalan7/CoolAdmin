@@ -24,8 +24,20 @@ if($form === "arms"){
     }
 
     }
+
+    $opt1 = "";
+    $sql1 = "SELECT s.supplier_id, s.user_name FROM supplier s WHERE s.deleted != 1";
+    $res = $conn->query($sql1);
+    $data1 = array();
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        $opt1 .='<option value='. $row['supplier_id'] .'>'. $row['supplier_id'] .' - '. $row['user_name'] . '</option>';
+    }
+
+    }
     $today = date("Y-m-d"); 
 echo '<form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">';
+
 echo '<div class="row form-group">';
 echo '<div class="col col-md-2">';
 echo '<label for="hf-rawmaterial" class=" form-control-label">Raw Material</label>';
@@ -36,22 +48,94 @@ echo "<option value='select'>select option</option>$opt";
 echo '</select>';
 echo '</div>';
 echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-supplier" class=" form-control-label">Supplier</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<select class="form-control" id="suppliername" name="suppliername">';
+echo "<option value='select'>select option</option>$opt1";
+echo '</select>';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-modeofpayment" class=" form-control-label">Mode of Payment</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<select class="form-control" id="modeofpayment" name="modeofpayment">';
+echo "<option value='cash'>Cash</option>";
+echo "<option value='cheque'>Cheque</option>";
+echo "<option value='card'>Card</option>";
+echo '</select>';
+echo '</div>';
+echo '</div>';
+
 echo '<div class="row form-group">';
 echo '<div class="col col-md-2">';
 echo '<label for="hf-weight" class=" form-control-label">Weight (in kg)</label>';
 echo '</div>';
 echo '<div class="col-12 col-md-4">';
-echo '<input type="text" id="hf-weight" name="hf-weight" placeholder="Enter weight..." class="form-control" value="0">';
+echo '<input type="number" id="hf-weight" name="hf-weight" placeholder="Enter weight..." class="form-control" oninput="weightchange()" value="0">';
 echo '</div>';
 echo '</div>';
+
 echo '<div class="row form-group">';
 echo '<div class="col col-md-2">';
 echo '<label for="hf-rate" class=" form-control-label">Rate (per kg)</label>';
 echo '</div>';
 echo '<div class="col-12 col-md-4">';
-echo '<input type="text" id="hf-rate" name="hf-rate" placeholder="Enter Rate..." class="form-control" value="0">';
+echo '<input type="number" id="hf-rate" name="hf-rate" placeholder="Enter Rate..." class="form-control" oninput="ratechange()" value="0">';
 echo '</div>';
 echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-totalpayment" class=" form-control-label">Total Payment</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<input type="number" id="hf-totalpayment" name="hf-totalpayment" class="form-control" readonly>';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-paymentmade" class=" form-control-label">Payment Made</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<input type="number" id="hf-paymentmade" name="hf-paymentmade" placeholder="Enter Payment Made..." class="form-control" oninput="paymentmadechange()" value="0">';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-discount" class=" form-control-label">Discount(in Rs)</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<input type="number" id="hf-discount" name="hf-discount" placeholder="Enter Discount..." class="form-control" oninput="discountchange()" value="0">';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-remaining" class=" form-control-label">Remaining(to be made)</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<input type="number" id="hf-remaining" name="hf-remaining" class="form-control" readonly>';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="row form-group">';
+echo '<div class="col col-md-2">';
+echo '<label for="hf-extrapayment" class=" form-control-label">Extra Payment</label>';
+echo '</div>';
+echo '<div class="col-12 col-md-4">';
+echo '<input type="number" id="hf-extrapayment" name="hf-extrapayment" class="form-control" readonly>';
+echo '</div>';
+echo '</div>';
+
 echo '<div class="row form-group">';
 echo '<div class="col col-md-2">';
 echo '<label for="hf-date" class=" form-control-label">Date</label>';
@@ -60,6 +144,7 @@ echo '<div class="col-12 col-md-4">';
 echo "<input type='date' id='hf-date' name='hf-date' placeholder='Enter Date...' class='form-control' value=$today>";
 echo '</div>';
 echo '</div>';
+
 echo '<div class="row form-group">';
 echo '<div class="col col-md-3">';
 echo '<input type="submit" class="btn btn-primary btn-lg" name="submit" value="Add" />';
@@ -167,15 +252,19 @@ echo '</form>';
 
     $id = $_POST['fmodid'];
 
-    $sql = "SELECT rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id WHERE rmsh.rawmaterial_id = $id and rmsh.deleted != 1";
+    $sql = "SELECT rm.raw_material_name,s.user_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id WHERE rmsh.rawmaterial_id = $id and rmsh.deleted != 1";
     $res = $conn->query($sql);
     if($res->num_rows > 0 ){
         echo '<table id="modalexample" class="table table-striped table-bordered">';
             echo '<thead>';
             echo '<tr>';
-            echo '<th>Raw material Name</th>';
-            echo '<th>Weight Added</th>';
-            echo '<th>Added on</th>';
+            echo '<th>Item</th>';
+            echo '<th>Weight</th>';
+            echo '<th>Rate</th>';
+            echo '<th>Supplier</th>';
+            echo '<th>total</th>';
+            echo '<th>paid</th>';
+            echo '<th>Date</th>';
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
@@ -184,6 +273,10 @@ echo '</form>';
                 echo  '<tr>';
                 echo  '<td>' . $row['raw_material_name'] . '</td>';
                 echo  '<td>' . $row['weight_added'] . ' kg</td>';
+                echo  '<td>' . $row['rate'] . '</td>';
+                echo  '<td>' . $row['user_name'] . '</td>';
+                echo  '<td>' . $row['totalpayment'] . '</td>';
+                echo  '<td>' . $row['paymentmade'] . '</td>';
                 echo  '<td>' . $row['date_added'] . '</td>';
                 echo '</tr>';
             }
