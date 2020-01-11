@@ -2,24 +2,6 @@
 
 <?php
 require_once("connection.php");
-
-if(!$conn->connect_error){
-
-    if(isset($_REQUEST['delete'])){
-        $id = (int)$_POST['id'];
-         
-        $sql = "update rawMaterial set deleted = 1 where raw_material_id = $id";
-        
-        $res = $conn->query($sql);
-        if($res){
-            #echo "<script>alert('Deleted Successfully')</script>";
-        }else{
-            #echo "<script>alert('Deleted Failed')</script>";
-        }
-
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +16,7 @@ if(!$conn->connect_error){
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Raw MAterial</title>
+    <title>View Raw Material</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -45,7 +27,7 @@ if(!$conn->connect_error){
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
     <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    
+
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
@@ -65,87 +47,81 @@ if(!$conn->connect_error){
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                        
-                    <div class="row">
-                            <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-12" id="rawmaterialtable">
 
 
-<?php 
+                                <?php
 
 
-if(!$conn->connect_error){
+                                if (!$conn->connect_error) {
 
-$sql = 'select * from rawMaterial where deleted != 1';
-$res = $conn->query($sql);
-if($res->num_rows > 0 ){
-    echo '<table id="example" class="table table-striped table-bordered">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th>Raw material ID</th>';
-        echo '<th>Raw material Name</th>';
-        echo '<th>Usage unit</th>';
-        echo '<th>Actions</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        while($row = $res->fetch_assoc()){
-            $id = $row['raw_material_id'];
-            echo  '<tr>';
-            echo  '<td>' . $row['raw_material_id'] . '</td>';
-            echo  '<td>' . $row['raw_material_name'] . '</td>';
-            echo  '<td>' . $row['unit_of_usage'] . '</td>';
-            echo '<td style="text-align:center">
+                                    $sql = 'select * from rawMaterial where deleted != 1';
+                                    $res = $conn->query($sql);
+                                    if ($res->num_rows > 0) {
+                                        echo '<table id="example" class="table table-striped table-bordered">';
+                                        echo '<thead>';
+                                        echo '<tr>';
+                                        echo '<th>Raw material ID</th>';
+                                        echo '<th>Raw material Name</th>';
+                                        echo '<th>Usage unit</th>';
+                                        echo '<th>Actions</th>';
+                                        echo '</tr>';
+                                        echo '</thead>';
+                                        echo '<tbody>';
+                                        while ($row = $res->fetch_assoc()) {
+                                            $id = $row['raw_material_id'];
+                                            echo  '<tr>';
+                                            echo  '<td>' . $row['raw_material_id'] . '</td>';
+                                            echo  '<td>' . $row['raw_material_name'] . '</td>';
+                                            echo  '<td>' . $row['unit_of_usage'] . '</td>';
+                                            echo '<td class="table-data-feature">
             
             <form action="update-rawmaterial.php" method="POST">
-            <input type="hidden" name="id" id="sid" value=' .$row["raw_material_id"]. 
-                '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                                                <button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
 
-                <form action="" method="POST">
-            <input type="hidden" name="id" value=' .$row["raw_material_id"]. 
-                '> <button type="submit" name="delete" value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                </form>
-                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["raw_material_id"] .'><i class="fas fa-eye"></i></button>
+                <button class="btn btn-danger did"  style="margin:3px" data-toggle="modal" data-id=' . $row["raw_material_id"] . '><i class="fas fa-trash"></i></button>
+                <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["raw_material_id"] . '><i class="fas fa-eye"></i></button>
                 
                 
                 
                 </td>';
-            echo '</tr>';
-        }
-
-       
-        
-        
-        echo '</tbody>';
-    echo '</table>';
+                                            echo '</tr>';
+                                        }
 
 
-}   
-}
-?>
+
+
+                                        echo '</tbody>';
+                                        echo '</table>';
+                                    }
+                                }
+                                ?>
 
 
 
@@ -153,13 +129,7 @@ if($res->num_rows > 0 ){
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -170,30 +140,56 @@ if($res->num_rows > 0 ){
     </div>
 
     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="largeModalLabel">Raw Material Detail</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-                        <input  type="hidden" id="idval" value=""/>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="largeModalLabel">Raw Material Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idval" value="" />
 
-							<p id="parawithdata">
-								
+                    <p id="parawithdata">
 
-                                
-							</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- end modal large -->
+
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal large -->
+
+    <!-- modal static -->
+    <div class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticModalLabel">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idval1" value="" />
+                    <p>
+                        <strong>Are you sure you want to delete this Raw Material ?</strong>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="deleterawmaterial()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmation"></div>
+    <div id="snackbar"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -224,29 +220,66 @@ if($res->num_rows > 0 ){
     <script src="js/main.js"></script>
 
     <script>
-    $(document).ready(function() {
-    $('#example').DataTable();
+        $(document).ready(function() {
+            $('#example').DataTable();
 
-    $('body').on('click','.mid',function(){ // Click to only happen on announce links
-    //var a = document.getElement
-    $("#idval").val($(this).data('id'));
-    // debugger;
-    var modid = parseInt($("#idval").val());
+            $('body').on('click', '.mid', function() { // Click to only happen on announce links
+                //var a = document.getElement
+                $("#idval").val($(this).data('id'));
+                // debugger;
+                var modid = parseInt($("#idval").val());
 
-    $('#parawithdata').load("viewModaldata.php", {
-        fmodid : modid,
-        fform : "rawmaterial"
-    });
-
-
-     $('#largeModal').modal('show');
-
-   });
-
-   
+                $('#parawithdata').load("viewModaldata.php", {
+                    fmodid: modid,
+                    fform: "rawmaterial"
+                });
 
 
-} );
+                $('#largeModal').modal('show');
+
+            });
+
+            $('body').on('click', '.did', function() { // Click to only happen on announce links
+                $("#idval1").val($(this).data('id'));
+                $('#staticModal').modal('show');
+            });
+
+
+
+
+        });
+
+        function snackbar(message, color) {
+            // Get the snackbar DIV
+            var x = document.getElementById("snackbar");
+
+            x.innerHTML = message;
+            x.style.background = color;
+            // Add the "show" class to DIV
+            x.className = "show";
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
+
+        function deleterawmaterial() {
+            $('#staticModal').modal('hide');
+            var rawid = parseInt($("#idval1").val());
+            $('#confirmation').load("delajax.php", {
+                rawid: rawid,
+                fform: "rawmaterialdelete"
+            }, function() {
+                //load again
+                $('#rawmaterialtable').load("delajax.php", {
+                    fform: "loadrawmaterialtable"
+                }, function() {
+                    $('#example').DataTable({
+                        "scrollX": true
+                    });
+                });
+            });
+        }
     </script>
 
 </body>

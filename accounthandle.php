@@ -1,11 +1,6 @@
 <?php
 require_once("connection.php");
 
-
-
-
-
-
 if (!$conn->connect_error) {
 
 
@@ -444,18 +439,26 @@ if (!$conn->connect_error) {
         }else{
             //insert into sales
             //update no of bags
+            $conn->autocommit(FALSE);
             $sql = "INSERT INTO sales(brand_id, formula_id, packing_size, noofbags, client_id, modeofpayment, totalpayment, paymentmade, discount, remainingpayment, extrapayment, date_added, deleted) VALUES (
                 $brandid, $formulaid,$packingsize,$noofbags,$clientid,'$modeofpayment',$totalpayment,$paymentmade,$discount,$remainingpayment,$extrapayment,'$date',false)";
-            $res = $conn->query($sql);
+            $res = $conn->query($sql);//one 
             if($res){
                 //if inserted succesfully then update
                 $sql = "UPDATE productStockPackingWise ps SET ps.noofbags = ps.noofbags - $noofbags  WHERE ps.id = $id and ps.deleted != 1";
-                $res1 = $conn->query($sql);
+                $res1 = $conn->query($sql); //two
                 if($res1){
                     //updated successfully
+                    $conn->commit();
                     echo "<script>snackbar('Sold Successfully.','green')</script>";
+                }else{
+                    echo "<script>snackbar('Database Error.','red')</script>";
+                    $conn->close();
                 }
 
+            }else{
+                $conn->close();
+                echo "<script>snackbar('Database Error.','red')</script>";
             }
             
         }

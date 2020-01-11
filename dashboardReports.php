@@ -201,6 +201,204 @@ if($form === "expenseReport"){
        echo '</table>';
     } 
 
+}else if($form === "salesdetailsreport"){
+
+    $time = $_POST['time'];
+    $client = $_POST['client'];
+
+    // echo "<script>alert('t - $time    --- c - $client')</script>";
+
+    $sql ="";
+
+
+    if($client == "all" && $time == "today"){
+
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added = CURDATE();";
+
+    }else if($client == "all" && $time == "1w"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+    }else if($client == "all" && $time == "tm"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  WHERE MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE()) and s.deleted != 1";
+        
+    }else if($client == "all" && $time == "1m"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($client == "all" && $time == "1y"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+        
+    }else if($client != "all" && $time == "today"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and c.client_id = $client and s.date_added = CURDATE();";
+        
+    }else if($client != "all" && $time == "1w"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and c.client_id = $client and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+        
+    }else if($client != "all" && $time == "tm"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and c.client_id = $client and MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE());";
+        
+    }else if($client != "all" && $time == "1m"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and c.client_id = $client and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($client != "all" && $time == "1y"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and c.client_id = $client and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+
+        
+    }
+
+
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        echo '<table class="table table-data2" id="example4" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Client</th>';
+        echo '<th>Brand</th>';
+        echo '<th>Formula</th>';
+        echo '<th>Packing Size</th>';
+        echo '<th>Bags</th>';
+        echo '<th>Total Payment</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+        while ($row = $res->fetch_assoc()) {
+            echo  '<tr>';
+            echo  '<td>' . $row['user_name'] . '</td>';
+            echo  '<td>' . $row['brand_name'] . '</td>';
+            echo  '<td>' . $row['formula_name'] . '</td>';
+            echo  '<td>' . $row['packing_size'] . ' kg</td>';
+            echo  '<td>' . $row['noofbags'] . '</td>';
+            echo  '<td>' . $row['totalpayment'] . '</td>';
+            echo  '<td>' . $row['date_added'] . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }else{
+        echo '<table class="table table-data2" id="example4" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Client</th>';
+        echo '<th>Brand</th>';
+        echo '<th>Formula</th>';
+        echo '<th>Packing Size</th>';
+        echo '<th>Bags</th>';
+        echo '<th>Total Payment</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+            echo  '<tr>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td>No Record Found</td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+
+}else if($form === "purchasesdetailreport"){
+
+    $time = $_POST['time'];
+    $supplier = $_POST['supplier'];
+
+    $sql ="";
+
+
+    if($supplier == "all" && $time == "today"){
+
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.date_added = CURDATE();";
+
+    }else if($supplier == "all" && $time == "1w"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+    }else if($supplier == "all" && $time == "tm"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id WHERE MONTH(rmsh.date_added) = MONTH(CURRENT_DATE()) AND YEAR(rmsh.date_added) = YEAR(CURRENT_DATE()) and rmsh.deleted != 1";
+        
+    }else if($supplier == "all" && $time == "1m"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($supplier == "all" && $time == "1y"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+        
+    }else if($supplier != "all" && $time == "today"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.supplier_id = $supplier and rmsh.date_added = CURDATE();";
+        
+    }else if($supplier != "all" && $time == "1w"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.supplier_id = $supplier and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+        
+    }else if($supplier != "all" && $time == "tm"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.supplier_id = $supplier and MONTH(rmsh.date_added) = MONTH(CURRENT_DATE()) AND YEAR(rmsh.date_added) = YEAR(CURRENT_DATE());";
+        
+    }else if($supplier != "all" && $time == "1m"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.supplier_id = $supplier and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($supplier != "all" && $time == "1y"){
+        $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id where rmsh.deleted != 1 and rmsh.supplier_id = $supplier and rmsh.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+
+        
+    }
+
+
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        echo '<table class="table table-data2" id="example2" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Supplier</th>';
+        echo '<th>Item</th>';
+        echo '<th>weight</th>';
+        echo '<th>rate</th>';
+        echo '<th>Total payment</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+        while ($row = $res->fetch_assoc()) {
+            echo  '<tr>';
+            echo  '<td>' . $row['user_name'] . '</td>';
+            echo  '<td>' . $row['raw_material_name'] . '</td>';
+            echo  '<td>' . $row['weight_added'] . ' kg</td>';
+            echo  '<td>' . $row['rate'] . '</td>';
+            echo  '<td>' . $row['totalpayment'] . '</td>';
+            echo  '<td>' . $row['date_added'] . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }else{
+        echo '<table class="table table-data2" id="example2" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Supplier</th>';
+        echo '<th>Item</th>';
+        echo '<th>weight</th>';
+        echo '<th>rate</th>';
+        echo '<th>Total payment</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+            echo  '<tr>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td>No Record Found</td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+
 }else if($form == "expensereport"){
     $month = $_POST['month'];
     $year = $_POST['year'];

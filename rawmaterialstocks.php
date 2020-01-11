@@ -28,41 +28,57 @@ if (!$conn->connect_error) {
         $extrapayment = $_REQUEST['hf-extrapayment'];
         $extrapayment = (float) $extrapayment;
         // get weight and add weight and update weight
+        $conn->autocommit(FALSE);
 
         $sql = "UPDATE rawmaterialStock rms SET  rms.weight  =rms.weight + $weight WHERE rms.rawmaterial_id = $rawmaterialid";
         $res = $conn->query($sql);
-        //validation passed
-        $sql1 = "insert into rawMaterialStockAdditionHistory(rawmaterial_id,weight_added,rate, supplier_id, modeofpayment, totalpayment, paymentmade, discount, remainingpayment, extrapayment, date_added, deleted) values($rawmaterialid,$weight,$rate,$supplierid,'$modeofpayment',$totalpayment,$paymentmade,$discount,$remainingpayment,$extrapayment,'$date',false);";
-        $res = $conn->query($sql1);
 
         if ($res) {
-            //echo "inserted succesfully";
+            $sql1 = "insert into rawMaterialStockAdditionHistory(rawmaterial_id,weight_added,rate, supplier_id, modeofpayment, totalpayment, paymentmade, discount, remainingpayment, extrapayment, date_added, deleted) values($rawmaterialid,$weight,$rate,$supplierid,'$modeofpayment',$totalpayment,$paymentmade,$discount,$remainingpayment,$extrapayment,'$date',false);";
+            $res = $conn->query($sql1);
 
-            //update rate in RawmaterialNutrients
-            //get kgs in stocks
-            $sql3 = "SELECT rms.weight FROM rawmaterialStock rms where rms.rawmaterial_id = $rawmaterialid";
-            $weightPresent = $conn->query($sql3)->fetch_object()->weight;
-            //get current rate of raw material
-            $sql4 = "SELECT rmn.percentageperkg FROM RawmaterialNutrients rmn WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
-            $currentRate = $conn->query($sql4)->fetch_object()->percentageperkg;
+            if ($res) {
+                //get kgs in stocks
+                $sql3 = "SELECT rms.weight FROM rawmaterialStock rms where rms.rawmaterial_id = $rawmaterialid";
+                $weightPresent = $conn->query($sql3)->fetch_object()->weight;
+                //get current rate of raw material
+                $sql4 = "SELECT rmn.percentageperkg FROM RawmaterialNutrients rmn WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
+                $currentRate = $conn->query($sql4)->fetch_object()->percentageperkg;
+    
+                $rspresent = ($weightPresent - $weight) * $currentRate;
+                $rsadded = $weight * $rate;
+    
+                $rsnew = $rsadded + $rspresent;
+                $newWeight = $weightPresent;
+    
+                $newRate = $rsnew / $newWeight;
+    
+                // echo "<script>alert('wp -$weightPresent  cr- $currentRate  w- $weight  nw- $newWeight nr- $newRate rp- $rspresent ra- $rsadded rn-$rsnew')</script>";
+    
+                $sql = "UPDATE RawmaterialNutrients rmn SET  rmn.percentageperkg  =$newRate WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
+                $res = $conn->query($sql);
 
-            $rspresent = ($weightPresent - $weight) * $currentRate;
-            $rsadded = $weight * $rate;
+                if($res){
+                    $not = "done";
+                    $conn->commit();
+                }else{
+                    $conn->close();
+                    $not = "notdone";
+                }
+    
+            }else{
+                $conn->close();
+            $not = "notdone";
+            }
 
-            $rsnew = $rsadded + $rspresent;
-            $newWeight = $weightPresent;
-
-            $newRate = $rsnew / $newWeight;
-
-            // echo "<script>alert('wp -$weightPresent  cr- $currentRate  w- $weight  nw- $newWeight nr- $newRate rp- $rspresent ra- $rsadded rn-$rsnew')</script>";
-
-            $sql = "UPDATE RawmaterialNutrients rmn SET  rmn.percentageperkg  =$newRate WHERE rmn.raw_material_id = $rawmaterialid and rmn.Nutrition_id = 14 and rmn.deleted != 1";
-            $res = $conn->query($sql);
-
-            $notification  = "adddo";
         } else {
-            echo "<script>alert('no')</script>";
+            $conn->close();
+            $not = "notdone";
         }
+        //validation passed
+
+
+        
     } else if (isset($_REQUEST['submita'])) {
         $rawmaterialid  =  $_REQUEST['rawmaterial'];
         $date =  $_REQUEST['hf-date'];
@@ -73,6 +89,7 @@ if (!$conn->connect_error) {
         $notification  = "";
 
         // get weight and add weight and update weight
+        $conn->autocommit(FALSE);
 
         $sql3 = "SELECT rms.weight FROM rawmaterialStock rms where rms.rawmaterial_id = $rawmaterialid";
         $weightPresent = $conn->query($sql3)->fetch_object()->weight; // 79
@@ -81,15 +98,27 @@ if (!$conn->connect_error) {
             $notification = "gr";
             //can't do this
         } else {
+
             $sql = "UPDATE rawmaterialStock rms SET  rms.weight  =rms.weight - $weight WHERE rms.rawmaterial_id = $rawmaterialid";
             $res = $conn->query($sql);
-            //validation passed
-            $sql1 = "insert into rawMaterialStockLossHistory(rawmaterial_id,weight_lost,date_added,comment,deleted) values($rawmaterialid,$weight,'$date','$comment',false);";
-            $res = $conn->query($sql1);
-            if ($res) {
-                //echo "inserted succesfully";
-                $notification = "do";
+
+            if($res){
+                $sql1 = "insert into rawMaterialStockLossHistory(rawmaterial_id,weight_lost,date_added,comment,deleted) values($rawmaterialid,$weight,'$date','$comment',false);";
+                $res = $conn->query($sql1);
+                if($res){
+                    $not = "done";
+                    $conn->commit();
+                }else{
+                    $conn->close();
+                    $not = "notdone";
+                }
+            }else{
+                $conn->close();
+                $not = "notdone";
             }
+            //validation passed
+
+            
         }
     } else {
     }
@@ -178,13 +207,7 @@ if (!$conn->connect_error) {
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -261,6 +284,14 @@ if (!$conn->connect_error) {
             } else if (noti == "do") {
                 snackbar("Removed Successfully", "green");
             }
+
+            var notif = "<?php echo $not ?>";
+            if (notif == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (notif == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
+
 
             $('body').on('click', '#arms', function() { // Click to only happen on announce links
                 $("#content").text("");

@@ -2,67 +2,67 @@
 
 <?php
 require_once("connection.php");
+$expensetype  =  "select";
+$date =  "";
+$amount =  0;
+$comment =  "";
+if(!$conn->connect_error){
 
 
-$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = $id = "";
-
-
-
-$err = "";
-
-if(!$conn->connect_error){// if database connected.
-    
     if(isset($_REQUEST['submit'])){ // if submit button clicked
         
-        $username  =  $_REQUEST['hf-username'];
-        $emailaddress =  $_REQUEST['hf-emailaddress'];
-        $workphone =  $_REQUEST['hf-workphone'];
-        $mobilenumber =  $_REQUEST['hf-mobilenumber'];
-        $workaddress =  $_REQUEST['hf-workaddress'];
-        $homeaddress =  $_REQUEST['hf-homeaddress'];
-        $bankaccounttitle =  $_REQUEST['hf-bankaccounttitle'];
-        $bankaccountnumber =  $_REQUEST['hf-bankaccountnumber'];
-        $bankname =  $_REQUEST['hf-bankname'];
+        $expensetype  =  $_REQUEST['expensetype'];
+        $date =  $_REQUEST['hf-date'];
+        $amount =  $_REQUEST['hf-amount'];
+        $comment =  $_REQUEST['hf-comment'];
         $id = $_REQUEST['id'];
-        //$profilepic = $_REQUEST['hf-profilepic'];
 
-        //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
-        
    
     //validation passed
+    $sql7 = "update expenses set type_id = $expensetype ,date='$date',amount=$amount,comment='$comment' where id = $id";
         
-        $sql7 = "update supplier set user_name = '$username' ,email_address='$emailaddress',work_phone='$workphone',mobile_number='$mobilenumber',work_address='$workaddress',home_address='$homeaddress',bank_account_title='$bankaccounttitle',bank_account_number='$bankaccountnumber',bank_name='$bankname',profile_pic='$profilepic' where supplier_id = $id";
-        
-        $res = $conn->query($sql7);
-       if($res){
-           // updated , go to view page.
-           header("Location: ./view-suppliers.php");
-           //echo "inserted succesfully";
-           #$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
-       }else{
-           //echo "update unsuccesfull";
-       }
-       
+    $res = $conn->query($sql7);
+   if($res){
+       // updated , go to view page.
+       header("Location: ./view-expense.php");
+       //echo "inserted succesfully";
+   }else{
+       //echo "update unsuccesfull";
+   }
+   
            
-   }else{// if not submit, first visit to page or refresh
+   }else{
+
     $id = (int)$_REQUEST['id'];
-    $sql2 = "select * from supplier where supplier_id = $id";
+    $sql2 = "select * from expenses where id = $id";
     $res1 = $conn->query($sql2)->fetch_object();
 
-    $username  =  $res1->user_name;
-    $emailaddress =  $res1->email_address;
-    $workphone =  $res1->work_phone;
-    $mobilenumber =  $res1->mobile_number;
-    $workaddress =  $res1->work_address;
-    $homeaddress =  $res1->home_address;
-    $bankaccounttitle =  $res1->bank_account_title;
-    $bankaccountnumber =  $res1->bank_account_number;
-    $bankname =  $res1->bank_name;
-    $profilepic = $res1->profile_pic;
 
-   }
 
+    $expensetype  =  $res1->type_id;
+    $date =  $res1->date;
+    $amount =  $res1->amount;
+    $comment =  $res1->comment;
+
+    $opt = "";
+    $sql =  "select id, expense_type from expenseType where deleted != 1";
+    $res = $conn->query($sql);
+    if($res->num_rows > 0 ){
+    while($row = $res->fetch_assoc()){
+        // echo "<script>alert('a')</script>";
+        if((int)$row['id'] == $expensetype){
+            $opt .='<option value='. $row['id'] .' selected>'. $row['expense_type'] .'</option>';
+
+        }else{
+            $opt .='<option value='. $row['id'] .'>'. $row['expense_type'] .'</option>';
+
+        }
+
+        }
+    // echo "<script>alert('$opt')</script>";
+    }
+}
 }
 
 ?>
@@ -78,7 +78,7 @@ if(!$conn->connect_error){// if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Update Supplier</title>
+    <title>Update Expense</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -129,127 +129,69 @@ if(!$conn->connect_error){// if database connected.
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
+
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        Update <strong>Supplier</strong> 
+                                        Update <strong>Expense</strong>
+                                        <!-- drop down -- date -- amount --submit button -->
                                     </div>
                                     <div class="card-body card-block">
                                         <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-username" class=" form-control-label">Supplier Name</label>
+                                                    <label for="hf-expensetype" class=" form-control-label">Expense Type</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-username" name="hf-username" placeholder="Enter Username..." class="form-control" value="<?php echo $username;?>">
+                                                <div class="col-12 col-md-4">
+                                                <select class="form-control" id="expensetype" name="expensetype">
+                                                    <option value="select">select option</option><?php echo $opt;?>
+                                                </select>
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-emailaddress" class=" form-control-label">Email Address</label>
+                                                    <label for="hf-date" class=" form-control-label">Date</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="email" id="hf-emailaddress" name="hf-emailaddress" placeholder="Enter Email Address..." class="form-control" value="<?php echo $emailaddress;?>">
+                                                <div class="col-12 col-md-4">
+                                                    <input type="date" id="hf-date" name="hf-date" placeholder="Enter Date..." class="form-control" value="<?php echo $date; ?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-workphone" class=" form-control-label">Work Phone</label>
+                                                    <label for="hf-amount" class=" form-control-label">Amount</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="tel" id="hf-workphone" name="hf-workphone" placeholder="Enter Work Phone..." class="form-control" value="<?php echo $workphone;?>">
+                                                <div class="col-12 col-md-4">
+                                                    <input type="text" id="hf-amount" name="hf-amount" placeholder="Enter expense amount..." class="form-control" value="<?php echo $amount; ?>">
                                                 </div>
                                             </div>
 
                                             <div class="row form-group">
                                                 <div class="col col-md-2">
-                                                    <label for="hf-mobilenumber" class=" form-control-label">Mobile Number</label>
+                                                    <label for="hf-comment" class=" form-control-label">Comment</label>
                                                 </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="tel" id="hf-mobilenumber" name="hf-mobilenumber" placeholder="Enter Mobile Number..." class="form-control" value="<?php echo $mobilenumber;?>">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-2">
-                                                    <label for="hf-workaddress" class=" form-control-label">Work Address</label>
-                                                </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-workaddress" name="hf-workaddress" placeholder="Enter Work Address..." class="form-control" value="<?php echo $workaddress;?>">
+                                                <div class="col-12 col-md-4">
+                                                    <textarea type="text" id="hf-comment" name="hf-comment" placeholder="any comments..." class="form-control" ><?php echo $comment; ?></textarea>
                                                 </div>
                                             </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-2">
-                                                    <label for="hf-homeaddress" class=" form-control-label">Home Address</label>
-                                                </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-homeaddress" name="hf-homeaddress" placeholder="Enter Home Address..." class="form-control" value="<?php echo $homeaddress;?>">
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                    <div class="col col-md-2">
-                                                        <label for="hf-bankaccounttitle" class=" form-control-label">Bank Account Title</label>
-                                                    </div>
-                                                    <div class="col-12 col-md-5">
-                                                        <input type="text" id="hf-bankaccounttitle" name="hf-bankaccounttitle" placeholder="Enter Bank Account Title..." class="form-control" value="<?php echo $bankaccounttitle;?>">
-                                                    </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col col-md-2">
-                                                        <label for="hf-bankaccountnumber" class=" form-control-label">Bank Account Number</label>
-                                                    </div>
-                                                    <div class="col-12 col-md-5">
-                                                        <input type="text" id="hf-bankaccountnumber" name="hf-bankaccountnumber" placeholder="Enter Bank Account Number..." class="form-control" value="<?php echo $bankaccountnumber;?>">
-                                                    </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col col-md-2">
-                                                        <label for="hf-bankname" class=" form-control-label">Bank Name</label>
-                                                    </div>
-                                                    <div class="col-12 col-md-5">
-                                                        <input type="text" id="hf-bankname" name="hf-bankname" placeholder="Enter Bank Name..." class="form-control" value="<?php echo $bankname;?>">
-                                                    </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                        <div class="col col-md-2">
-                                                                <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
-                                                        </div>
-                                                        <div class="col-12 col-md-5">
-                                                                <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
-                                                        </div>
-                                                    </div>
                                                    
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
                                                 <input type="hidden" name="id" value="<?php echo $id;?>">
-                                                <input type="submit" class="btn btn-primary btn-lg btn-success" name="submit" value="Update" />
+                                                <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Update" />
                                                 </div>
-                                                
                                             </div>
 
                                             
                                                 
                                         </form>
                                     </div>
-                                    <!-- <div class="card-footer">
-                                        
-                                            <i class="fa fa-dot-circle-o"></i> Register
-                                        </button>
-                                        <button type="reset" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-ban"></i> Cancel
-                                        </button>
-                                    </div> -->
+                                    
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -284,44 +226,77 @@ if(!$conn->connect_error){// if database connected.
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+    <!-- <script>
+$(document).ready(function () {
+
+    $('body').on('click','#aen',function(){ // Click to only happen on announce links
+        $("#exptypeform").text("");
+        $('#exptypeform').load("expensesajax.php", {
+            fform : "aen"
+         });
+
+   });
+
+    });
+    </script> -->
     <script>
+
+$(document).ready(function() {
+            
+            var noti = "<?php echo $notification?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
+
+        });
+
+
 function validateForm() {
-    var username = document.getElementById("hf-username").value;
-    var emailaddress = document.getElementById("hf-emailaddress").value;
-    var workphone = document.getElementById("hf-workphone").value;
-    var mobilenumber = document.getElementById("hf-mobilenumber").value;
-    var workaddress = document.getElementById("hf-workaddress").value;
-    var homeaddress = document.getElementById("hf-homeaddress").value;
-    var bankaccounttitle = document.getElementById("hf-bankaccounttitle").value;
-    var bankaccountnumber = document.getElementById("hf-bankaccountnumber").value;
-    var bankname = document.getElementById("hf-bankname").value;
-    var profilepic = document.getElementById("hf-profilepic").value;
-    if (username == "") {
-    snackbar("Supplier name is required.","red");
-    return false;
+    
+    var expensetype = document.getElementById('expensetype').value;
+    var date = document.getElementById('hf-date').value;
+    var amount = document.getElementById('hf-amount').value;
+    var comment = document.getElementById('hf-comment').value;
+    // alert(expensetype);
+    // alert(date);
+    // alert(amount);
+    // alert(comment);
+    if(expensetype == "select"){
+        snackbar("Expense type is required","red");
+        return false;
     }
-    if (emailaddress == "") {
-    snackbar("Email Address is required.","red");
-    return false;
+    if(date == ""){
+        snackbar("Expense date is required","red");
+        return false;
     }
-    if (workphone == "") {
-    snackbar("Work Phone is required.","red");
-    return false;
+    if(amount == '0' || amount == ''){
+        snackbar("Expense amount is required","red");
+        return false;
     }
-    if (mobilenumber == "") {
-    snackbar("Mobile Number is required.","red");
-    return false;
+    
+    if(comment == ""){
+        snackbar("describe nature of expense in comment section","red");
+        return false;
     }
-    if (workaddress == "") {
-    snackbar("Work Address is required.","red");
-    return false;
-    }
-    if (homeaddress == "") {
-    snackbar("Home Address is required.","red");
-    return false;
+    var fl = validateQuantity(amount);
+    if(!fl){
+            snackbar("Amount field is not valid. only numeral allowed.","red");
+            return false;
+        }
+
+        if(parseFloat(amount) < 0 ){
+        snackbar("Expense amount can't be negetive.","red");
+        return false;
     }
 
     return true;
+}
+
+function validateQuantity(s) {
+    var rgx = /^[0-9]*\.?[0-9]*$/;
+    return s.match(rgx);
 }
 
 function snackbar(message,color) {

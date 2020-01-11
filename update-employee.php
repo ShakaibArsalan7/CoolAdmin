@@ -4,7 +4,7 @@
 require_once("connection.php");
 
 
-$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = $id = "";
+$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $id = "";
 
 
 
@@ -24,7 +24,6 @@ if(!$conn->connect_error){// if database connected.
         $bankaccountnumber =  $_REQUEST['hf-bankaccountnumber'];
         $bankname =  $_REQUEST['hf-bankname'];
         $id = $_REQUEST['id'];
-        //$profilepic = $_REQUEST['hf-profilepic'];
 
         //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
@@ -32,14 +31,13 @@ if(!$conn->connect_error){// if database connected.
    
     //validation passed
         
-        $sql7 = "update employee set user_name = '$username' ,email_address='$emailaddress',work_phone='$workphone',mobile_number='$mobilenumber',work_address='$workaddress',home_address='$homeaddress',bank_account_title='$bankaccounttitle',bank_account_number='$bankaccountnumber',bank_name='$bankname',profile_pic='$profilepic' where employee_id = $id";
+        $sql7 = "update employee set user_name = '$username' ,email_address='$emailaddress',work_phone='$workphone',mobile_number='$mobilenumber',work_address='$workaddress',home_address='$homeaddress',bank_account_title='$bankaccounttitle',bank_account_number='$bankaccountnumber',bank_name='$bankname',profile_pic='' where employee_id = $id";
         
         $res = $conn->query($sql7);
        if($res){
            // updated , go to view page.
            header("Location: ./view-employee.php");
            //echo "inserted succesfully";
-           #$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
        }else{
            //echo "update unsuccesfull";
        }
@@ -59,7 +57,6 @@ if(!$conn->connect_error){// if database connected.
     $bankaccounttitle =  $res1->bank_account_title;
     $bankaccountnumber =  $res1->bank_account_number;
     $bankname =  $res1->bank_name;
-    $profilepic = $res1->profile_pic;
 
    }
 
@@ -211,14 +208,7 @@ if(!$conn->connect_error){// if database connected.
                                                         <input type="text" id="hf-bankname" name="hf-bankname" placeholder="Enter Bank Name..." class="form-control" value="<?php echo $bankname;?>">
                                                     </div>
                                                 </div>
-                                                <div class="row form-group">
-                                                        <div class="col col-md-2">
-                                                                <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
-                                                        </div>
-                                                        <div class="col-12 col-md-5">
-                                                                <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
-                                                        </div>
-                                                    </div>
+                                                
                                                    
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
@@ -243,13 +233,7 @@ if(!$conn->connect_error){// if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -295,7 +279,6 @@ function validateForm() {
     var bankaccounttitle = document.getElementById("hf-bankaccounttitle").value;
     var bankaccountnumber = document.getElementById("hf-bankaccountnumber").value;
     var bankname = document.getElementById("hf-bankname").value;
-    var profilepic = document.getElementById("hf-profilepic").value;
     if (username == "") {
     snackbar("Employee name is required.","red");
     return false;

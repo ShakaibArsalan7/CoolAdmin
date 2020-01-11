@@ -67,16 +67,16 @@ if(isset($_COOKIE['USERID'])){
                                     <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
                                 </div>
                                 <div>
-                                <small style=" <?php echo "display: $disp;"?>color:red; align:center" >Email or Password is wrong.</small>
+                                <small style="color:red; align:center<?php echo ";display: $disp;"?> " >Email or Password is wrong.</small>
                                 </div>
-                                <div class="login-checkbox">
+                                <!-- <div class="login-checkbox">
                                     <label>
                                         <input type="checkbox" name="remember">Remember Me
                                     </label>
                                     <label>
                                         <a href="forget-pass.php">Forgotten Password?</a>
                                     </label>
-                                </div>
+                                </div> -->
                                 <input class="au-btn au-btn--block au-btn--green m-b-20" type="submit" name="submit" value="sign in" />
                                 
                             </form>

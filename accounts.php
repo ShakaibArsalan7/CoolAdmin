@@ -85,13 +85,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -158,7 +152,7 @@
     <script src="js/main.js"></script>
     <script>
         $(document).ready(function() {
-            <?php #echo $notification; ?>
+            
             // var noti = ";
             // if (noti == "adddo") {
             //     snackbar("Added Successfully", "green");
@@ -515,7 +509,7 @@
             } else {
                 document.getElementById("hf-extrapayment").value = 0;
                 document.getElementById("hf-remaining").value = tp - (pm + d);
-            } 
+            }  
 
         }
 

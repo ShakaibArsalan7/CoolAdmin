@@ -18,7 +18,7 @@ if (!$conn->connect_error) { // if database connected.
         $timestamp = time();
 
         //validation passed
-
+        $conn->autocommit(FALSE);
         $sql = "insert into formulas(brand_id,formula_name,adding_timestamp,deleted) values($brandid,'$formulaname','$timestamp',false);";
         //echo "<script>alert(\"$sql\")</script>";
         $res = $conn->query($sql);
@@ -27,7 +27,7 @@ if (!$conn->connect_error) { // if database connected.
             $sql2 = "select formula_id from formulas where adding_timestamp = '$timestamp' && deleted != 1";
             $formulaid = $conn->query($sql2)->fetch_object()->formula_id;
 
-
+            $done = true;
             //echo "<script>alert('$res1');</script>";
             foreach ($_POST as $name => $value) {
                 if (strpos($name, 'rawmaterial') !== false) {
@@ -37,11 +37,57 @@ if (!$conn->connect_error) { // if database connected.
 
                     $que = "insert into brandFormula(brand_id,formula_id,rawmaterial_id,weightinkg,deleted) values($brandid,$formulaid,$rawmatid,$qquan,false)";
                     $res2 = $conn->query($que);
-                }
-                //echo "<script>alert('$name - $value')</script>";
 
+                    if($res2 && $done){
+                        $done = true;
+                       }else{
+                        $done = false;
+                       }
+                }
             }
+
+            if($done == true){
+                $not = "done";
+                $conn->commit();
+            }else{
+                $conn->close();
+                $not = "notdone";
+            }
+
+            
+
+
+        }else{
+            $conn->close();
+            $not = "notdone";
         }
+
+
+        $brandname  = "";
+        $opt = "";
+        $sql =  "select brand_id, brand_name from brand where deleted != 1";
+        $res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                // echo "<script>alert('a')</script>";
+                $opt .= '<option value=' . $row['brand_id'] . '>' . $row['brand_id'] . ' - ' . $row['brand_name'] . '</option>';
+            }
+            // echo "<script>alert('$opt')</script>";
+        }
+
+        $rawmaterialname  = "";
+        $opt1 = "";
+        $sql =  "select raw_material_id, raw_material_name from rawMaterial where deleted != 1";
+        $res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                // echo "<script>alert('a')</script>";
+                $opt1 .= '<option value=' . $row['raw_material_id'] . '>' . $row['raw_material_id'] . ' - ' . $row['raw_material_name'] . '</option>';
+            }
+            // echo "<script>alert('$opt')</script>";
+        }
+
+
     } else { // if not submit, first visit to page or refresh
 
         $brandname  = "";
@@ -230,13 +276,7 @@ if (!$conn->connect_error) { // if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -279,6 +319,8 @@ if (!$conn->connect_error) { // if database connected.
         var rawmaters = [];
         var rawquantity = [];
         $(document).ready(function() {
+
+
 
             $('#example11').DataTable({
                     "scrollX": true
@@ -477,6 +519,13 @@ if (!$conn->connect_error) { // if database connected.
                     rawquantity.splice(index, 1);
                 }
             });
+
+            var noti = "<?php echo $not?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
 
 
         });
@@ -747,7 +796,7 @@ if (!$conn->connect_error) { // if database connected.
         function displayRealTimeTableTotal(tweight,totalrow) {
             var data1 = "";
             data1 += '<h2 style="text-align:center; margin-bottom:20px">Total</h2>';
-            data1 += '<table class="table table-striped table-bordered" style="width:100%;font-size:12px">';
+            data1 += '<table class="table table-striped table-bordered" style="width:90%;font-size:10.5px">';
             data1 += '<thead>';
             data1 += '<tr>';
             data1 += '<th style="background-color:red;">Weights</th>';

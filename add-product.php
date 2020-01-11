@@ -14,6 +14,8 @@ if (!$conn->connect_error) { // if database connected.
         $productname  =  $_REQUEST['hf-brandname'];
         //$profilepic = $_REQUEST['hf-profilepic'];
         $timestamp = time();
+        $conn->autocommit(FALSE);
+
         $sql1 = "insert into brand(brand_name,profile_pic,adding_timestamp,deleted) values('$productname','$profilepic','$timestamp',false)";
         $res = $conn->query($sql1);
         $brandid = "";
@@ -21,7 +23,7 @@ if (!$conn->connect_error) { // if database connected.
 
             $sql2 = "select brand_id from brand where adding_timestamp = '$timestamp' && deleted != 1";
             $res1 = $conn->query($sql2)->fetch_object()->brand_id;
-
+            $done = true;
 
             //echo "<script>alert('$res1');</script>";
             foreach ($_POST as $name => $value) {
@@ -29,13 +31,27 @@ if (!$conn->connect_error) { // if database connected.
                     $que = "insert into packingDetail(brand_id,packing_size,deleted) values('$res1','$value',false)";
                     $res2 = $conn->query($que);
 
-                    
+                    if($res2 && $done){
+                        $done = true;
+                       }else{
+                        $done = false;
+                       }
+
+
                 }
             }
 
-            $notification = "202"; //insert successfully
+            if($done == true){
+                $not = "done";
+                $conn->commit();
+            }else{
+                $conn->close();
+                $not = "notdone";
+            }
+
         } else {
-            $notification = "502"; //insert failure
+            $conn->close();
+            $not = "notdone";
         }
 
         $opt = "";
@@ -60,7 +76,7 @@ if (!$conn->connect_error) { // if database connected.
         }
     }
 } else { //if database not connected
-    $notification = "501";
+    
 }
 
 ?>
@@ -197,13 +213,7 @@ if (!$conn->connect_error) { // if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -239,15 +249,11 @@ if (!$conn->connect_error) { // if database connected.
     <script>
         $(document).ready(function() {
             //
-            var notification = '<?php echo $notification ?>';
-
-            if (notification == "501") {
-                snackbar("database error - database not connected.", "red");
-
-            } else if (notification == "202") {
-                snackbar("Brand Added Successfully.", "green");
-            } else if (notification == "502") {
-                snackbar("Insert Failure, Brand Data Not added.", "red");
+            var noti = "<?php echo $not?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
             }
             var counter = 0;
 

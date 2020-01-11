@@ -5,9 +5,11 @@ $id = $_POST['fmodid'];
 $form = $_POST['fform'];
 if($form === "one"){
     echo "<input type='hidden' name='id' id='brandid' value=$id >";
-    echo '<button type="button" style="margin:15px 5px" class="btn btn-info" id="cbn">Change Brand Name</button>';
-    echo '<button type="button" style="margin:15px 5px" class="btn btn-success" id="apo">Add Packing Option</button>';
-    echo '<button type="button" style="margin:15px 5px" class="btn btn-danger" id="rpo">Remove Packing Option</button>';
+    echo '<button type="button" style="margin:15px 5px" class="btn btn-info" id="cbn">Change Name</button>';
+    echo '<button type="button" style="margin:15px 5px" class="btn btn-success" id="apo">Add Packing</button>';
+    echo '<button type="button" style="margin:15px 5px" class="btn btn-danger" id="rpo">Remove Packing</button>';
+    echo '<button type="button" style="margin:15px 5px" class="btn btn-danger" id="deletebrand">Delete Brand</button>';
+
 }else if($form === "cbn"){
     echo "<input type='hidden' name='id1' id='brandid1' value=$id >";
     echo '<div class="col col-md-2">';
@@ -221,6 +223,39 @@ if($form === "one"){
            echo "<script>snackbar('Failure Occurred ,Size not removed.','red')</script>";
        }
  
+    }else if($form === "deleteconfirmed"){
+        $brandid  =$_POST['brandid'];
+        $sql7 = "update brand set deleted = true where brand_id = $brandid";
+        
+        $res = $conn->query($sql7);
+       if($res){
+           //delete packing details
+        $sql7 = "update packingDetail set deleted = true where brand_id = $brandid";
+        $res = $conn->query($sql7);
+        if($res){
+            echo '<script>snackbar("Deleted Succesfully","green")</script>';
+        }
+       }else{
+           echo '<script>snackbar("Unsuccessful Deletion","red")</script>';
+       }
+ 
+    }else if($form === "loadbrand"){
+        $opt = "";
+        $sql =  "select brand_id, brand_name from brand where deleted != 1";
+        $res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                $opt .= '<option value=' . $row['brand_id'] . '>' . $row['brand_id'] . ' - ' . $row['brand_name'] . '</option>';
+            }
+        }
+        
+        echo '<select class="form-control" id="brandedit" name="brande">';
+        echo "<option value='select'>select option</option>$opt";
+        echo '</select>';
+
+        
+
+
     }
 }
 ?>

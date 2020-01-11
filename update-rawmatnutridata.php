@@ -116,7 +116,8 @@ echo '</div>  ';
 
         echo "<script>snackbar('Updated Successfully','green')</script>";
        }else{
-           //echo "update unsuccesfull";
+        echo "<script>snackbar('Updation Unsuccessfull','red')</script>";
+        //echo "update unsuccesfull";
        }
     }else{
 
@@ -158,7 +159,8 @@ echo '</div>  ';
 
         echo "<script>snackbar('Updated Successfully','green')</script>";
        }else{
-           //echo "update unsuccesfull";
+        echo "<script>snackbar('Updation Unsuccessfull','red')</script>";
+        //echo "update unsuccesfull";
        }
     }
 

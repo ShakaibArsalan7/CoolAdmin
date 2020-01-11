@@ -2,32 +2,27 @@
 
 <?php
 require_once("connection.php");
-$expensetype  = "";
-$err = "";
 
 if (!$conn->connect_error) { // if database connected.
 
-    if (isset($_REQUEST['submit'])) { // if submit button clicked
-
-        $expensetype  =  $_REQUEST['hf-expensetype'];
 
 
-
-        //validation passed
-        $timestamp = time();
-        $sql = "insert into expenseType(expense_type,adding_timestamp,deleted) values('$expensetype','$timestamp',false);";
-        $res = $conn->query($sql);
-
-
-        if ($res) {
-            //echo "inserted succesfully";
-            $notification = "done";
-            $expensetype  = "";
-        } else {
-            $notification = "notdone";
+    $opt1 = "";
+    $sql =  "select typeID,typeName from AttenadnceType where deleted != 1";
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt1 .= '<option value=' . $row['typeID'] . '>' . $row['typeName'] . '</option>';
         }
-    } else { // if not submit, first visit to page or refresh
-        $expensetype  = "";
+    }
+
+    $opt = "";
+    $sql =  "select employee_id,user_name from employee where deleted != 1";
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt .= '<option value=' . $row['employee_id'] . '>' . $row['user_name'] . '</option>';
+        }
     }
 }
 
@@ -44,7 +39,7 @@ if (!$conn->connect_error) { // if database connected.
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Add Expense Type</title>
+    <title>Update Labor Attendance</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -95,33 +90,67 @@ if (!$conn->connect_error) { // if database connected.
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
+
+
+
+
+
+
                         <div class="row">
-                            <div class="col-md-10">
+
+
+
+                            <div class="col-md-12">
+
+
+
+
                                 <div class="card">
                                     <div class="card-header">
-                                        Add <strong>Expense Type</strong>
+                                        Update <strong>Labor Attendance</strong>
                                     </div>
+
+
                                     <div class="card-body card-block">
-                                        <form action="" method="post" class="form-horizontal" onsubmit="return validateForm()">
-                                            <div class="row form-group">
-                                                <div class="col col-md-2">
-                                                    <label for="hf-expensetype" class=" form-control-label">Expense Type</label>
-                                                </div>
-                                                <div class="col-12 col-md-5">
-                                                    <input type="text" id="hf-expensetype" name="hf-expensetype" placeholder="Enter Expense Type..." class="form-control" value="<?php echo $nutrientname; ?>">
-                                                </div>
+
+
+                                        <div class="row form-group">
+                                            <div class="col col-md-2">
+                                                <label for="hf-date" class=" form-control-label">Date</label>
                                             </div>
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
-                                                    <input type="submit" class="btn btn-primary btn-lg" name="submit" value="Register" />
-                                                </div>
-
+                                            <div class="col-12 col-md-4">
+                                                <input type='date' id='hf-date' name='hf-date' placeholder='Enter Date...' class='form-control' >
                                             </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-2">
+                                                <label for="hf-employeeid" class=" form-control-label">Employee</label>
+                                            </div>
+                                            <div class="col-12 col-md-4">
+                                                <select class="form-control" id="employeeid" name="employeeid">
+                                                    <option value='select'>select option</option><?php echo $opt; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-2">
+                                                <label for="hf-attsta" class=" form-control-label">Status</label>
+                                            </div>
+                                            <div class="col-12 col-md-4">
+                                                <select class="form-control" id="attsta" name="attsta">
+                                                    <option value='select'>select option</option><?php echo $opt1; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-3">
+                                                <button class="btn btn-info" name="update" id="update" onclick="submitform()">Update</button>
+                                            </div>
+                                        </div>
 
-
-
-                                        </form>
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -134,7 +163,7 @@ if (!$conn->connect_error) { // if database connected.
         </div>
 
     </div>
-
+    <div id="upatt"></div>
     <div id="snackbar"></div>
 
     <!-- Jquery JS-->
@@ -160,30 +189,51 @@ if (!$conn->connect_error) { // if database connected.
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
+
+
+
     <script>
+        function submitform() {
+            if (checkValidity()) {
+                var emp = document.getElementById('employeeid').value;
+                var date = document.getElementById('hf-date').value;
+                var attsta = document.getElementById('attsta').value;
 
+                $('#upatt').load("attendance.php", {
+                    emp: emp,
+                    date: date,
+                    attsta: attsta,
+                    fform: "updateattendance"
+                });
 
-$(document).ready(function() {
-            
-            var noti = "<?php echo $notification?>";
-            if (noti == "done") {
-                snackbar("Added Successfully", "green");
-            } else if (noti == "notdone") {
-                snackbar("Adding Failure.", "red");
             }
+        }
 
-        });
+        function checkValidity() {
+            var emp = document.getElementById('employeeid').value;
+            var date = document.getElementById('hf-date').value;
+            var attsta = document.getElementById('attsta').value;
 
-        
-        function validateForm() {
-            var nname = document.getElementById("hf-expensetype").value;
-            if (nname == "") {
-                snackbar("Expense Type is required.", "red");
+            if (date == "") {
+                snackbar("Date is required", "red");
+                return false;
+            }
+            if (emp == "select") {
+                snackbar("Select any Employee", "red");
+                return false;
+            }
+            if (attsta == "select") {
+                snackbar("Select any Attendance Status", "red");
                 return false;
             }
 
             return true;
+
+
         }
+
+
 
         function snackbar(message, color) {
             // Get the snackbar DIV

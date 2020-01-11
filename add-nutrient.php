@@ -19,7 +19,10 @@ if(!$conn->connect_error){// if database connected.
         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";
+           $not = "done";
            $nutrientname  = "";;
+       }else{
+        $not = "notdone";
        }
            
    }else{// if not submit, first visit to page or refresh
@@ -122,13 +125,7 @@ if(!$conn->connect_error){// if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -164,6 +161,17 @@ if(!$conn->connect_error){// if database connected.
     <!-- Main JS-->
     <script src="js/main.js"></script>
     <script>
+        $(document).ready(function() {
+            
+            var noti = "<?php echo $not?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
+
+        });
+
 function validateForm() {
     var nname = document.getElementById("hf-nutrientname").value;
     if (nname == "") {

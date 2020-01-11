@@ -75,6 +75,26 @@ if ($res->num_rows > 0) {
     }
 }
 
+$opt5 = "";
+$sql =  "select c.client_id, c.user_name from client c where c.deleted != 1";
+$res = $conn->query($sql);
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        // echo "<script>alert('a')</script>";
+        $opt5 .= '<option value=' . $row['client_id'] . '>' . $row['client_id'] . ' - ' . $row['user_name'] . '</option>';
+    }
+}
+
+$opt6 = "";
+$sql =  "select s.supplier_id, s.user_name from supplier s where s.deleted != 1";
+$res = $conn->query($sql);
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        // echo "<script>alert('a')</script>";
+        $opt6 .= '<option value=' . $row['supplier_id'] . '>' . $row['supplier_id'] . ' - ' . $row['user_name'] . '</option>';
+    }
+}
+
 // $opt1 = "";
 // $sql =  "select employee_id, user_name from employee where deleted != 1";
 // $res = $conn->query($sql);
@@ -175,13 +195,13 @@ if ($res->num_rows > 0) {
                                                 <i class="zmdi zmdi-shopping-cart"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$activeEmployees"; ?></h2>
-                                                <span>Employees</span>
+                                                <a href="view-employee.php">
+                                                    <h2><?php echo "$activeEmployees"; ?></h2>
+                                                    <span>Employees</span>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart2"></canvas> -->
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -193,13 +213,13 @@ if ($res->num_rows > 0) {
                                                 <i class="zmdi zmdi-shopping-cart"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$supplier"; ?></h2>
-                                                <span>Suppliers</span>
+                                                <a href="view-suppliers.php">
+                                                    <h2><?php echo "$supplier"; ?></h2>
+                                                    <span>Suppliers</span>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart2"></canvas> -->
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -211,31 +231,29 @@ if ($res->num_rows > 0) {
                                                 <i class="zmdi zmdi-calendar-note"></i>
                                             </div>
                                             <div class="text">
-                                                <h2><?php echo "$clients"; ?></h2>
-                                                <span>clients</span>
+                                                <a href="view-clients.php">
+                                                    <h2><?php echo "$clients"; ?></h2>
+                                                    <span>clients</span>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart3"></canvas> -->
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 <div class="overview-item overview-item--c4">
                                     <div class="overview__inner">
-                                        <div class="overview-box clearfix">
+                                        <div class="overview-box clearfix" style="font-size:0.1rem;">
                                             <div class="icon">
                                                 <i class="zmdi zmdi-money"></i>
                                             </div>
                                             <div class="text">
-                                                <h2 style="font-size:2rem;"><?php echo "$expenses"; ?></h2>
+                                                <h2 style="font-size:1.6rem;"><?php echo ($expenses == NULL) ? 0 : "$expenses"; ?></h2>
                                                 <span>Exp. (<?php echo date('M Y'); ?>)</span>
                                             </div>
                                         </div>
-                                        <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart4"></canvas> -->
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -301,7 +319,7 @@ if ($res->num_rows > 0) {
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                             <div class="col-md-6">
                                 <div class="au-card m-b-30">
@@ -328,7 +346,7 @@ if ($res->num_rows > 0) {
                                 </div>
                             </div>
 
-                            
+
 
                             <div class="col-md-6">
 
@@ -366,23 +384,14 @@ if ($res->num_rows > 0) {
 
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
                                         <h3 class="title-2 m-b-40">More Reports will be added after further requirements implementations.</h3>
-                                        <!-- <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="rawmat" id="rawmat">
-                                                <option value="select" selected="selected">Select Option</option>
-                                                <?php #echo $opt2; 
-                                                ?>
-                                            </select>
-
-                                            <div class="dropDownSelect2"></div>
-                                        </div> -->
                                         <div><canvas id="raw-mat-chart1"></canvas></div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
 
                         </div>
@@ -472,7 +481,7 @@ if ($res->num_rows > 0) {
                                     <div class="rs-select2--light rs-select2--md">
                                         <select class="js-select2" name="rawmaterial" id="rawmaterial">
                                             <option value="all" selected="selected">All Raw Materials</option>
-                                            <?php echo $opt1; ?>
+                                            <?php echo $opt4; ?>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -529,15 +538,155 @@ if ($res->num_rows > 0) {
                             <!-- END DATA TABLE -->
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h3 class="title-5 m-b-35 m-t-50">Sales</h3>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left">
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="clientsid" id="clientsid">
+                                            <option value="all" selected="selected">All Clients</option>
+                                            <?php echo $opt5; ?>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="time3" id="time3">
+                                            <option value="today">Today</option>
+                                            <option value="1w">1 Week</option>
+                                            <option value="tm" selected="selected">this Month</option>
+                                            <option value="1m">1 Months</option>
+                                            <option value="1y">1 Year</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
 
+                                </div>
+                            </div>
+
+
+                            <div class="table-responsive table-responsive-data2" id="salesdetails">
+
+
+                                <?php
+
+
+                                $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id where MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE()) and s.deleted != 1";
+                                $res = $conn->query($sql);
+                                if ($res->num_rows > 0) {
+                                    echo '<table class="table table-data2" id="example4" style="width:100%">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Client</th>';
+                                    echo '<th>Brand</th>';
+                                    echo '<th>Formula</th>';
+                                    echo '<th>Packing Size</th>';
+                                    echo '<th>Bags</th>';
+                                    echo '<th>Total Payment</th>';
+                                    echo '<th>Added on</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody >';
+                                    while ($row = $res->fetch_assoc()) {
+                                        echo  '<tr>';
+                                        echo  '<td>' . $row['user_name'] . '</td>';
+                                        echo  '<td>' . $row['brand_name'] . '</td>';
+                                        echo  '<td>' . $row['formula_name'] . '</td>';
+                                        echo  '<td>' . $row['packing_size'] . ' kg</td>';
+                                        echo  '<td>' . $row['noofbags'] . '</td>';
+                                        echo  '<td>' . $row['totalpayment'] . '</td>';
+                                        echo  '<td>' . $row['date_added'] . '</td>';
+                                        echo '</tr>';
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                }
+
+
+                                ?>
+
+
+
+
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="copyright">
-                                <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
+                            <!-- DATA TABLE -->
+                            <h3 class="title-5 m-b-35 m-t-50">Purchases</h3>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left">
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="suppliersid" id="suppliersid">
+                                            <option value="all" selected="selected">All Suppliers</option>
+                                            <?php echo $opt6; ?>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="time4" id="time4">
+                                            <option value="today">Today</option>
+                                            <option value="1w">1 Week</option>
+                                            <option value="tm" selected="selected">this Month</option>
+                                            <option value="1m">1 Months</option>
+                                            <option value="1y">1 Year</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+
+                                </div>
                             </div>
+
+
+                            <div class="table-responsive table-responsive-data2" id="purchasesdetail">
+
+
+                                <?php
+
+
+                                $sql = "SELECT s.user_name,rm.raw_material_name,rmsh.* FROM rawMaterialStockAdditionHistory rmsh inner join rawMaterial rm on rmsh.rawmaterial_id = rm.raw_material_id inner join supplier s on s.supplier_id = rmsh.supplier_id WHERE MONTH(date_added) = MONTH(CURRENT_DATE()) AND YEAR(date_added) = YEAR(CURRENT_DATE()) and rmsh.deleted != 1";
+                                $res = $conn->query($sql);
+                                if ($res->num_rows > 0) {
+                                    echo '<table class="table table-data2" id="example2" style="width:100%">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Supplier</th>';
+                                    echo '<th>Item</th>';
+                                    echo '<th>weight</th>';
+                                    echo '<th>rate</th>';
+                                    echo '<th>Total payment</th>';
+                                    echo '<th>Added on</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody >';
+                                    while ($row = $res->fetch_assoc()) {
+                                        echo  '<tr>';
+                                        echo  '<td>' . $row['user_name'] . '</td>';
+                                        echo  '<td>' . $row['raw_material_name'] . '</td>';
+                                        echo  '<td>' . $row['weight_added'] . ' kg</td>';
+                                        echo  '<td>' . $row['rate'] . '</td>';
+                                        echo  '<td>' . $row['totalpayment'] . '</td>';
+                                        echo  '<td>' . $row['date_added'] . '</td>';
+                                        echo '</tr>';
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                }
+
+
+                                ?>
+
+
+                            </div>
+                            <!-- END DATA TABLE -->
                         </div>
                     </div>
+
+                    <?php include_once('copyright.php') ?>
                 </div>
             </div>
         </div>
@@ -593,6 +742,15 @@ if ($res->num_rows > 0) {
                 pageLength: 5
             });
 
+            $('#example2').DataTable({
+                "scrollX": true,
+                pageLength: 5
+            });
+
+            $('#example4').DataTable({
+                "scrollX": true,
+                pageLength: 5
+            });
 
             $('#category').on('change', function() {
                 var category = this.value;
@@ -653,8 +811,6 @@ if ($res->num_rows > 0) {
                         pageLength: 5
                     });
                 });
-
-
             });
 
 
@@ -676,6 +832,75 @@ if ($res->num_rows > 0) {
                 });
             });
 
+            $('#time3').on('change', function() {
+                var time = this.value;
+                var client = $('#clientsid').val();
+                $("#salesdetails").text("");
+                $('#salesdetails').load("dashboardReports.php", {
+                    client: client,
+                    time: time,
+                    fform: "salesdetailsreport"
+                }, function() {
+                    $('#example4').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
+
+
+            $('#clientsid').on('change', function() {
+                var client = this.value;
+                var time = $('#time3').val();
+                // alert(category);
+                // alert(time);
+                $("#salesdetails").text("");
+                $('#salesdetails').load("dashboardReports.php", {
+                    client: client,
+                    time: time,
+                    fform: "salesdetailsreport"
+                }, function() {
+                    $('#example4').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
+
+
+            $('#time4').on('change', function() {
+                var time = this.value;
+                var supplier = $('#suppliersid').val();
+                $("#purchasesdetail").text("");
+                $('#purchasesdetail').load("dashboardReports.php", {
+                    supplier: supplier,
+                    time: time,
+                    fform: "purchasesdetailreport"
+                }, function() {
+                    $('#example2').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
+
+            $('#suppliersid').on('change', function() {
+                var supplier = this.value;
+                var time = $('#time4').val();
+                // alert(category);
+                // alert(time);
+                $("#purchasesdetail").text("");
+                $('#purchasesdetail').load("dashboardReports.php", {
+                    supplier: supplier,
+                    time: time,
+                    fform: "purchasesdetailreport"
+                }, function() {
+                    $('#example2').DataTable({
+                        "scrollX": true,
+                        pageLength: 5
+                    });
+                });
+            });
 
 
 

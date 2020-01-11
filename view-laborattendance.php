@@ -62,7 +62,7 @@ require_once("connection.php");
     <style>
         .sketchbox {
             width: calc((100vw -331) /62);
-            height: calc((100vw -331) /62);
+            height: calc((100vw -331) /46);
             background-color: white;
             border: 1px solid red;
             display: inline-block;
@@ -166,13 +166,7 @@ require_once("connection.php");
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -423,27 +417,6 @@ require_once("connection.php");
 
                         } else {
 
-                            //i 0  == dates
-                            // j 0 == names
-                            // if (i == 0 && j == 0) {
-                            //     div = '<div class="sketchbox" style="border:1px solid black;background-color:green;width:200px"></div>';
-                            //     $('.container-sketch').append(div);
-                            // } else if (i == 0) {
-                            //     div = '<div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center">' + j + '</div>';
-                            //     $('.container-sketch').append(div);
-
-                            // } else if (j == 0) {
-                            //     div = '<input type="text" hidden value=' + enames[i - 1].employee_id + '><div class="sketchbox" style="font-size=4px;border:1px solid black; text-align:center;width:200px">' + enames[i - 1].user_name + '</div>';
-                            //     $('.container-sketch').append(div);
-                            //     //names
-                            // } else {
-                            //     //if present then tick, else for absent leave ,cross
-
-                            //     m = j;
-                            //     id = i + '_' + m;
-                            //     div = '<div id =' + id + ' class="sketchbox" style="background-color:gray;"></div>'
-                            //     $('.container-sketch').append(div);
-                            // }
 
                         }
 

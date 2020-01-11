@@ -3,23 +3,6 @@
 <?php
 require_once("connection.php");
 
-if(!$conn->connect_error){
-
-    if(isset($_REQUEST['delete'])){
-        $id = (int)$_POST['id'];
-         
-        $sql = "update expenses set deleted = 1 where id = $id";
-        
-        $res = $conn->query($sql);
-        if($res){
-            #echo "<script>alert('Deleted Successfully')</script>";
-        }else{
-            #echo "<script>alert('Deleted Failed')</script>";
-        }
-
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +73,7 @@ if(!$conn->connect_error){
                     <div class="container-fluid">
                         
                     <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="expensetable">
 
 
 <?php 
@@ -117,17 +100,13 @@ if($res->num_rows > 0 ){
             echo  '<td>' . $row['date'] . '</td>';
             echo  '<td>' . $row['amount'] . '</td>';
             echo  '<td>' . $row['comment'] . '</td>';
-            echo '<td style="text-align:center">
+            echo '<td class="table-data-feature">
             
             <form action="update-expense.php" method="POST">
-            <input type="hidden" name="id" id="sid" value=' .$row["id"]. 
+            <input type="hidden" name="id" value=' .$row["id"]. 
                 '><button type="submit" name="edit" value="edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </form>
-
-                <form action="" method="POST">
-            <input type="hidden" name="id" value=' .$row["id"]. 
-                '> <button type="submit" name="delete"  value="delete" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                </form>
+                <button class="btn btn-danger did"  style="margin:3px" data-toggle="modal" data-id=' . $row["id"] . '><i class="fas fa-trash"></i></button>
                 <button class="btn btn-info mid" data-toggle="modal" data-id=' . $row["id"] .'><i class="fas fa-eye"></i></button>
                 
                 
@@ -153,13 +132,7 @@ if($res->num_rows > 0 ){
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -195,30 +168,32 @@ if($res->num_rows > 0 ){
 			</div>
 			<!-- end modal large -->
 
-            			<!-- modal static -->
-			<!-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
-			 data-backdrop="static">
-				<div class="modal-dialog modal-sm" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticModalLabel">Confirmation</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<p>
-								Are you sure You want to delete this record ?
-							</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary falsebutton" data-dismiss="modal">Cancel</button>
-							<button type="button" class="btn btn-primary confirmbutton">Confirm</button>
-						</div>
-					</div>
-				</div>
-			</div> -->
-			<!-- end modal static -->
+    <!-- modal static -->
+    <div class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticModalLabel">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idval1" value="" />
+                    <p>
+                        <strong>Are you sure you want to delete this Expense ?</strong>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="deleteexpense()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal static -->
+    <div id="confirmation"></div>
+    <div id="snackbar"></div>
 
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -268,7 +243,48 @@ if($res->num_rows > 0 ){
      $('#largeModal').modal('show');
    });
 
+
+   $('body').on('click', '.did', function() { // Click to only happen on announce links
+                $("#idval1").val($(this).data('id'));
+                $('#staticModal').modal('show');
+            });
+
+
+
 } );
+
+
+function snackbar(message, color) {
+            // Get the snackbar DIV
+            var x = document.getElementById("snackbar");
+
+            x.innerHTML = message;
+            x.style.background = color;
+            // Add the "show" class to DIV
+            x.className = "show";
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
+
+        function deleteexpense() {
+            $('#staticModal').modal('hide');
+            var exid = parseInt($("#idval1").val());
+            $('#confirmation').load("delajax.php", {
+                exid: exid,
+                fform: "expensedelete"
+            }, function() {
+                //load again
+                $('#expensetable').load("delajax.php", {
+                    fform: "loadexpensetable"
+                }, function() {
+                    $('#example').DataTable({
+                        "scrollX": true
+                    });
+                });
+            });
+        }
     </script>
 
 </body>

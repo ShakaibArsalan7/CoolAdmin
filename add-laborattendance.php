@@ -179,13 +179,7 @@ if(!$conn->connect_error){// if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -245,7 +239,8 @@ function submitform() {
   }
 
   $('#addatt').load("attendance.php", {
-        attendanceData : JSON.stringify(attendanceData)
+        attendanceData : JSON.stringify(attendanceData),
+                    fform: "addattendance"
          },function(){
             snackbar("Attendance Added.","green"); 
          });

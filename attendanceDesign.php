@@ -15,7 +15,7 @@ $month = $_POST['month'];
 $year = $_POST['year'];
 
 if($form === "timechange"){
-    echo "var noOfDays = ", cal_days_in_month(CAL_GREGORIAN, date($month), date($year)), ";";
+    $noOfDays = cal_days_in_month(CAL_GREGORIAN, date($month), date($year));
     $sql = "select count(*) as noOfEmployees from employee e where e.deleted != 1";
     $noOfEmployees = $conn->query($sql)->fetch_object()->noOfEmployees;
     $sql = "select * from employee e where e.deleted != 1";
@@ -41,10 +41,11 @@ if($form === "timechange"){
     echo "<script>";
     echo "var enames = " . $js_enames . ";";
     echo "var labattendances = " . $js_labattendances . ";";
+    echo "var noOfDays = ", $noOfDays, ";";
     echo "var noOfEmployees = ", $noOfEmployees, ";";
     echo "var month = '", date('m'), "';";
     echo "var daytoday = '", date('d'), "';";
-    echo "resetBoxes(noOfEmployees, labattendances, noOfDays,daytoday,enames,false);";
+    echo "resetBoxes(noOfEmployees, labattendances, parseInt(noOfDays),daytoday,enames,false);";
     echo "</script>";
 }
 

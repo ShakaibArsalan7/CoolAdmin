@@ -2,7 +2,7 @@
 <?php require_once('session.php') ?>
 <?php
 require_once("connection.php");
-$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+$username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = "";
 $err = "";
 
 if(!$conn->connect_error){// if database connected.
@@ -18,7 +18,6 @@ if(!$conn->connect_error){// if database connected.
         $bankaccounttitle =  $_REQUEST['hf-bankaccounttitle'];
         $bankaccountnumber =  $_REQUEST['hf-bankaccountnumber'];
         $bankname =  $_REQUEST['hf-bankname'];
-        //$profilepic = $_REQUEST['hf-profilepic'];
 
         //echo $_REQUEST['hf-username'] . $_REQUEST['hf-emailaddress'];
 
@@ -26,15 +25,19 @@ if(!$conn->connect_error){// if database connected.
    
     //validation passed
 
-        $sql = "insert into salesman(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','$profilepic',false)";
+        $sql = "insert into salesman(user_name,email_address,work_phone,mobile_number,work_address,home_address,bank_account_title,bank_account_number,bank_name,profile_pic,deleted) values('$username','$emailaddress','$workphone','$mobilenumber','$workaddress','$homeaddress','$bankaccounttitle','$bankaccountnumber','$bankname','',false)";
         $res = $conn->query($sql);
        if($res){
            //echo "inserted succesfully";
-           $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
-       }
+           $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname  = "";
+           $notification = "done";
+       
+        }else{
+            $notification = "notdone";
+        }
            
    }else{// if not submit, first visit to page or refresh
-    $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname = $profilepic = "";
+    $username  = $emailaddress = $workphone = $mobilenumber = $workaddress = $homeaddress = $bankaccounttitle = $bankaccountnumber = $bankname  = "";
    }
 
 }
@@ -185,14 +188,7 @@ if(!$conn->connect_error){// if database connected.
                                                         <input type="text" id="hf-bankname" name="hf-bankname" placeholder="Enter Bank Name..." class="form-control" value="<?php echo $bankname;?>">
                                                     </div>
                                                 </div>
-                                                <div class="row form-group">
-                                                        <div class="col col-md-3">
-                                                                <label for="hf-profilepic" class=" form-control-label">Profile Picture</label>
-                                                        </div>
-                                                        <div class="col-12 col-md-7">
-                                                                <input type="file" id="hf-profilepic" name="hf-profilepic" class="form-control-file">
-                                                        </div>
-                                                    </div>
+                                              
                                                    
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
@@ -216,13 +212,7 @@ if(!$conn->connect_error){// if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -258,6 +248,17 @@ if(!$conn->connect_error){// if database connected.
     <!-- Main JS-->
     <script src="js/main.js"></script>
     <script>
+        $(document).ready(function() {
+            
+            var noti = "<?php echo $notification?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
+
+        });
+
 function validateForm() {
     var username = document.getElementById("hf-username").value;
     var emailaddress = document.getElementById("hf-emailaddress").value;
@@ -268,7 +269,6 @@ function validateForm() {
     var bankaccounttitle = document.getElementById("hf-bankaccounttitle").value;
     var bankaccountnumber = document.getElementById("hf-bankaccountnumber").value;
     var bankname = document.getElementById("hf-bankname").value;
-    var profilepic = document.getElementById("hf-profilepic").value;
     if (username == "") {
     snackbar("Username is required.","red");
     return false;

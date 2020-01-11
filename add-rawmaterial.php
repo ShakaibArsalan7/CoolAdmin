@@ -18,6 +18,7 @@ if(!$conn->connect_error){// if database connected.
    
     //validation passed
         $timestamp= time();
+        $conn->autocommit(FALSE);
         $sql = "insert into rawMaterial(raw_material_name,unit_of_purchase,unit_of_usage,adding_timestamp,deleted) values('$rawmaterialname','kg','kg','$timestamp',false);";
         $res = $conn->query($sql);
        if($res){
@@ -28,7 +29,8 @@ if(!$conn->connect_error){// if database connected.
 
            $sql3 = "insert into rawmaterialStock(rawmaterial_id,weight,deleted) values($res1,0,false);";
             $res3 = $conn->query($sql3);
-       
+        
+            $done = true;
        
            //echo "<script>alert('$res1');</script>";
            foreach ($_POST as $name => $value) {
@@ -37,10 +39,26 @@ if(!$conn->connect_error){// if database connected.
                 $qquan = $_POST[$qname];
                $que = "insert into RawmaterialNutrients(raw_material_id,Nutrition_id,percentageperkg,deleted) values('$res1','$value',$qquan,false)";
                $res2 = $conn->query($que);
-           }
-        //echo "<script>alert('$name - $value')</script>";
 
+               if($res2 && $done){
+                $done = true;
+               }else{
+                $done = false;
+               }
+           }
         }
+
+        if($done == true){
+            $not = "done";
+            $conn->commit();
+        }else{
+            $conn->close();
+            $not = "notdone";
+        }
+
+       }else{
+        $conn->close();
+           $not = "notdone";
        }
            
    }else{// if not submit, first visit to page or refresh
@@ -185,13 +203,7 @@ if(!$conn->connect_error){// if database connected.
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <!-- <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p> -->
-                                </div>
-                            </div>
-                        </div>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -268,6 +280,13 @@ $(document).ready(function () {
         $(this).closest("tr").remove();
         counter -= 1;
     });
+
+    var noti = "<?php echo $not?>";
+            if (noti == "done") {
+                snackbar("Added Successfully", "green");
+            } else if (noti == "notdone") {
+                snackbar("Adding Failure.", "red");
+            }
 
 
 });

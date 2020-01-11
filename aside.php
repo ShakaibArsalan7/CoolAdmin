@@ -152,6 +152,9 @@
                                     <li>
                                         <a href="view-laborattendance.php">View Labor Attendance</a>
                                     </li>
+                                    <li>
+                                        <a href="update-laborattendance.php">Update Labor Attendance</a>
+                                    </li>
                                 </ul>
                             </li>
 
