@@ -130,6 +130,9 @@ if ($res->num_rows > 0) {
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
     <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <!-- <link href="vendor/dataTables/jquery.dataTables.min.css" rel="stylesheet"> -->
+    <link href="vendor/dataTables/buttons.dataTables.min.css" rel="stylesheet">
+
 
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
@@ -201,7 +204,7 @@ if ($res->num_rows > 0) {
                                                 </a>
                                             </div>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +222,7 @@ if ($res->num_rows > 0) {
                                                 </a>
                                             </div>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +240,7 @@ if ($res->num_rows > 0) {
                                                 </a>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +256,7 @@ if ($res->num_rows > 0) {
                                                 <span>Exp. (<?php echo date('M Y'); ?>)</span>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -424,6 +427,7 @@ if ($res->num_rows > 0) {
                                     </div>
 
                                 </div>
+
                             </div>
 
 
@@ -497,6 +501,7 @@ if ($res->num_rows > 0) {
                                     </div>
 
                                 </div>
+
                             </div>
 
 
@@ -563,6 +568,7 @@ if ($res->num_rows > 0) {
                                     </div>
 
                                 </div>
+
                             </div>
 
 
@@ -639,6 +645,7 @@ if ($res->num_rows > 0) {
                                     </div>
 
                                 </div>
+
                             </div>
 
 
@@ -708,7 +715,17 @@ if ($res->num_rows > 0) {
     <!-- Vendor JS       -->
 
     <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
+
     <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
+
+    <script src="vendor/dataTables/dataTables.buttons.min.js"></script>
+    <script src="vendor/dataTables/buttons.flash.min.js"></script>
+    <script src="vendor/dataTables/jszip.min.js"></script>
+    <script src="vendor/dataTables/pdfmake.min.js"></script>
+    <script src="vendor/dataTables/vfs_fonts.js"></script>
+    <script src="vendor/dataTables/buttons.html5.min.js"></script>
+    <script src="vendor/dataTables/buttons.print.min.js"></script>
+
     <script src="vendor/slick/slick.min.js">
     </script>
     <script src="vendor/wow/wow.min.js"></script>
@@ -734,29 +751,79 @@ if ($res->num_rows > 0) {
         $(document).ready(function() {
             $('#example').DataTable({
                 "scrollX": true,
-                pageLength: 5
+                pageLength: 5,
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'csvHtml5',
+                        title: 'Expenses CSV File'
+                    }, {
+                        extend: 'excelHtml5',
+                        title: 'Expenses Excel File'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Expenses PDF File'
+                    }
+                ]
             });
 
             $('#example1').DataTable({
                 "scrollX": true,
-                pageLength: 5
+                pageLength: 5,
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'csvHtml5',
+                        title: 'Raw Material CSV File'
+                    }, {
+                        extend: 'excelHtml5',
+                        title: 'Raw Material Excel File'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Raw Material PDF File'
+                    }
+                ]
             });
 
             $('#example2').DataTable({
                 "scrollX": true,
-                pageLength: 5
+                pageLength: 5,
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'csvHtml5',
+                        title: 'Purchaser CSV File'
+                    }, {
+                        extend: 'excelHtml5',
+                        title: 'Purchaser Excel File'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Purchaser PDF File'
+                    }
+                ]
             });
 
             $('#example4').DataTable({
                 "scrollX": true,
-                pageLength: 5
+                pageLength: 5,
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'csvHtml5',
+                        title: 'Sales CSV File'
+                    }, {
+                        extend: 'excelHtml5',
+                        title: 'Sales Excel File'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Sales PDF File'
+                    }
+                ]
             });
 
             $('#category').on('change', function() {
                 var category = this.value;
                 var time = $('#time').val();
-                // alert(category);
-                // alert(time);
                 $("#expenses").text("");
                 $('#expenses').load("dashboardReports.php", {
                     category: category,
@@ -765,7 +832,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Expenses CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Expenses Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Expenses PDF File'
+                            }
+                        ]
                     });
                 });
 
@@ -786,7 +866,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Expenses CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Expenses Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Expenses PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -808,7 +901,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example1').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Raw Material CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Raw Material Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Raw Material PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -827,7 +933,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example1').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Raw Material CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Raw Material Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Raw Material PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -843,7 +962,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example4').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Sales CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Sales Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Sales PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -862,7 +994,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example4').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Sales CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Sales Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Sales PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -879,7 +1024,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example2').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Purchaser CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Purchaser Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Purchaser PDF File'
+                            }
+                        ]
                     });
                 });
             });
@@ -897,7 +1055,20 @@ if ($res->num_rows > 0) {
                 }, function() {
                     $('#example2').DataTable({
                         "scrollX": true,
-                        pageLength: 5
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Purchaser CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Purchaser Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Purchaser PDF File'
+                            }
+                        ]
                     });
                 });
             });
