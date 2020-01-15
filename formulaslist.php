@@ -194,6 +194,8 @@ if(!$conn->connect_error){
             $i++;
         }
          array_unshift($sumrow, "", "Total", "100.0");
+         $fper = $sumrow[16] * 0.4;
+         $fortypercent = round($fper,2);
         
 
 
@@ -207,6 +209,7 @@ if(!$conn->connect_error){
 
 
         if(count($brandformulasdata) > 0 ){
+                echo "<h3>For 40 kg Rate : $fortypercent Rs.</h3>";
                 echo '<table id="example" class="table table-striped table-bordered" style="width:100%">';
                 echo '<thead>';
                 echo '<tr>';

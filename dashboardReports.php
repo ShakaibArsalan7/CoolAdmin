@@ -258,6 +258,7 @@ if($form === "expenseReport"){
         echo '<th>Packing Size</th>';
         echo '<th>Bags</th>';
         echo '<th>Total Payment</th>';
+        echo '<th>Payment Due</th>';
         echo '<th>Added on</th>';
         echo '</tr>';
         echo '</thead>';
@@ -270,6 +271,7 @@ if($form === "expenseReport"){
             echo  '<td>' . $row['packing_size'] . ' kg</td>';
             echo  '<td>' . $row['noofbags'] . '</td>';
             echo  '<td>' . $row['totalpayment'] . '</td>';
+            echo  '<td>' . $row['remainingpayment'] . '</td>';
             echo  '<td>' . $row['date_added'] . '</td>';
             echo '</tr>';
         }
@@ -285,6 +287,7 @@ if($form === "expenseReport"){
         echo '<th>Packing Size</th>';
         echo '<th>Bags</th>';
         echo '<th>Total Payment</th>';
+        echo '<th>Payment Due</th>';
         echo '<th>Added on</th>';
         echo '</tr>';
         echo '</thead>';
@@ -294,6 +297,113 @@ if($form === "expenseReport"){
             echo  '<td></td>';
             echo  '<td></td>';
             echo  '<td>No Record Found</td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+
+}else if($form === "salesmandetailreport"){
+
+    $time = $_POST['time'];
+    $salesman = $_POST['salesman'];
+
+    // echo "<script>alert('t - $time    --- c - $client')</script>";
+
+    $sql ="";
+
+
+    if($salesman == "all" && $time == "today"){
+
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added = CURDATE();";
+
+    }else if($salesman == "all" && $time == "1w"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+    }else if($salesman == "all" && $time == "tm"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  WHERE MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE()) and s.deleted != 1";
+        
+    }else if($salesman == "all" && $time == "1m"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($salesman == "all" && $time == "1y"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+        
+    }else if($salesman != "all" && $time == "today"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.salesman_id = $salesman and s.date_added = CURDATE();";
+        
+    }else if($salesman != "all" && $time == "1w"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.salesman_id = $salesman and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);";
+
+        
+    }else if($salesman != "all" && $time == "tm"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.salesman_id = $salesman and MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE());";
+        
+    }else if($salesman != "all" && $time == "1m"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.salesman_id = $salesman and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);";
+        
+    }else if($salesman != "all" && $time == "1y"){
+        $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id  where s.deleted != 1 and s.salesman_id = $salesman and s.date_added >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+
+        
+    }
+
+
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        echo '<table class="table table-data2" id="example8" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Client</th>';
+        echo '<th>Brand</th>';
+        echo '<th>Formula</th>';
+        echo '<th>Packing Size</th>';
+        echo '<th>Bags</th>';
+        echo '<th>Total Payment</th>';
+        echo '<th>Payment Due</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+        while ($row = $res->fetch_assoc()) {
+            echo  '<tr>';
+            echo  '<td>' . $row['user_name'] . '</td>';
+            echo  '<td>' . $row['brand_name'] . '</td>';
+            echo  '<td>' . $row['formula_name'] . '</td>';
+            echo  '<td>' . $row['packing_size'] . ' kg</td>';
+            echo  '<td>' . $row['noofbags'] . '</td>';
+            echo  '<td>' . $row['totalpayment'] . '</td>';
+            echo  '<td>' . $row['remainingpayment'] . '</td>';
+            echo  '<td>' . $row['date_added'] . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }else{
+        echo '<table class="table table-data2" id="example4" style="width:100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Client</th>';
+        echo '<th>Brand</th>';
+        echo '<th>Formula</th>';
+        echo '<th>Packing Size</th>';
+        echo '<th>Bags</th>';
+        echo '<th>Total Payment</th>';
+        echo '<th>Payment Due</th>';
+        echo '<th>Added on</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody >';
+            echo  '<tr>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td></td>';
+            echo  '<td>No Record Found</td>';
+            echo  '<td></td>';
             echo  '<td></td>';
             echo  '<td></td>';
             echo  '<td></td>';
@@ -357,6 +467,7 @@ if($form === "expenseReport"){
         echo '<th>weight</th>';
         echo '<th>rate</th>';
         echo '<th>Total payment</th>';
+        echo '<th>Payment Due</th>';
         echo '<th>Added on</th>';
         echo '</tr>';
         echo '</thead>';
@@ -368,6 +479,7 @@ if($form === "expenseReport"){
             echo  '<td>' . $row['weight_added'] . ' kg</td>';
             echo  '<td>' . $row['rate'] . '</td>';
             echo  '<td>' . $row['totalpayment'] . '</td>';
+            echo  '<td>' . $row['remainingpayment'] . '</td>';
             echo  '<td>' . $row['date_added'] . '</td>';
             echo '</tr>';
         }
@@ -382,6 +494,7 @@ if($form === "expenseReport"){
         echo '<th>weight</th>';
         echo '<th>rate</th>';
         echo '<th>Total payment</th>';
+        echo '<th>Payment Due</th>';
         echo '<th>Added on</th>';
         echo '</tr>';
         echo '</thead>';
@@ -391,6 +504,7 @@ if($form === "expenseReport"){
             echo  '<td></td>';
             echo  '<td></td>';
             echo  '<td>No Record Found</td>';
+            echo  '<td></td>';
             echo  '<td></td>';
             echo  '<td></td>';
             echo '</tr>';

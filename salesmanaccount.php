@@ -1,21 +1,19 @@
-<?php require_once('session.php') ?>
-<?php
+<?php require_once('session.php');
+
 require_once("connection.php");
-
-if(!$conn->connect_error){
-
-    $brandname  = "";
-    $opt = "";
-    $sql =  "select brand_id, brand_name from brand where deleted != 1";
-    $res = $conn->query($sql);
-    if($res->num_rows > 0 ){
-    while($row = $res->fetch_assoc()){
-        // echo "<script>alert('a')</script>";
-        $opt .='<option value='. $row['brand_id'] .'>'. $row['brand_id'] . ' - ' . $row['brand_name'] .'</option>';
-
+if (!$conn->connect_error) {
+    $opt6 = "";
+    $sql1 = "SELECT s.salesman_id, s.user_name FROM salesman s WHERE s.deleted != 1";
+    $res = $conn->query($sql1);
+    $data1 = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt6 .= '<option value=' . $row['salesman_id'] . '>' . $row['salesman_id'] . ' - ' . $row['user_name'] . '</option>';
         }
     }
 }
+
+
 
 ?>
 <!DOCTYPE html>
@@ -30,7 +28,7 @@ if(!$conn->connect_error){
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>View Formula</title>
+    <title>Salesman Account</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -59,55 +57,48 @@ if(!$conn->connect_error){
 <body class="animsition">
     <div class="page-wrapper">
         <!-- HEADER MOBILE-->
-        <?php include_once("header.php")?>
+        <?php include_once("header.php") ?>
         <!-- END HEADER MOBILE-->
 
         <!-- MENU SIDEBAR-->
-        <?php include_once("aside.php")?>
+        <?php include_once("aside.php") ?>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
             <header class="header-desktop">
-                    <div class="section__content section__content--p30">
-                        <div class="container-fluid">
-                        <?php include_once('accountdetail.php')?>
-                        </div>
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <?php include_once('accountdetail.php') ?>
                     </div>
-                </header>
+                </div>
+            </header>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                        
-                    <div class="row">
+
+                        <div class="row">
                             <div class="col-md-12">
-                                            <div class="row form-group">
-                                                <div class="col col-md-2">
-                                                    <label for="brandname" class=" form-control-label">Brand Name</label>
-                                                </div>
-                                                <div class="col-12 col-md-5 brandname" >
-                                                <select class="form-control" id="brandname" name="brande">
-                                                    <option value="select">select option</option><?php echo $opt;?>
-                                                </select>
-                                                </div>
-                                            </div> 
-
-                                            <div class="row form-group" id="formulalist">
-                                               
-                                            </div> 
-
-                                            <div id="rawmaterialdetail">
-                                                
-                                            </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-salesman" class=" form-control-label">Salesman</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-control" id="salesmanid" name="salesmanid">
+                                            <option value='select'>select option</option><?php echo $opt6; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="salesmandetails">
+                                </div>
                             </div>
-                    </div>
+                        </div>
 
-
-                    <?php include_once('copyright.php') ?>
+                        <?php include_once('copyright.php') ?>
                     </div>
                 </div>
             </div>
@@ -117,17 +108,16 @@ if(!$conn->connect_error){
 
     </div>
 
-    <!-- <div class="modal">Place at bottom of page</div> -->
-
+    <div id="snackbar"></div>
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-    <!-- Vendor JS       -->
 
     <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
     <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
+    <!-- Vendor JS       -->
     <script src="vendor/slick/slick.min.js">
     </script>
     <script src="vendor/wow/wow.min.js"></script>
@@ -145,56 +135,43 @@ if(!$conn->connect_error){
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
-
     <script>
-$(document).ready(function () {
-
-    
-
-        $('#brandname').on('change', function() {
-        var brandid = this.value;
-        if(brandid != "select"){
-            // alert(brandid);
-            $("#rawmaterialdetail").text("");
-            $('#formulalist').load("formulaslist.php", {
-                fmodid : brandid,
-                fform : "formulaslist"
+        $(document).ready(function() {
+            $('body').on('change', '#salesmanid', function() {
+                // alert(hey);
+                var salesmanid = this.value;
+                if (salesmanid == "select") {
+                    $("#salesmandetails").text("");
+                } else {
+                    $('#salesmandetails').load("accounthandle.php", {
+                        salesmanid: parseInt(salesmanid),
+                        fform: "salesmandetails"
+                    }, function() {
+                        $('#example5').DataTable({
+                            scrollX :true
+                        });
+                    });
+                }
             });
-        }else{
-            $("#formulalist").text("");
+
+
+        });
+    </script>
+    <script>
+        function snackbar(message, color) {
+            // Get the snackbar DIV
+            var x = document.getElementById("snackbar");
+
+            x.innerHTML = message;
+            x.style.background = color;
+            // Add the "show" class to DIV
+            x.className = "show";
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 3000);
         }
-        
-    });
-    
-
-    $('body').on('change','#formulaid',function(){ // Click to only happen on announce links
-
-        
-         var brandid = $('#brandid').val();
-         var formulaid = this.value;
-         if(formulaid != "select"){
-            // alert(brandid);
-            $("#rawmaterialdetail").text("");
-            $('#rawmaterialdetail').load("formulaslist.php", {
-                bmodid :  brandid,
-                fmodid : formulaid,
-                fform : "rawmatlist"
-            },function(){
-                $('#example').DataTable({
-                    "scrollX": true
-                });
-            });
-        }else{
-            $("#rawmaterialdetail").text("");
-        }
-
-   });
-
-
-});
-
-</script>
-
+    </script>
 </body>
 
 </html>

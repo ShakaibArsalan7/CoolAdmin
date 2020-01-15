@@ -319,10 +319,19 @@ require_once("connection.php");
                                         // different type of attendances
                                         var at = onelabatt[k].attendance_description;
                                         if (at == 1) {
-                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fas fa-check"></i></div>'
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fab fa-pinterest-p"></i></div>'
                                             $('.container-sketch').append(div);
-                                        } else {
-                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-times"></i></div>'
+                                        } else if (at == 2)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-font"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 3)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue">FL</div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 4)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:skyblue">HL</div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 5)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:orange"><i class="fab fa-stripe-s"></i></div>'
                                             $('.container-sketch').append(div);
                                         }
                                         f = true;
@@ -330,7 +339,7 @@ require_once("connection.php");
                                     }
                                 }
                                 if (!f) {
-                                    div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue"><i class="fas fa-question"></i></div>'
+                                    div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue"></div>'
                                     $('.container-sketch').append(div);
                                 }
 
@@ -395,10 +404,19 @@ require_once("connection.php");
                                         // different type of attendances
                                         var at = onelabatt[k].attendance_description;
                                         if (at == 1) {
-                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fas fa-check"></i></div>'
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:green"><i class="fab fa-pinterest-p"></i></div>'
                                             $('.container-sketch').append(div);
-                                        } else {
-                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-times"></i></div>'
+                                        } else if (at == 2)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:red"><i class="fas fa-font"></i></div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 3)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:blue">FL</div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 4)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:skyblue">HL</div>'
+                                            $('.container-sketch').append(div);
+                                        }else if (at == 5)  {
+                                            div = '<div id =' + id + ' class="sketchbox" style="text-align:center;color:orange"><i class="fab fa-stripe-s"></i></div>'
                                             $('.container-sketch').append(div);
                                         }
                                         f = true;

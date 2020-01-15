@@ -95,6 +95,16 @@ if ($res->num_rows > 0) {
     }
 }
 
+$opt7 = "";
+$sql1 = "SELECT s.salesman_id, s.user_name FROM salesman s WHERE s.deleted != 1";
+$res = $conn->query($sql1);
+$data1 = array();
+if ($res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        $opt7 .= '<option value=' . $row['salesman_id'] . '>' . $row['salesman_id'] . ' - ' . $row['user_name'] . '</option>';
+    }
+}
+
 // $opt1 = "";
 // $sql =  "select employee_id, user_name from employee where deleted != 1";
 // $res = $conn->query($sql);
@@ -590,6 +600,7 @@ if ($res->num_rows > 0) {
                                     echo '<th>Packing Size</th>';
                                     echo '<th>Bags</th>';
                                     echo '<th>Total Payment</th>';
+                                    echo '<th>Payment Due</th>';
                                     echo '<th>Added on</th>';
                                     echo '</tr>';
                                     echo '</thead>';
@@ -602,6 +613,7 @@ if ($res->num_rows > 0) {
                                         echo  '<td>' . $row['packing_size'] . ' kg</td>';
                                         echo  '<td>' . $row['noofbags'] . '</td>';
                                         echo  '<td>' . $row['totalpayment'] . '</td>';
+                                        echo  '<td>' . $row['remainingpayment'] . '</td>';
                                         echo  '<td>' . $row['date_added'] . '</td>';
                                         echo '</tr>';
                                     }
@@ -666,6 +678,7 @@ if ($res->num_rows > 0) {
                                     echo '<th>weight</th>';
                                     echo '<th>rate</th>';
                                     echo '<th>Total payment</th>';
+                                    echo '<th>Payment Due</th>';
                                     echo '<th>Added on</th>';
                                     echo '</tr>';
                                     echo '</thead>';
@@ -677,6 +690,7 @@ if ($res->num_rows > 0) {
                                         echo  '<td>' . $row['weight_added'] . ' kg</td>';
                                         echo  '<td>' . $row['rate'] . '</td>';
                                         echo  '<td>' . $row['totalpayment'] . '</td>';
+                                        echo  '<td>' . $row['remainingpayment'] . '</td>';
                                         echo  '<td>' . $row['date_added'] . '</td>';
                                         echo '</tr>';
                                     }
@@ -686,6 +700,85 @@ if ($res->num_rows > 0) {
 
 
                                 ?>
+
+
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h3 class="title-5 m-b-35 m-t-50">Salesman Details</h3>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left">
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="salesmanid" id="salesmanid">
+                                            <option value="all" selected="selected">All Salesman</option>
+                                            <?php echo $opt7; ?>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+                                    <div class="rs-select2--light rs-select2--md">
+                                        <select class="js-select2" name="time5" id="time5">
+                                            <option value="today">Today</option>
+                                            <option value="1w">1 Week</option>
+                                            <option value="tm" selected="selected">this Month</option>
+                                            <option value="1m">1 Months</option>
+                                            <option value="1y">1 Year</option>
+                                        </select>
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="table-responsive table-responsive-data2" id="salesmandetails">
+
+
+                                <?php
+
+
+                                $sql = "SELECT c.user_name,b.brand_name,f.formula_name,s.* FROM sales s inner join brand b on b.brand_id = s.brand_id inner join formulas f on f.formula_id = s.formula_id inner join client c on c.client_id = s.client_id where MONTH(s.date_added) = MONTH(CURRENT_DATE()) AND YEAR(s.date_added) = YEAR(CURRENT_DATE()) and s.deleted != 1";
+                                $res = $conn->query($sql);
+                                if ($res->num_rows > 0) {
+                                    echo '<table class="table table-data2" id="example8" style="width:100%">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Client</th>';
+                                    echo '<th>Brand</th>';
+                                    echo '<th>Formula</th>';
+                                    echo '<th>Packing Size</th>';
+                                    echo '<th>Bags</th>';
+                                    echo '<th>Total Payment</th>';
+                                    echo '<th>Payment Due</th>';
+                                    echo '<th>Added on</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody >';
+                                    while ($row = $res->fetch_assoc()) {
+                                        echo  '<tr>';
+                                        echo  '<td>' . $row['user_name'] . '</td>';
+                                        echo  '<td>' . $row['brand_name'] . '</td>';
+                                        echo  '<td>' . $row['formula_name'] . '</td>';
+                                        echo  '<td>' . $row['packing_size'] . ' kg</td>';
+                                        echo  '<td>' . $row['noofbags'] . '</td>';
+                                        echo  '<td>' . $row['totalpayment'] . '</td>';
+                                        echo  '<td>' . $row['remainingpayment'] . '</td>';
+                                        echo  '<td>' . $row['date_added'] . '</td>';
+                                        echo '</tr>';
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                }
+
+
+                                ?>
+
+
 
 
                             </div>
@@ -817,6 +910,24 @@ if ($res->num_rows > 0) {
                     {
                         extend: 'pdfHtml5',
                         title: 'Sales PDF File'
+                    }
+                ]
+            });
+
+            $('#example8').DataTable({
+                "scrollX": true,
+                pageLength: 5,
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'csvHtml5',
+                        title: 'Salesman CSV File'
+                    }, {
+                        extend: 'excelHtml5',
+                        title: 'Salesman Excel File'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Salesman PDF File'
                     }
                 ]
             });
@@ -974,6 +1085,66 @@ if ($res->num_rows > 0) {
                             {
                                 extend: 'pdfHtml5',
                                 title: 'Sales PDF File'
+                            }
+                        ]
+                    });
+                });
+            });
+
+            $('#time5').on('change', function() {
+                var time = this.value;
+                var salesman = $('#salesmanid').val();
+                $("#salesmandetails").text("");
+                $('#salesmandetails').load("dashboardReports.php", {
+                    salesman: salesman,
+                    time: time,
+                    fform: "salesmandetailreport"
+                }, function() {
+                    $('#example8').DataTable({
+                        "scrollX": true,
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Salesman CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Salesman Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Salesman PDF File'
+                            }
+                        ]
+                    });
+                });
+            });
+
+            $('#salesmanid').on('change', function() {
+                var salesman = this.value;
+                var time = $('#time5').val();
+                // alert(category);
+                // alert(time);
+                $("#salesmandetails").text("");
+                $('#salesmandetails').load("dashboardReports.php", {
+                    salesman: salesman,
+                    time: time,
+                    fform: "salesmandetailreport"
+                }, function() {
+                    $('#example8').DataTable({
+                        "scrollX": true,
+                        pageLength: 5,
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'csvHtml5',
+                                title: 'Salesman CSV File'
+                            }, {
+                                extend: 'excelHtml5',
+                                title: 'Salesman Excel File'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: 'Salesman PDF File'
                             }
                         ]
                     });

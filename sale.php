@@ -1,9 +1,40 @@
 <?php require_once('session.php');
-        require_once("connection.php");
-         ?>
+require_once("connection.php");
+if (!$conn->connect_error) {
+    $brandname  = "";
+    $opt = "";
+    $sql =  "select brand_id, brand_name from brand where deleted != 1";
+    $res = $conn->query($sql);
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt .= '<option value=' . $row['brand_id'] . '>' . $row['brand_id'] . ' - ' . $row['brand_name'] . '</option>';
+        }
+    }
+    $today = date("Y-m-d");
+    //brand id , formula id , packing sizes, no of bags , submit button
 
+    $opt1 = "";
+    $sql1 = "SELECT c.client_id, c.user_name FROM client c WHERE c.deleted != 1";
+    $res = $conn->query($sql1);
+    $data1 = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt1 .= '<option value=' . $row['client_id'] . '>' . $row['client_id'] . ' - ' . $row['user_name'] . '</option>';
+        }
+    }
 
+    $opt6 = "";
+    $sql1 = "SELECT s.salesman_id, s.user_name FROM salesman s WHERE s.deleted != 1";
+    $res = $conn->query($sql1);
+    $data1 = array();
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $opt6 .= '<option value=' . $row['salesman_id'] . '>' . $row['salesman_id'] . ' - ' . $row['user_name'] . '</option>';
+        }
+    }
+}
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +47,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Accounts</title>
+    <title>Sale</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -26,7 +57,6 @@
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-    <link href="vendor/dataTables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
@@ -68,19 +98,126 @@
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                        <div class="row" style="width:70%;margin:auto">
-                            <div class="col-md-12">
-
-                                <button type="button" style="margin:15px 5px" class="btn btn-info" id="sale">Sale</button>
-                                <button type="button" style="margin:15px 5px" class="btn btn-success" id="supplieraccount">Suppliers Account</button>
-                                <button type="button" style="margin:15px 5px" class="btn btn-danger" id="clientaccount">Clients Account</button>
-                                <button type="button" style="margin:15px 5px" class="btn btn-danger" id="salesmanaccount">Salesman Account</button>
-
-                            </div>
-                        </div>
 
                         <div class="row">
-                            <div class="col-md-12" id="content">
+                            <div class="col-md-10">
+                                <h3 style="margin-bottom:25px;"><strong>Sale</strong></h3>
+
+
+
+
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-brandid" class=" form-control-label">Brand :</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-control" id="brandid" name="brandid">
+                                            <option value='select'>select option</option><?php echo $opt; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group" id="formulashere">
+                                </div>
+                                <div class="row form-group" id="packingshere">
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-noofbags" class=" form-control-label">No of Bags</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="text" id="hf-noofbags" name="hf-noofbags" placeholder="Enter No. of Bags..." class="form-control" value="0">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-client" class=" form-control-label">Client</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-control" id="clientname" name="clientname">
+                                            <option value='select'>select option</option><?php echo $opt1; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-salesman" class=" form-control-label">Salesman</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-control" id="salesmanname" name="salesmanname">
+                                            <option value='select'>select option</option><?php echo $opt6; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-modeofpayment" class=" form-control-label">Mode of Payment</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-control" id="modeofpayment" name="modeofpayment">
+                                            <option value='cash'>Cash</option>
+                                            <option value='cheque'>Cheque</option>
+                                            <option value='card'>Card</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-totalpayment" class=" form-control-label">Total Payment</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="number" id="hf-totalpayment" name="hf-totalpayment" class="form-control" oninput="totalpaymentchange()">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-paymentmade" class=" form-control-label">Payment Made</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="number" id="hf-paymentmade" name="hf-paymentmade" placeholder="Enter Payment Made..." class="form-control" oninput="paymentmadechange()" value="0">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-discount" class=" form-control-label">Discount(in Rs)</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="number" id="hf-discount" name="hf-discount" placeholder="Enter Discount..." class="form-control" oninput="discountchange()" value="0">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-remaining" class=" form-control-label">Remaining(to be made)</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="number" id="hf-remaining" name="hf-remaining" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-extrapayment" class=" form-control-label">Extra Payment</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type="number" id="hf-extrapayment" name="hf-extrapayment" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-2">
+                                        <label for="hf-date" class=" form-control-label">Date</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <input type='date' id='hf-date' name='hf-date' placeholder='Enter Date...' class='form-control' value="<?php echo $today; ?>">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <button class="btn btn-primary btn-lg" id="saledone" onclick="return validateForm()">Sale</button>
+                                    </div>
+                                </div>
+
+
+
+
+
 
 
                             </div>
@@ -96,31 +233,6 @@
 
     </div>
 
-    <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="largeModalLabel">Clear Remaining Payment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="idval" value="" />
-
-                    <div id="parawithdata">
-
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end modal large -->
-
-
-    
     <div id="saleajax"></div>
     <div id="addpay"></div>
     <div id="snackbar"></div>
@@ -130,9 +242,6 @@
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-
-    <script src="vendor/dataTables/jquery.dataTables.min.js"></script>
-    <script src="vendor/dataTables/dataTables.bootstrap4.min.js"></script>
     <!-- Vendor JS       -->
     <script src="vendor/slick/slick.min.js">
     </script>
@@ -151,97 +260,9 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
     <script>
         $(document).ready(function() {
-            
-           
-
-            $('body').on('click', '#sale', function() { // Click to only happen on announce links
-                $("#content").text("");
-                $('#content').load("accounthandle.php", {
-                    fform: "sale"
-                });
-
-            });
-
-
-            $('body').on('click', '#supplieraccount', function() { // Click to only happen on announce links
-                $("#content").text("");
-                $('#content').load("accounthandle.php", {
-                    fform: "supplieraccount"
-                });
-            });
-
-            $('body').on('change', '#suppliername', function() {
-                var supplierid = this.value;
-
-                if (supplierid == "select") {
-                    $("#supplierdetails").text("");
-                } else {
-                    $('#supplierdetails').load("accounthandle.php", {
-                        supplierid: parseInt(supplierid),
-                        fform: "supplierdetails"
-                    }, function() {
-                        $('#example3').DataTable();
-                    });
-                }
-            });
-
-            // ******************************************************************
-
-            $('body').on('click', '#clientaccount', function() { // Click to only happen on announce links
-                $("#content").text("");
-                $('#content').load("accounthandle.php", {
-                    fform: "clientaccount"
-                });
-            });
-
-            $('body').on('change', '#clientid', function() {
-                var clientid = this.value
-
-                if (clientid == "select") {
-                    $("#clientdetails").text("");
-                } else {
-                    $('#clientdetails').load("accounthandle.php", {
-                        clientid: parseInt(clientid),
-                        fform: "clientdetails"
-                    }, function() {
-                        $('#example4').DataTable({
-                            scrollX :true
-                        });
-                    });
-                }
-            });
-
-
-            // ************************************************************************** salesman
-            $('body').on('click', '#salesmanaccount', function() { // Click to only happen on announce links
-                $("#content").text("");
-                $('#content').load("accounthandle.php", {
-                    fform: "salesmanaccount"
-                });
-            });
-
-            $('body').on('change', '#salesmanid', function() {
-                // alert(hey);
-                var salesmanid = this.value;
-                debugger;
-                if (salesmanid == "select") {
-                    $("#salesmandetails").text("");
-                    // alert(salesmanid);
-
-                } else {
-                    $('#salesmandetails').load("accounthandle.php", {
-                        salesmanid: parseInt(salesmanid),
-                        fform: "salesmandetails"
-                    }, function() {
-                        $('#example5').DataTable({
-                            scrollX :true
-                        });
-                    });
-                }
-            });
-
             $('body').on('change', '#brandid', function() {
                 var brandid = parseInt($("#brandid").val());
                 if (brandid == "select") {
@@ -253,8 +274,6 @@
                         fform: "showformulas"
                     });
                 }
-
-
             });
 
 
@@ -273,99 +292,6 @@
 
 
             });
-
-
-            $('body').on('click', '.mid', function() { // Click to only happen on announce links
-                //var a = document.getElement
-                $("#idval").val($(this).data('id'));
-                // debugger;
-                var id = parseInt($("#idval").val());
-
-                $('#parawithdata').load("accounthandle.php", {
-                    id: id,
-                    fform: "clearSupplierDue"
-                });
-
-
-                $('#largeModal').modal('show');
-
-            });
-
-            $('body').on('click', '#additionalpayment', function() {
-                // update the amount in the database after adding the remaining 
-                var rems = parseFloat(document.getElementById('hf-additionals').value);
-                var id = parseInt($("#idval").val());
-                if(rems <= 0 ){
-                    snackbar('Remaining amount cannot be zero','red');
-                    return false;
-                } 
-                $('#addpay').load("accounthandle.php", {
-                    id: id,
-                    rems :rems,
-                    fform: "supplierRemainingamount"
-                },function(){
-                    var supplierid = parseInt(document.getElementById('suppliername').value);
-                    $('#supplierdetails').text('');
-                    $('#supplierdetails').load("accounthandle.php", {
-                        supplierid: supplierid,
-                        fform: "supplierdetails"
-                    }, function() {
-                        $('#example3').DataTable();
-                    });
-                });
-                $('#largeModal').modal('hide');
-            });
-
-
-            $('body').on('click', '.clid', function() { // Click to only happen on announce links
-                //var a = document.getElement
-                $("#idval").val($(this).data('id'));
-                // debugger;
-                var id = parseInt($("#idval").val());
-
-                $('#parawithdata').load("accounthandle.php", {
-                    id: id,
-                    fform: "clearClientDue"
-                });
-
-
-                $('#largeModal').modal('show');
-
-            });
-
-            $('body').on('click', '#additionalpaymentcl', function() { // Click to only happen on announce links
-                var remc = parseFloat(document.getElementById('hf-additionalc').value);
-                var id = parseInt($("#idval").val());
-                if(remc <= 0 ){
-                    snackbar('Remaining amount cannot be zero','red');
-                    return false;
-                } 
-                $('#addpay').load("accounthandle.php", {
-                    id: id,
-                    remc :remc,
-                    fform: "clientRemainingamount"
-                },function(){
-                    var clientid = parseInt(document.getElementById('clientid').value);
-                    $('#clientdetails').text('');
-                    $('#clientdetails').load("accounthandle.php", {
-                        clientid: clientid,
-                        fform: "clientdetails"
-                    }, function() {
-                        $('#example4').DataTable({
-                            scrollX :true
-                        });
-                    });
-                });
-                $('#largeModal').modal('hide');
-            });
-
-
-
-
-
-
-
-
         });
     </script>
 
@@ -438,10 +364,10 @@
             $('#saleajax').text('');
             //send the ajax with data
             $('#saleajax').load("accounthandle.php", {
-                
+
                 brandid: parseInt(brandid),
-                formulaid : parseInt(formulaid), 
-                packingsize : parseInt(packingsize),
+                formulaid: parseInt(formulaid),
+                packingsize: parseInt(packingsize),
                 noofbags: parseInt(noofbags),
                 clientname: parseInt(clientname),
                 salesmanname: parseInt(salesmanname),
@@ -453,7 +379,7 @@
                 extrapayment: parseFloat(extrapayment),
                 date: date,
                 fform: "saleajax"
-            },function(){
+            }, function() {
                 document.getElementById('brandid').value = "select";
             });
 
@@ -461,10 +387,6 @@
         }
 
 
-        // function validateQuantity(s) {
-        //     var rgx = /^[0-9]*\.?[0-9]*$/;
-        //     return s.match(rgx);
-        // }
 
         function snackbar(message, color) {
             // Get the snackbar DIV
@@ -530,25 +452,26 @@
             } else {
                 document.getElementById("hf-extrapayment").value = 0;
                 document.getElementById("hf-remaining").value = tp - (pm + d);
-            }  
+            }
 
         }
 
-        function additionalPaymentsuchange(){
+        function additionalPaymentsuchange() {
             var rems = parseFloat(document.getElementById("rems").value);
             var adds = parseFloat(document.getElementById("hf-additionals").value);
             // debugger;
-            if(adds > rems){
-                snackbar('you are adding more than remaining payment.','red');
+            if (adds > rems) {
+                snackbar('you are adding more than remaining payment.', 'red');
                 document.getElementById("hf-additionals").value = rems;
             }
         }
-        function additionalPaymentclchange(){
+
+        function additionalPaymentclchange() {
             var remc = parseFloat(document.getElementById("remc").value);
             var addc = parseFloat(document.getElementById("hf-additionalc").value);
             // debugger;
-            if(addc > remc){
-                snackbar('you are adding more than remaining payment.','red');
+            if (addc > remc) {
+                snackbar('you are adding more than remaining payment.', 'red');
                 document.getElementById("hf-additionalc").value = remc;
             }
         }

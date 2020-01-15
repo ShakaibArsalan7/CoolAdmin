@@ -23,19 +23,7 @@
                             <a class="js-arrow" href="dashboard.php">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
-                        <!-- <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-users"></i>Users
-                            </a>
-                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="add-user.php">Add User</a>
-                                </li>
-                                <li>
-                                    <a href="view-users.php">View Users</a>
-                                </li>
-                            </ul>
-                        </li> -->
+                        
                         <li class="has-sub">
                                 <a class="js-arrow" href="#">
                                     <i class="fab fa-product-hunt"></i>Brands
@@ -49,6 +37,58 @@
                                     </li>
                                 </ul>
                         </li>
+
+                        <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-clipboard-list"></i>Expenses
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                    <a href="add-expense.php">Add Expense</a>
+                                    </li>
+                                    <li>
+                                    <a href="view-expense.php">View Expense</a>
+                                    </li>
+                                    <li>
+                                    <a href="add-expensetype.php">Add Expense Type</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-cubes"></i>Stocks
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                    <a href="rawmaterialstocks.php">Raw Material Stock</a>
+                                    </li>
+                                    <li>
+                                    <a href="productstock.php">Production Stock</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="sale.php">
+                                    <i class="fas fa-dollar-sign"></i>Sale</a>
+                            </li>
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-dollar-sign"></i>Accounts
+                                </a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                        <a href="clientaccount.php">Client Account</a>
+                                    </li>
+                                    <li>
+                                        <a href="supplieraccount.php">Supplier Account</a>
+                                    </li>
+                                    <li>
+                                        <a href="salesmanaccount.php">Salesman Account</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
@@ -187,39 +227,10 @@
                             </li>
                             
                             
-                            <li class="has-sub">
-                                <a class="js-arrow" href="#">
-                                <i class="fas fa-clipboard-list"></i>Expenses
-                                </a>
-                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                    <li>
-                                    <a href="add-expense.php">Add Expense</a>
-                                    </li>
-                                    <li>
-                                    <a href="view-expense.php">View Expense</a>
-                                    </li>
-                                    <li>
-                                    <a href="add-expensetype.php">Add Expense Type</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a class="js-arrow" href="#">
-                                <i class="fas fa-cubes"></i>Stocks
-                                </a>
-                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                    <li>
-                                        <a href="rawmaterialstocks.php">Raw Material Stock</a>
-                                    </li>
-                                    <li>
-                                        <a href="productstock.php">Production Stock</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="accounts.php">
-                                    <i class="fas fa-dollar-sign"></i>Accounts</a>
-                            </li>
+                            
+                            
+
+
                         
                     </ul>
                 </div>
